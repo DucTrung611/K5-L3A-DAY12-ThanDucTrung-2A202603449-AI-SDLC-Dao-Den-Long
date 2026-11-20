@@ -1,26 +1,21 @@
 ---
 name: verify-game
-description: Chạy toàn bộ kiểm chứng Đảo Đèn Lồng (contract, unit test, scenario headless, determinism, bot playthrough) và lưu bằng chứng vào docs/proof/phase-N/. Dùng khi kết thúc một tính năng, trước khi gắn tag phase, hoặc khi cần cập nhật bảng truy vết yêu cầu → bằng chứng.
+description: Chạy toàn bộ kiểm chứng Đảo Đèn Lồng (contract v1.1, unit test, scenario headless 3 đêm, determinism, bot, mutation, FPS client) và lưu bằng chứng vào docs/proof/phase-N/. Dùng khi kết thúc một tính năng, trước khi gắn tag phase, hoặc khi cần cập nhật bảng truy vết yêu cầu → bằng chứng.
 ---
 
 # Kiểm chứng & lưu bằng chứng
 
 ## Khi nào dùng
 - Sau khi xong một tính năng/sửa lỗi: chạy bước 1.
-- Trước khi gắn tag `phase-N`: chạy bước 1 → 3.
+- Trước khi gắn tag `phase-N`: chạy bước 1 → 4.
 
 ## Các bước
-1. `npm run verify`. Phải xanh hết. Nếu đỏ: đọc lỗi, sửa **code** (không sửa expect/test cho qua), chạy lại.
-2. `npm run proof -- --phase N`. Lệnh này ghi vào `docs/proof/phase-N/`:
-   - `results.md`: bảng PASS/FAIL từng scenario + determinism + bot + hiệu năng + môi trường máy
-   - `scenarios/*.jsonl`: output headless thật của từng scenario
-   - `bot/`: inputs + output phát lại của bot (bằng chứng chơi từ đầu tới thắng)
-3. Cập nhật `docs/proof/phase-N/report.md` (bảng Yêu cầu | Kiểm chứng | Bằng chứng | Kết quả):
-   - Mỗi yêu cầu trỏ tới file bằng chứng cụ thể. Chưa đạt thì ghi "Chưa đạt" + lý do.
-   - Ảnh/GIF cho thứ chỉ nhìn mới thấy (HUD, màn thắng/thua): chạy `npm run dev`, chụp, ghi rõ ảnh chứng minh yêu cầu nào.
-4. Scenario mới: tạo `tests/scenarios/<tên>/{scenario,inputs,expect}.json`. `expect.json` tính TAY từ yêu cầu + tuning,
-   ghi `requirement` và `description` (cách tính). Định dạng expect: xem đầu file `scripts/lib/expect.js`.
+1. `npm run verify`. Phải xanh hết. Nếu đỏ: đọc lỗi, sửa **code** (không sửa expect/test cho qua), chạy lại. FAIL hàng loạt thì nghi harness (đường dẫn, tên trường) trước.
+2. `npm run mutation` (~4 phút): sửa cố ý hằng số/logic trong bản sao tạm, mỗi mutation phải làm ≥ 1 scenario FAIL. Mutation sống sót → thêm kiểm tra biên vào `tests/scenarios/_generate.mjs`.
+3. Client (phần chỉ nhìn mới thấy): `npm run build`, `npx vite preview --port 4173`, dùng Playwright mở trang, chụp ảnh từng màn (menu, giới thiệu, HUD từng đêm, tạm dừng, cài đặt, kết quả, Bình Minh), đo FPS (≥ 30 ở 1280×720, bản build thường) bằng `window.__fps`; lưu `fps.json`. Móc kiểm chứng: `window.__ddl` (`beginNight(n, seed, scenario)`, `step`, `game`, `ui`).
+4. `npm run proof -- --phase N` ghi `docs/proof/phase-N/results.md`, `scenarios/*.jsonl`, `determinism.json`, `bot/`, hiệu năng headless. Rồi cập nhật `docs/proof/phase-N/report.md` (Yêu cầu | Kiểm chứng | Bằng chứng | Kết quả; chưa đạt thì ghi "Chưa đạt" + lý do).
+5. Scenario mới: thêm vào `tests/scenarios/_generate.mjs` (expect tính TAY, ghi công thức trong `description`), xóa thư mục scenario cũ, sinh lại. Định dạng expect: xem đầu `scripts/lib/expect.js`.
 
 ## Lưu ý
 - Bằng chứng phải khớp mã ở tag: chạy proof SAU commit cuối của phase, trước khi tag.
-- Không sửa tay file output.
+- Không sửa tay file output. Dừng mọi server Vite đã mở khi xong (kiểm tra cổng 5173/4173).

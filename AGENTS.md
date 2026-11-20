@@ -1,28 +1,35 @@
 # AGENTS.md – Đảo Đèn Lồng
 
-Game 3D (Three.js) + chế độ headless theo **Test Contract v1.0**. Yêu cầu, giả định: `docs/notes/phase-N.md`. Kế hoạch: `PLAN.md`.
+Game 3D (Three.js) 3 đêm + chế độ headless theo **Test Contract v1.1**. Giả định và spec: `docs/notes/phase-N.md`. Kế hoạch: `PLAN.md`.
+Luật chuẩn do **Ticket-02** quy định (bảng số chuẩn, 3 bản đồ, thứ tự xử lý một tick). Mơ hồ thì tra `docs/notes/phase-2.md` (giả định B1…B30) trước khi bịa luật.
 
 ## Lệnh
 - Cài: `npm ci` · Chạy game: `npm run dev` · Build web tĩnh: `npm run build`
-- Headless: `node src/headless/cli.js --seed 1 --night 1 --ticks 600 --out out/run.jsonl [--scenario f] [--inputs f] [--snapshot-every 10]`
+- Headless: `node src/headless/cli.js --seed 1 --night 1|2|3 --ticks 600 --out out/run.jsonl [--scenario f] [--inputs f] [--snapshot-every 10]`
 - Kiểm chứng toàn bộ (PHẢI xanh trước khi báo xong): `npm run verify`
-  (= contract + unit test + scenario + determinism + bot playthrough)
-- Lưu bằng chứng phase: `npm run proof -- --phase N` (skill `verify-game`)
+  (= contract + unit test + scenario + determinism 3 đêm + bot Đêm 1)
+- Lưu bằng chứng phase: `npm run proof -- --phase N` (skill `verify-game`) · Mutation check: `npm run mutation`
 
 ## Kiến trúc
-- `src/sim/` lõi mô phỏng thuần, dùng chung cho headless và client. `src/client/` chỉ ĐỌC state để vẽ.
-- `src/client/extras/` = phần sáng tạo, chỉ chạy ở client, không được đổi output headless.
-- Thứ tự xử lý 1 bước cố định trong `src/sim/game.js` (input → di chuyển → interact → pulse → nhặt → Bóng Mực → va chạm → spawn → thời gian → kết thúc).
+- `src/sim/` lõi mô phỏng thuần, dùng chung headless và client: `tuning.js` (số chuẩn, 1 nguồn), `maps.js` (3 bản đồ + hàm chiều cao `height(x,z)`), `game.js` (một tick), `validate.js`, `output.js`.
+- `src/client/` chỉ ĐỌC state để vẽ: `main.js` (menu → đêm → kết quả → Bình Minh, tạm dừng), `scene.js`, `hud.js`, `input.js`, `audio.js`, `settings.js`. Sáng tạo của tôi (vệt sáng theo chân Mây, nhạc nền/âm thanh tự tổng hợp) nằm ở client, không được đổi output headless.
+- Thứ tự một tick CỐ ĐỊNH trong `stepGame` (ticket): input (pause trước) → giảm bộ đếm → di chuyển Mây + rơi → nhặt → đèn → vùng an toàn → tỏa sáng → Bóng Mực/Gió Lạc → chạm → sinh theo lịch → thắng/thua.
 
 ## Quy tắc bắt buộc
-- `src/sim`: KHÔNG `Math.random`/`Date`/`performance`, KHÔNG import three/DOM; timer đếm bằng tick nguyên (`secToTicks`).
-- Số tuning chỉ sửa ở `src/sim/tuning.js` VÀ `game.contract.json` cùng lúc (`npm run contract` kiểm tra).
-- Khoảng cách đo trên mặt phẳng XZ, "trong bán kính r" là `<= r`. Tọa độ output làm tròn 3 chữ số (`src/sim/output.js`).
-- Không sửa `tests/scenarios/*/expect.json` cho khớp output. Expect được viết tay từ yêu cầu. Nếu luật đổi (ticket mới) thì sửa kèm lý do trong `docs/notes/phase-N.md`.
+- `src/sim`: KHÔNG `Math.random`/`Date`/`performance`, KHÔNG import three/DOM; timer đếm bằng tick nguyên (`secToTicks`); RNG chỉ qua `createRng(seed)`.
+- Số chuẩn chỉ sửa ở `src/sim/tuning.js` VÀ `game.contract.json` cùng lúc (`npm run contract` đối chiếu cả với bảng số viết tay trong script).
+- Địa hình: một hàm `height(x,z)` (-Infinity = hư không, +Infinity = vật cản). Khoảng cách tuning đo trên XZ, "trong bán kính r" là `<= r` (+1e-9). Tọa độ output làm tròn 3 chữ số.
+- KHÔNG sửa `tests/scenarios/*/expect.json` cho khớp output. Expect tính tay từ yêu cầu, công thức nằm trong `tests/scenarios/_generate.mjs` (sửa generator rồi sinh lại). Luật đổi (ticket mới) thì sửa kèm lý do trong `docs/notes/phase-N.md`.
 - Không tắt test âm thầm. Không commit `.env`/key. Commit nhỏ, mỗi commit một việc.
-- Yêu cầu mơ hồ: ghi giả định vào `docs/notes/phase-N.md` trước khi code, không tự bịa luật mà không ghi.
+- Khi test FAIL hàng loạt, nghi lỗi harness/runner trước (đường dẫn, tên trường đổi) rồi mới nghi luật game.
+
+## Bài học (agent hay sai ở đây)
+- Đổi tên trường của `game.player` (vd `pulseCdTicks` → `pulseCd`) mà quên bot/tests: bot thôi tỏa sáng mà không báo lỗi. Tìm bằng grep toàn repo khi đổi tên.
+- Test sai vì quên luật vừa thêm (vd đèn vừa sáng đẩy Bóng Mực ra nên không thể bị chạm cùng tick). Đọc lại luật trước khi sửa code.
+- Mutation sống sót = lỗ hổng test: thêm kiểm tra biên (vd bất tử hồi sinh còn ở tick 230, hết ở tick 231).
 
 ## Harness
-- Hook `PostToolUse`: sửa `src|tests|scripts` thì chạy unit test (`scripts/hooks/post-edit-test.js`).
+- Hook `PostToolUse`: sửa `src|tests|scripts` thì chạy unit test (`scripts/hooks/post-edit-test.js`). Đỏ giữa chừng lúc đang viết lại lõi là bình thường.
 - Hook `Stop`: chạy toàn bộ kiểm chứng, đỏ thì chặn kết thúc (`scripts/hooks/stop-verify.js`).
-- Subagent `reviewer` (`.claude/agents/reviewer.md`): review diff, đối chiếu contract. Không phải agent đã viết code.
+- Subagent `reviewer` (`.claude/agents/reviewer.md`): review diff, đối chiếu contract và ticket. Không phải agent đã viết code.
+- Skill `verify-game`: chạy kiểm chứng và lưu bằng chứng vào `docs/proof/phase-N/`.
