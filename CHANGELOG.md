@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## [phase-4] – v1.0.0 "Bình minh" (Ticket-04, Contract v1.3)
+Giả định B49…B62 và truy vết yêu cầu: [docs/notes/phase-4.md](docs/notes/phase-4.md). **Không đổi luật, tuning hay đầu ra headless**: 102 scenario của Phase 1–3 giữ nguyên, không sửa `expect.json` nào.
+
+### Thêm
+- **Benchmark** (`node scripts/bench.js`, trang `bench.html`): cảnh chuẩn 200 Bóng Mực + 100 đom đóm + L1–L3 sáng, camera quỹ đạo, 1280×720, VSync tắt, ghi `bench.json` (avg FPS, p1-low, p95, frames, load, bộ nhớ đỉnh).
+- **Soak test** (`node scripts/soak.js`): 10 Đêm liên tiếp trong một tiến trình, input ngẫu nhiên theo seed, ghi `soak.json`.
+- **Bảng xếp hạng cục bộ**: top 10, tên 3–12 ký tự `[A-Za-z0-9_]`, ISO 8601 có múi giờ, lưu đĩa `data/leaderboard.json` (qua máy chủ vite) hoặc trình duyệt; màn hình xem từ Menu; `--export-leaderboard`.
+- **Dễ tiếp cận**: đổi phím mọi hành động (phát hiện trùng, khôi phục mặc định, lưu bền); phụ đề/chỉ báo (Bóng Mực + mũi tên mép màn hình, Gió sắp thổi, 10 s cuối, đèn fuel < 30); Giảm chuyển động (camera rung mới + chớp màn hình đều tắt được); chữ ≥ 18 px, Chữ lớn ×1.25.
+- **Đóng gói**: README đủ bench/soak/leaderboard/accessibility, CHANGELOG 4 phase, CREDITS, LICENSE, `retro.md`, Release `v1.0.0` (web tĩnh `dao-den-long-web.zip` + video demo).
+- **Kiểm chứng**: 14 unit test mới (`tests/unit/phase4.test.js`), `scripts/ui-check.js` (23 kiểm tra bằng trình duyệt thật), `soak` trong `npm run verify`, `make-proof` hỗ trợ Phase 4.
+
+### Đổi
+- **Contract v1.3**: `contract_version "1.3"`, thêm `bench_cmd`, `soak_cmd`; `run_cmd` = `node scripts/run.js` (hiểu `--export-leaderboard`; không tham số thì chạy game). Test `game.contract.json: các khóa bắt buộc` sửa từ "1.2" sang "1.3" kèm khóa mới.
+- **Phím mặc định**: bỏ phím tắt phụ `P` (tạm dừng) và `Q` (lướt) để không đụng phím người dùng tự chọn; còn `Esc` và `Shift`. `↑`/`↓` vẫn đi tới/lùi.
+- **Cỡ chữ UI**: mọi chữ ≥ 18 px (trước đây nhỏ nhất 9 px); HUD và vòng hồi chiêu phóng to tương ứng.
+- Vite build thêm trang `bench.html`; `vite.config.js` có middleware `/api/leaderboard`.
+
 ## [phase-3] – Ticket-03 "Đèn cạn dầu" (Contract v1.2)
 Quyết định thiết kế: [docs/adr-phase-3.md](docs/adr-phase-3.md). Giả định B31…B48 và danh sách test bị thay: [docs/notes/phase-3.md](docs/notes/phase-3.md).
 

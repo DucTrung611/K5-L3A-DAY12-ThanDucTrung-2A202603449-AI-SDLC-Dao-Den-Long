@@ -1,0 +1,120 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "name": "menu: mọi chữ hiển thị >= 18 px ở 1280x720",
+      "ok": true,
+      "detail": "nhỏ nhất 18px (DIV: Ba đêm · ba hòn đảo )"
+    },
+    {
+      "name": "cài đặt: mọi chữ hiển thị >= 18 px",
+      "ok": true,
+      "detail": "nhỏ nhất 18px (LABEL: Âm lượng)"
+    },
+    {
+      "name": "Chữ lớn: cỡ chữ gốc ×1.25 (22.5 px)",
+      "ok": true,
+      "detail": "22.5px"
+    },
+    {
+      "name": "Chữ lớn: chữ nhỏ nhất >= 22.5 px",
+      "ok": true,
+      "detail": "22.5px"
+    },
+    {
+      "name": "Giảm chuyển động: bật được và lưu",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Giảm chuyển động: chớp màn hình bị ẩn",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "đổi phím: đủ 9 hành động",
+      "ok": true,
+      "detail": "9 hàng"
+    },
+    {
+      "name": "đổi phím: phát hiện trùng và cảnh báo",
+      "ok": true,
+      "detail": "Phím E đã dùng cho \"Tương tác (nạp/châm dầu)\". Hãy đổi phím đó trước hoặc chọn phím khác."
+    },
+    {
+      "name": "đổi phím: gán Nhảy = Z",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "đổi phím: gán Tạm dừng = P",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "đổi phím: lưu bền qua tải lại trang (menu hiện Z)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "đổi phím: Khôi phục mặc định",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "phụ đề: 'Bóng Mực xuất hiện' khi Bóng Mực xuất hiện",
+      "ok": true,
+      "detail": "Bóng Mực xuất hiện!"
+    },
+    {
+      "name": "chỉ báo: 10 s cuối của Đêm",
+      "ok": true,
+      "detail": "Còn 10 giây tới bình minh!"
+    },
+    {
+      "name": "chỉ báo: đèn fuel < 30",
+      "ok": true,
+      "detail": "Đèn L1 sắp cạn dầu (dưới 30)!"
+    },
+    {
+      "name": "thua: màn kết quả có ô nhập tên",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tên 2 ký tự bị từ chối",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tên có ký tự lạ bị từ chối",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "lưu điểm khi thua: thành công",
+      "ok": true,
+      "detail": "Đã lưu! Hạng #1."
+    },
+    {
+      "name": "bản ghi nằm trên ĐĨA (file bảng xếp hạng)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bảng xếp hạng truy cập từ Menu và giữ dữ liệu sau khi tải lại",
+      "ok": true,
+      "detail": "1Tester_1002026-11-20 20:375"
+    },
+    {
+      "name": "CLI --export-leaderboard khớp bản ghi vừa lưu",
+      "ok": true,
+      "detail": "{\"name\":\"Tester_1\",\"score\":0,\"nights_won\":0,\"achieved_at\":\"2026-11-20T20:37:29+07:00\",\"seed\":5}"
+    },
+    {
+      "name": "không có lỗi JS/console trong cả phiên",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

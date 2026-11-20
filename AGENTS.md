@@ -1,6 +1,7 @@
 # AGENTS.md – Đảo Đèn Lồng
 
 Game 3D (Three.js) 3 đêm + chế độ headless theo **Test Contract v1.2**. Giả định và spec: `docs/notes/phase-N.md`. Kế hoạch: `PLAN.md`.
+Phase 4 (**Ticket-04**, Contract v1.3) KHÔNG đổi luật/số liệu/đầu ra headless; thêm bench, soak, bảng xếp hạng, accessibility (`docs/notes/phase-4.md`, giả định B49…B62).
 Luật chuẩn do **Ticket-02** (bảng số chuẩn, 3 bản đồ, thứ tự một tick) và **Ticket-03** "Đèn cạn dầu" (nhiên liệu đèn, `drain`, thắng bình minh, sức chứa, điểm mới; ADR ở `docs/adr-phase-3.md`) quy định. Mơ hồ thì tra `docs/notes/phase-3.md` (B31…B48) rồi `docs/notes/phase-2.md` (B1…B30) trước khi bịa luật. Ticket sau thay luật cũ thì test cũ phải sửa/xóa KÈM LÝ DO.
 
 ## Lệnh
@@ -8,6 +9,7 @@ Luật chuẩn do **Ticket-02** (bảng số chuẩn, 3 bản đồ, thứ tự 
 - Headless: `node src/headless/cli.js --seed 1 --night 1|2|3 --ticks 600 --out out/run.jsonl [--scenario f] [--inputs f] [--snapshot-every 10]`
 - Kiểm chứng toàn bộ (PHẢI xanh trước khi báo xong): `npm run verify`
   (= contract + unit test + scenario + determinism 3 đêm + bot Đêm 1)
+- Phase 4: `npm run bench` (cần Chrome/Edge) · `npm run soak` · `npm run ui-check` (trình duyệt thật) · `node scripts/run.js --export-leaderboard out.json`
 - Lưu bằng chứng phase: `npm run proof -- --phase N` (skill `verify-game`) · Mutation check: `npm run mutation`
 
 ## Kiến trúc
@@ -15,6 +17,8 @@ Luật chuẩn do **Ticket-02** (bảng số chuẩn, 3 bản đồ, thứ tự 
 - `src/client/` chỉ ĐỌC state để vẽ: `main.js` (menu → đêm → kết quả → Bình Minh, tạm dừng), `scene.js`, `hud.js`, `input.js`, `audio.js`, `settings.js`. Sáng tạo của tôi (vệt sáng theo chân Mây, nhạc nền/âm thanh tự tổng hợp) nằm ở client, không được đổi output headless.
 - Dầu đèn là SỐ NGUYÊN đơn vị 1/60 (`fuelU`, `fuel = 100` ⇔ 6000); chỉ làm tròn khi xuất. Vùng an toàn = `hasZone(L)` (sáng và `fuel >= 30`), một chỗ duy nhất.
 - Thứ tự một tick CỐ ĐỊNH trong `stepGame` (ticket): input (pause trước) → giảm bộ đếm + trừ dầu đèn (`fuel <= 0` thì tắt ngay) → di chuyển Mây + rơi → nhặt → đèn → vùng an toàn → tỏa sáng → Bóng Mực/Gió Lạc → chạm → sinh theo lịch → thắng/thua.
+
+- Phase 4: `src/sim/leaderboard.js` (luật bảng xếp hạng, thuần), `src/sim/bench.js` (cảnh benchmark), `src/sim/soak.js`; `src/client/keymap.js` (đổi phím), `bench-run.js` (+ `bench.html`); `scripts/bench.js`, `soak.js`, `run.js` (= `run_cmd`), `ui-check.js`, `lib/leaderboard-store.js` (đĩa + middleware vite).
 
 ## Quy tắc bắt buộc
 - `src/sim`: KHÔNG `Math.random`/`Date`/`performance`, KHÔNG import three/DOM; timer đếm bằng tick nguyên (`secToTicks`); RNG chỉ qua `createRng(seed)`.
@@ -38,3 +42,9 @@ Luật chuẩn do **Ticket-02** (bảng số chuẩn, 3 bản đồ, thứ tự 
 - Hook `Stop`: chạy toàn bộ kiểm chứng, đỏ thì chặn kết thúc (`scripts/hooks/stop-verify.js`).
 - Subagent `reviewer` (`.claude/agents/reviewer.md`): review diff, đối chiếu contract và ticket. Không phải agent đã viết code.
 - Skill `verify-game`: chạy kiểm chứng và lưu bằng chứng vào `docs/proof/phase-N/`.
+
+## Bài học Phase 4
+- Vite `configureServer`/`configurePreviewServer`: KHÔNG trả về giá trị (dạng `(s) => s.middlewares.use(...)` trả về hàm và vite coi là hook post, sập khi khởi động). Dùng thân hàm có ngoặc nhọn.
+- `src/sim` cấm `Date`: giờ hiện tại (`isoWithOffset`) nằm ở client. Hook `PostToolUse` bắt lỗi này ngay.
+- Thời gian còn lại của đêm do sim tự tính từ `simTick`; muốn thử 10 s cuối thì dựng đêm bằng `scenario.time_left_s`, đừng sửa `game.timeLeft` bằng tay.
+- Sửa file bằng script có chuỗi chứa `\\n`: vỡ cú pháp (xem Phase 3). Với heredoc dài chứa dấu nháy, ghi file bằng công cụ Write rồi chạy.

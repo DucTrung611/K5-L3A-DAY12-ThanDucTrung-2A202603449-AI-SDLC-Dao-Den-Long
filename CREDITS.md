@@ -5,6 +5,7 @@
 |---|---|---|---|
 | three.js | 0.170.0 | MIT | https://github.com/mrdoob/three.js |
 | Vite (công cụ dev/build) | 5.4.11 | MIT | https://github.com/vitejs/vite |
+| playwright-core (chỉ dùng cho benchmark và kiểm tra giao diện; không có trong bản phát hành) | 1.49.1 | Apache-2.0 | https://github.com/microsoft/playwright |
 
 ## Asset
 - **Không dùng asset ngoài.** Mọi mô hình 3D (Mây, nón lá, đèn lồng, Bóng Mực, đảo, cây, đá) được dựng bằng hình khối có sẵn của three.js trong code.
@@ -15,5 +16,6 @@
 - Nhân vật, bối cảnh, tên gọi: bản gốc của lab Day 12 AI SDLC (lab board "Đảo Đèn Lồng Lab").
 
 ## Công cụ AI
-- **Claude Code** (Anthropic, model Claude Opus): lập kế hoạch, viết mã, test, tài liệu và chạy kiểm chứng, dưới sự điều phối và review của tác giả. Chi tiết: `docs/notes/phase-*.md` mục Nhật ký dùng AI.
+- **Claude Code** (Anthropic; các model Claude Opus và Claude Sonnet): lập kế hoạch, viết mã, test, tài liệu và chạy kiểm chứng, dưới sự điều phối và review của tác giả. Chi tiết: `docs/notes/phase-*.md` mục Nhật ký dùng AI.
 - Không dùng AI tạo hình ảnh hay âm thanh.
+- Video demo (`demo.mp4`): do tác giả tự quay màn hình; không dùng AI tạo video hay giọng đọc.

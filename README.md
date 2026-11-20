@@ -1,11 +1,15 @@
 # Đảo Đèn Lồng
 
-> **Video demo:** sẽ cập nhật ở Phase 4 (Release `v1.0.0`).
-> Day 12 AI SDLC Lab · Thân Đức Trung · 2A202603449 · Tài liệu lab gốc: [docs/lab/](docs/lab/README.md) · Kế hoạch: [PLAN.md](PLAN.md) · Trạng thái: **Phase 3 (Ticket-03 "Đèn cạn dầu", Contract v1.2)**
+> **Video demo:** [demo.mp4 trong Release v1.0.0](https://github.com/DucTrung611/K5-L3A-DAY12-ThanDucTrung-2A202603449-AI-SDLC-Dao-Den-Long/releases/tag/v1.0.0) (nếu chưa mở được: `docs/demo/demo.mp4`).
+> Day 12 AI SDLC Lab · Thân Đức Trung · 2A202603449 · Tài liệu lab gốc: [docs/lab/](docs/lab/README.md) · Kế hoạch: [PLAN.md](PLAN.md) · Trạng thái: **Phase 4 (Ticket-04 "Bình minh", Contract v1.3) · phát hành v1.0.0**
 
 Game 3D góc nhìn thứ ba. **Mây**, người giữ đèn nhỏ tuổi đội nón lá treo một chiếc đèn lồng nhỏ, đi qua **ba hòn đảo** trong ba đêm, gom đom đóm để thắp lại các **Đèn Lồng Lớn**, né **Bóng Mực** và **Gió Lạc** trước khi trời sáng.
 
 ![Đảo Cầu](docs/proof/phase-2/10-night2-drifter-charm-shades.png)
+
+![Menu và bảng điều khiển](docs/proof/phase-4/ui-01-menu.png)
+
+**Yêu cầu hệ thống:** Node.js ≥ 22; trình duyệt có WebGL (Chrome/Edge/Firefox/Safari mới); GPU rời hoặc iGPU đủ để đạt ~60 FPS ở 1280×720 (máy phát triển: AMD Radeon iGPU, ~95–130 FPS ở cảnh benchmark). Benchmark cần thêm Chrome hoặc Edge.
 
 ## Cài đặt và chạy (3 lệnh)
 
@@ -21,18 +25,24 @@ Bản web tĩnh: `npm run build` sinh `dist/` (chạy bằng `npm run preview` h
 
 ## Điều khiển
 
+Phím mặc định (đổi được trong **Cài đặt → Đổi phím**, có phát hiện trùng phím và nút Khôi phục mặc định; cấu hình được lưu):
+
 | Phím | Hành động |
 |---|---|
-| `W` `A` `S` `D` / `↑` `↓` | Đi lại theo hướng camera |
-| `←` `→` / kéo chuột | Xoay camera (độ nhạy chỉnh trong Cài đặt) |
+| `W` `A` `S` `D` (và `↑` `↓`) | Đi lại theo hướng camera |
+| `←` `→` / kéo chuột | Xoay camera (cố định, không đổi được) |
 | `Space` | Nhảy |
-| `Shift` (hoặc `Q`) | **Lướt** 14 m/s trong 0.2 s, hồi chiêu 1.5 s, giữ nguyên độ cao |
-| `E` | Nạp đom đóm vào Đèn Lồng chưa sáng gần nhất (trong 2 m) |
+| `Shift` | **Lướt** 14 m/s trong 0.2 s, hồi chiêu 1.5 s, giữ nguyên độ cao |
+| `E` | Nạp đom đóm vào Đèn Lồng chưa sáng / châm dầu đèn đang sáng, gần nhất trong 2 m |
 | `F` | Tỏa sáng: xua Bóng Mực trong 5 m (tốn 3 đom đóm, hồi chiêu 3 s) |
-| `Esc` / `P` | Tạm dừng (logic dừng hẳn): Tiếp tục / Chơi lại Đêm / Cài đặt / Về menu |
+| `Esc` | Tạm dừng (logic dừng hẳn): Tiếp tục / Chơi lại Đêm / Cài đặt / Về menu |
 | `Enter` / `R` | Bắt đầu, sang màn kế / Chơi lại Đêm sau khi thua |
 
-**Cài đặt** (âm lượng, độ nhạy chuột) được lưu và giữ nguyên ở lần mở game sau.
+**Cài đặt** (âm lượng, độ nhạy chuột, bảng màu dễ phân biệt, **giảm chuyển động**, **chữ lớn ×1.25**, **phụ đề/chỉ báo**, đổi phím) được lưu và giữ nguyên ở lần mở game sau.
+
+**Dễ tiếp cận (Phase 4):** đổi phím cho mọi hành động; phụ đề và chỉ báo hình ảnh cho Bóng Mực xuất hiện (kèm mũi tên chỉ hướng ở mép màn hình), Gió sắp thổi, 10 giây cuối, đèn `fuel < 30`; Giảm chuyển động (tắt rung camera, chớp màn hình, nhấp nháy); cỡ chữ mặc định ≥ 18 px ở 1280×720, Chữ lớn ×1.25.
+
+**Bảng xếp hạng cục bộ (Phase 4):** Menu → *Bảng xếp hạng*. Sau khi thua ở bất kỳ Đêm nào hoặc ở màn Bình Minh, nhập tên 3–12 ký tự (`A-Z a-z 0-9 _`) để lưu điểm. Giữ top 10 (điểm giảm dần, bằng điểm thì ai đạt trước đứng trên), lưu bền ở `data/leaderboard.json` khi chạy bằng `npm run dev`/`npm run preview` (bản web tĩnh không có máy chủ thì lưu trong trình duyệt). Xuất ra file: `node scripts/run.js --export-leaderboard out.json`.
 
 ## Luật chơi (số chuẩn của Ticket-02)
 
@@ -57,7 +67,7 @@ Bản web tĩnh: `npm run build` sinh `dist/` (chạy bằng `npm run preview` h
 
 **Điểm (Phase 3)**: +5 mỗi đom đóm nạp (thắp, thắp lại, châm dầu) · thắp lần đầu +100 · thắp lại +40 · Bóng Mực trúng Tỏa sáng +5 (+15 nếu đang hút dầu) · khi thắng, mỗi đèn sáng `+50 + floor(dầu)` và mỗi Ngọn Lửa còn lại +50. Không còn thưởng thời gian. Tổng điểm là tổng các đêm đã thắng.
 
-## Chế độ headless (Test Contract v1.2)
+## Chế độ headless (Test Contract v1.3)
 
 Khai báo ở [game.contract.json](game.contract.json). Logic chạy 60 tick/giây cố định, không cần cửa sổ hay GPU. Một đêm đầy đủ (tối đa 21 600 tick) chạy trong dưới 1 giây.
 
@@ -74,15 +84,30 @@ Có thêm so với v1.0: input `dash`, `pause`; scenario `player.{invuln_ticks,d
 
 **Giá trị đặc biệt trong contract:** `fall_enabled: true` (rơi khỏi đảo có phạt). Không khóa tuning nào là `null`. Điểm xuất phát Đêm 3 là **(0,0,−20)** (ticket không nêu; (0,0,0) nằm trong tháp chuông). `shade_speed` khai 4.0, riêng Đêm 3 là 4.5 (số nội bộ `RULES.shade_speed_night3`). Toàn bộ giả định B1…B30 ở [docs/notes/phase-2.md](docs/notes/phase-2.md).
 
+Contract v1.3 (Phase 4) **không đổi luật, tuning hay schema JSONL**; chỉ thêm `bench_cmd`, `soak_cmd` và `run_cmd` = `node scripts/run.js`. Cả `run_cmd` lẫn `headless_cmd` hiểu `--export-leaderboard out.json`.
+
+## Benchmark và soak test (Phase 4)
+
+```bash
+node scripts/bench.js --seed 42 --duration 30 --out bench.json   # = npm run bench
+node scripts/soak.js  --seed 7  --nights 10 --out soak.json      # = npm run soak
+```
+
+- **Benchmark** mở Chrome/Edge (qua Playwright, tự build `dist/` nếu chưa có), cửa sổ 1280×720 không toàn màn hình, tắt VSync bằng cờ Chrome `--disable-frame-rate-limit --disable-gpu-vsync` (`vsync_off: true`), tải Đêm 1 đầy đủ ánh sáng với 200 Bóng Mực `wander` + 100 đom đóm + L1–L3 sáng `fuel = 100`, Mây đứng yên ở gốc, camera bay vòng r = 30 m, Y = 15 m, 15 s/vòng ngược chiều kim đồng hồ. Bỏ 3 s khởi động, đo `--duration` giây rồi thoát mã 0. Máy không có màn hình: `BENCH_HEADLESS=1`; chọn trình duyệt: `BENCH_BROWSER=<đường dẫn exe>`. Mọi nhân vật/hiệu ứng sáng tạo thêm (vệt sáng theo chân Mây) bị tắt trong cảnh này. Giả định B49–B54 ở [docs/notes/phase-4.md](docs/notes/phase-4.md).
+- **Soak** chạy 10 Đêm liên tiếp (xoay vòng 1→2→3, seed `7 + i`) trong cùng một tiến trình Node với input ngẫu nhiên theo seed, đo RSS đầu/cuối (sau khi ép GC). Đạt khi `crashes == 0` và `mem_end_mb <= 1.2 × mem_start_mb`.
+- Kết quả đã chạy của tôi (commit sẵn ở gốc repo): [bench.json](bench.json) (Chrome 158, AMD Radeon iGPU, Windows 11: 96.4 FPS trung bình, p1-low 56.6 FPS, p95 12.3 ms, load 2.7 s; các lần chạy khác nhau dao động ~95–130 FPS) và [soak.json](soak.json) (10 đêm, 0 sập, RSS 57.7 → 57.7 MB). Số trên máy chấm chuẩn có thể khác.
+
 ## Kiểm thử
 
 ```bash
-npm run verify      # contract v1.2 + 58 unit test + 101 scenario headless + determinism 3 đêm + bot Đêm 1
+npm test            # unit test (node:test), ~3 s
+npm run verify      # contract v1.3 + unit test + 102 scenario headless + determinism 3 đêm + bot Đêm 1 + soak 10 đêm
+npm run ui-check    # kiểm giao diện bằng trình duyệt thật: đổi phím, cỡ chữ, phụ đề, bảng xếp hạng (cần Chrome/Edge)
 npm run mutation    # sửa cố ý hằng số/logic, scenario phải FAIL (test không phải loại luôn đạt)
-npm run proof -- --phase 3   # chạy lại toàn bộ và lưu bằng chứng vào docs/proof/phase-3/
+npm run proof -- --phase 4   # chạy lại toàn bộ (gồm bench, soak, ui-check) và lưu bằng chứng vào docs/proof/phase-4/
 ```
 
-- Bằng chứng Phase 3: [docs/proof/phase-3/report.md](docs/proof/phase-3/report.md) và [results.md](docs/proof/phase-3/results.md) (tự sinh). Phase 2: [docs/proof/phase-2/report.md](docs/proof/phase-2/report.md). Phase 1: [docs/proof/phase-1/](docs/proof/phase-1/report.md).
+- Bằng chứng Phase 4: [docs/proof/phase-4/results.md](docs/proof/phase-4/results.md) (tự sinh), giả định và truy vết ở [docs/notes/phase-4.md](docs/notes/phase-4.md). Phase 3: [docs/proof/phase-3/report.md](docs/proof/phase-3/report.md) và [results.md](docs/proof/phase-3/results.md) (tự sinh). Phase 2: [docs/proof/phase-2/report.md](docs/proof/phase-2/report.md). Phase 1: [docs/proof/phase-1/](docs/proof/phase-1/report.md).
 - Mọi `expect.json` được tính **tay** từ ticket (công thức trong [tests/scenarios/_generate.mjs](tests/scenarios/_generate.mjs)), không chép từ output chương trình.
 - CI: [.github/workflows/ci.yml](.github/workflows/ci.yml) chạy `npm run verify` trên Ubuntu và macOS mỗi lần push.
 
@@ -100,14 +125,14 @@ Bằng chứng phần lõi vẫn đúng: `npm run verify` xanh; unit test `src/s
 
 ```text
 src/sim/         lõi mô phỏng thuần (số chuẩn, bản đồ, một tick); dùng chung headless + client
-src/headless/    CLI theo Test Contract
+src/headless/    CLI theo Test Contract (+ --export-leaderboard)
 src/client/      Three.js, HUD, menu, input, audio, cài đặt
 tests/unit/      unit test (node:test)
 tests/scenarios/ 66 scenario headless + expect.json tính tay (+ _generate.mjs)
-scripts/         runner scenario, determinism, contract, bot, mutation, proof, hooks
+scripts/         runner scenario, determinism, contract, bot, mutation, proof, hooks, bench, soak, run, ui-check
 docs/notes/      giả định, nhật ký AI, đánh giá từng phase, retro
 docs/proof/      bằng chứng từng phase (ảnh, JSONL, FPS, mutation)
 AGENTS.md, CLAUDE.md, .claude/   harness AI (hooks, skill verify-game, subagent reviewer)
 ```
 
-Giấy phép: [MIT](LICENSE) · Ghi nguồn: [CREDITS.md](CREDITS.md) · Lịch sử: [CHANGELOG.md](CHANGELOG.md)
+Retro: [docs/notes/retro.md](docs/notes/retro.md) · Giấy phép: [MIT](LICENSE) · Ghi nguồn: [CREDITS.md](CREDITS.md) · Lịch sử: [CHANGELOG.md](CHANGELOG.md)
