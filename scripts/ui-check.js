@@ -152,7 +152,7 @@ try {
   check("tên 2 ký tự bị từ chối", /3–12/.test(await page.textContent("#resMsg")));
   await page.fill("#resInput", "bad name!");
   await page.click("#resSave");
-  check("tên có ký tự lạ bị từ chối", /chữ, số/.test(await page.textContent("#resMsg")));
+  check("tên có ký tự lạ bị từ chối", /A-Z, a-z/.test(await page.textContent("#resMsg")));
   await page.fill("#resInput", "Tester_1");
   await page.click("#resSave");
   await page.waitForFunction(() => /Đã lưu/.test(document.getElementById("resMsg").textContent));
