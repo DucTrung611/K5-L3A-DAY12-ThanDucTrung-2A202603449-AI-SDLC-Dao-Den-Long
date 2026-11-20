@@ -1,0 +1,17 @@
+{
+  "requirement": "C1",
+  "description": "Nhặt cần chênh cao chân Mây - mặt đất nơi đặt ≤ 1.5: Mây ở y=1.4 (đang rơi, tick 1 còn 1.394) nhặt ngay tick 1",
+  "seed": 1,
+  "ticks": 3,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "mote_picked",
+        "data": {
+          "carried": 1
+        }
+      }
+    ]
+  }
+}

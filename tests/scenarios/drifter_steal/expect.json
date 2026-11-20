@@ -1,0 +1,65 @@
+{
+  "requirement": "Gió Lạc",
+  "description": "Mang 6 ≥ 5 và cách 10 m ≤ 15: idle -> chase (7 m/s, x = 10 - 0.1167 t); chạm ≤ 1.2 m lần đầu ở t=76 (x=1.133) -> drifter_steal {amount 3, carried 3}, flee 240 tick rồi biến mất (tick 316)",
+  "seed": 1,
+  "ticks": 330,
+  "snapshot_every": 10,
+  "expect": {
+    "events": [
+      {
+        "tick": 76,
+        "name": "drifter_steal",
+        "data": {
+          "drifter_id": "D1",
+          "amount": 3,
+          "carried": 3
+        }
+      }
+    ],
+    "event_counts": {
+      "drifter_steal": 1
+    },
+    "absent_events": [
+      "player_hit"
+    ],
+    "snapshots": {
+      "70": {
+        "player": {
+          "carried": 6
+        },
+        "drifters": [
+          {
+            "id": "D1",
+            "state": "chase",
+            "stolen": 0
+          }
+        ]
+      },
+      "80": {
+        "player": {
+          "carried": 3
+        },
+        "drifters": [
+          {
+            "id": "D1",
+            "state": "flee",
+            "stolen": 3
+          }
+        ]
+      },
+      "310": {
+        "drifters": [
+          {
+            "id": "D1",
+            "state": "flee",
+            "stolen": 3
+          }
+        ]
+      },
+      "320": {
+        "drifters": []
+      }
+    }
+  },
+  "night": 2
+}

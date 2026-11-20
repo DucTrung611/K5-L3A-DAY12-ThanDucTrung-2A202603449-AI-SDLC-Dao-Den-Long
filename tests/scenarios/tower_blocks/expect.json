@@ -1,0 +1,32 @@
+{
+  "requirement": "C4",
+  "description": "Đêm 3: tháp chuông (trụ r=2 ở tâm tầng 2) không đi xuyên được: đi -Z từ z=6 dừng ở z=2.1",
+  "seed": 1,
+  "ticks": 60,
+  "snapshot_every": 30,
+  "expect": {
+    "snapshots": {
+      "30": {
+        "player": {
+          "pos": [
+            0,
+            6,
+            3
+          ],
+          "grounded": true
+        }
+      },
+      "60": {
+        "player": {
+          "pos": [
+            0,
+            6,
+            2.1
+          ],
+          "grounded": true
+        }
+      }
+    }
+  },
+  "night": 3
+}

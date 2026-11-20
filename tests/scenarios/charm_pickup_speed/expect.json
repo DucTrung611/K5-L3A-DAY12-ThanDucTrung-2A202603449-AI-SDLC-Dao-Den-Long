@@ -1,0 +1,92 @@
+{
+  "requirement": "Bùa Gió",
+  "description": "Nhặt bùa ở XZ ≤ 1.0 (z=2.0 ở tick 20): charm_picked {C1, 600}; bùa biến mất, hồi sau 2700 tick (45 s); từ tick 21 chạy 7.2 m/s (z = 2.0 + 0.12·t); charm_s đếm ngược từ 10 s",
+  "seed": 1,
+  "ticks": 40,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 20,
+        "name": "charm_picked",
+        "data": {
+          "charm_id": "C1",
+          "charm_ticks": 600
+        }
+      }
+    ],
+    "event_counts": {
+      "charm_picked": 1
+    },
+    "snapshots": {
+      "19": {
+        "player": {
+          "charm_s": 0
+        },
+        "charms": [
+          {
+            "id": "C1",
+            "available": true
+          }
+        ]
+      },
+      "20": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            2
+          ],
+          "charm_s": 10,
+          "vel": [
+            0,
+            0,
+            6
+          ]
+        },
+        "charms": [
+          {
+            "id": "C1",
+            "available": false,
+            "respawn_s": 45
+          }
+        ]
+      },
+      "21": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            2.12
+          ],
+          "vel": [
+            0,
+            0,
+            7.2
+          ],
+          "charm_s": 9.983
+        },
+        "charms": [
+          {
+            "respawn_s": 44.983
+          }
+        ]
+      },
+      "30": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            3.2
+          ],
+          "charm_s": 9.833
+        },
+        "charms": [
+          {
+            "respawn_s": 44.833
+          }
+        ]
+      }
+    }
+  }
+}

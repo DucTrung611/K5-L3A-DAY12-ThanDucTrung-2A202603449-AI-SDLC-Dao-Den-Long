@@ -1,17 +1,53 @@
 {
-  "requirement": "R17",
-  "description": "Nhảy: v0 6 m/s, g 20 m/s² (Euler bán ẩn) -> y = (6n - n(n+1)/6)/60, tick 10: 0.694 m; đã tiếp đất ở tick 60; giữ nút không nhảy lại",
+  "requirement": "R17/C1",
+  "description": "Nhảy 7.0 m/s, trọng lực 20 m/s²: y_n = (7n - n(n+1)/6)/60 -> tick 10: 0.861; tick 20: 1.167 (đỉnh); tick 41 chạm đất (y = 0 đúng); giữ nút không nhảy lại; vy tick 10 = 7 - 10·20/60 = 3.667",
   "seed": 1,
   "ticks": 60,
+  "snapshot_every": 1,
   "expect": {
     "snapshots": {
       "10": {
         "player": {
           "pos": [
             0,
-            0.694,
+            0.861,
+            0
+          ],
+          "vel": [
+            0,
+            3.667,
+            0
+          ],
+          "grounded": false
+        }
+      },
+      "20": {
+        "player": {
+          "pos": [
+            0,
+            1.167,
             0
           ]
+        }
+      },
+      "40": {
+        "player": {
+          "pos": [
+            0,
+            0.111,
+            0
+          ],
+          "grounded": false
+        }
+      },
+      "41": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "grounded": true
         }
       },
       "60": {
@@ -20,7 +56,8 @@
             0,
             0,
             0
-          ]
+          ],
+          "grounded": true
         }
       }
     }

@@ -1,0 +1,65 @@
+{
+  "requirement": "Lướt",
+  "description": "Lướt trên không giữ nguyên độ cao: nhảy tick 1; tick 10 y = 0.861; lướt tick 11..22 y đứng yên 0.861 (hướng mặt +Z, đi 2.8 m); sau lướt rơi từ nghỉ: y_k = 0.861 - k(k+1)/360, chạm đất ở k=18 -> tick 40",
+  "seed": 1,
+  "ticks": 45,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "10": {
+        "player": {
+          "pos": [
+            0,
+            0.861,
+            0
+          ],
+          "grounded": false
+        }
+      },
+      "11": {
+        "player": {
+          "pos": [
+            0,
+            0.861,
+            0.233
+          ],
+          "vel": [
+            0,
+            0,
+            14
+          ]
+        }
+      },
+      "22": {
+        "player": {
+          "pos": [
+            0,
+            0.861,
+            2.8
+          ],
+          "grounded": false
+        }
+      },
+      "39": {
+        "player": {
+          "pos": [
+            0,
+            0.011,
+            2.8
+          ],
+          "grounded": false
+        }
+      },
+      "40": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            2.8
+          ],
+          "grounded": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "requirement": "C4",
+  "description": "Đêm 2 mặc định: 330 s, xuất phát (0,0,0), 6 đèn tọa độ chuẩn, 20 đom đóm, bùa C1 sẵn sàng, chưa có Bóng Mực/Gió Lạc",
+  "seed": 7,
+  "ticks": 20,
+  "expect": {
+    "snapshots": {
+      "0": {
+        "night": 2,
+        "time_left_s": 330,
+        "player": {
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "flames": 3
+        },
+        "lanterns": [
+          {
+            "id": "L1",
+            "pos": [
+              0,
+              0,
+              20
+            ],
+            "lit": false,
+            "deposited": 0
+          },
+          {
+            "id": "L2",
+            "pos": [
+              17,
+              0,
+              -10
+            ],
+            "lit": false,
+            "deposited": 0
+          },
+          {
+            "id": "L3",
+            "pos": [
+              -17,
+              0,
+              -10
+            ],
+            "lit": false,
+            "deposited": 0
+          },
+          {
+            "id": "L4",
+            "pos": [
+              70,
+              0,
+              20
+            ],
+            "lit": false,
+            "deposited": 0
+          },
+          {
+            "id": "L5",
+            "pos": [
+              87,
+              0,
+              -10
+            ],
+            "lit": false,
+            "deposited": 0
+          },
+          {
+            "id": "L6",
+            "pos": [
+              53,
+              0,
+              -10
+            ],
+            "lit": false,
+            "deposited": 0
+          }
+        ],
+        "motes_active": 20,
+        "shades": [],
+        "drifters": [],
+        "charms": [
+          {
+            "id": "C1",
+            "available": true,
+            "respawn_s": 0
+          }
+        ]
+      }
+    }
+  },
+  "night": 2
+}

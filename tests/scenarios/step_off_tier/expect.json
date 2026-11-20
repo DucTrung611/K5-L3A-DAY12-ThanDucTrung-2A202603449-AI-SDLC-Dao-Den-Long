@@ -1,0 +1,55 @@
+{
+  "requirement": "C4",
+  "description": "Đêm 3: bước ra khỏi mép tầng 1 (r < 12) thì rơi xuống tầng 0 (không phạt): đi -X từ x=12.55, x=11.95 ở tick 6 ra khỏi mép; rơi y_k = 3 - k(k+1)/360 chạm đất ở k=33 -> tick 39",
+  "seed": 1,
+  "ticks": 45,
+  "snapshot_every": 1,
+  "expect": {
+    "absent_events": [
+      "player_hit"
+    ],
+    "snapshots": {
+      "5": {
+        "player": {
+          "pos": [
+            12.05,
+            3,
+            0.5
+          ],
+          "grounded": true
+        }
+      },
+      "6": {
+        "player": {
+          "pos": [
+            11.95,
+            3,
+            0.5
+          ],
+          "grounded": false
+        }
+      },
+      "38": {
+        "player": {
+          "pos": [
+            8.75,
+            0.067,
+            0.5
+          ],
+          "grounded": false
+        }
+      },
+      "39": {
+        "player": {
+          "pos": [
+            8.65,
+            0,
+            0.5
+          ],
+          "grounded": true
+        }
+      }
+    }
+  },
+  "night": 3
+}

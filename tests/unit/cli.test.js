@@ -39,9 +39,36 @@ test("thiếu --seed -> exit 1 + stderr", () => {
   assert.match(r.stderr, /seed/);
 });
 
-test("tham số lạ / night khác 1 -> exit khác 0", () => {
+// Phase 2 (Contract v1.1): --night nhận 1, 2, 3 (Phase 1 chỉ nhận 1 nên test này được sửa, không bỏ).
+test("tham số lạ / night ngoài 1..3 -> exit khác 0; night 2 và 3 chạy được", () => {
   assert.notEqual(cli("--seed", "1", "--night", "1", "--ticks", "1", "--out", path.join(TMP, "a.jsonl"), "--bogus", "1").status, 0);
-  assert.notEqual(cli("--seed", "1", "--night", "2", "--ticks", "1", "--out", path.join(TMP, "b.jsonl")).status, 0);
+  assert.notEqual(cli("--seed", "1", "--night", "4", "--ticks", "1", "--out", path.join(TMP, "b.jsonl")).status, 0);
+  assert.notEqual(cli("--seed", "1", "--night", "0", "--ticks", "1", "--out", path.join(TMP, "b.jsonl")).status, 0);
+  for (const n of ["2", "3"]) {
+    const out = path.join(TMP, `n${n}.jsonl`);
+    assert.equal(cli("--seed", "1", "--night", n, "--ticks", "100", "--out", out).status, 0);
+    const objs = parseJsonl(fs.readFileSync(out, "utf8"));
+    assert.deepEqual(validateOutput(objs, { snapshotEvery: 10, ticks: 100, night: Number(n) }), []);
+  }
+});
+
+test("scenario: id đèn phải thuộc đúng đêm (L6 hợp lệ ở Đêm 2, sai ở Đêm 1) -> exit 2", () => {
+  const sc = tmp("l6.json", JSON.stringify({ lanterns: [{ id: "L6", lit: true }] }));
+  assert.equal(cli("--seed", "1", "--night", "1", "--ticks", "1", "--out", path.join(TMP, "l6a.jsonl"), "--scenario", sc).status, 2);
+  assert.equal(cli("--seed", "1", "--night", "2", "--ticks", "1", "--out", path.join(TMP, "l6b.jsonl"), "--scenario", sc).status, 0);
+});
+
+test("scenario: state Bóng Mực/Gió Lạc sai tên -> exit 2", () => {
+  const base = ["--seed", "1", "--night", "2", "--ticks", "1", "--out", path.join(TMP, "st.jsonl"), "--scenario"];
+  assert.equal(cli(...base, tmp("st1.json", JSON.stringify({ shades: [{ pos: [1, 0, 0], state: "dead" }] }))).status, 2);
+  assert.equal(cli(...base, tmp("st2.json", JSON.stringify({ drifters: [{ pos: [1, 0, 0], state: "spawning" }] }))).status, 2);
+  assert.equal(cli(...base, tmp("st3.json", JSON.stringify({ charms: [{ id: "C9" }] }))).status, 2);
+});
+
+test("inputs: pause/dash phải là boolean", () => {
+  const base = ["--seed", "1", "--night", "1", "--ticks", "5", "--out", path.join(TMP, "pd.jsonl"), "--inputs"];
+  assert.equal(cli(...base, tmp("pd1.json", JSON.stringify({ frames: [{ tick: 0, pause: 1 }] }))).status, 2);
+  assert.equal(cli(...base, tmp("pd2.json", JSON.stringify({ frames: [{ tick: 0, dash: true, pause: false }] }))).status, 0);
 });
 
 test("inputs JSON hỏng -> exit 2", () => {

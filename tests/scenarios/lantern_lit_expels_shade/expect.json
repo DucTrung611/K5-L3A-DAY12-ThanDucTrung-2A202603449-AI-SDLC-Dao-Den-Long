@@ -1,0 +1,47 @@
+{
+  "requirement": "C1/C5",
+  "description": "Đèn vừa sáng ở tick 1: Bóng Mực cách đèn 3 m bị đẩy ra mép 6 m trong 30 tick (0.1 m/tick: z = 28 + 0.1 t), không chạm người chơi",
+  "seed": 1,
+  "ticks": 40,
+  "snapshot_every": 10,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L1"
+        }
+      }
+    ],
+    "absent_events": [
+      "player_hit"
+    ],
+    "snapshots": {
+      "10": {
+        "shades": [
+          {
+            "pos": [
+              0,
+              1,
+              29
+            ],
+            "state": "recoil"
+          }
+        ]
+      },
+      "30": {
+        "shades": [
+          {
+            "pos": [
+              0,
+              1,
+              31
+            ],
+            "state": "chase"
+          }
+        ]
+      }
+    }
+  }
+}

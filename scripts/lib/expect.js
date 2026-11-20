@@ -2,7 +2,7 @@
 //
 // expect.json:
 // {
-//   "requirement": "R7", "description": "...",
+//   "requirement": "R7", "description": "...", "night": 1,
 //   "seed": 1, "ticks": 60, "snapshot_every": 10, "exit_code": 0,
 //   "expect": {
 //     "end": { ...khớp một phần },
@@ -10,7 +10,7 @@
 //     "event_counts": { "deposit": 1 },          // đếm chính xác
 //     "absent_events": ["player_hit"],
 //     "snapshots": { "60": { ...khớp một phần } },
-//     "invariants": ["shades_outside_lit_safe_radius"]
+//     "invariants": ["shades_outside_lit_safe_radius", "wind_pushes_2mps"]
 //   }
 // }
 
@@ -33,6 +33,8 @@ export function partialMatch(actual, expected, path = "$") {
   return Object.keys(expected).flatMap((k) => partialMatch(actual[k], expected[k], `${path}.${k}`));
 }
 
+const snapshotAt = (objs, tick) => objs.find((o) => o.type === "snapshot" && o.tick === tick);
+
 const INVARIANTS = {
   shades_outside_lit_safe_radius(objs, tuning) {
     const errs = [];
@@ -47,10 +49,27 @@ const INVARIANTS = {
     }
     return errs;
   },
-  player_inside_island(objs) {
-    return objs
-      .filter((o) => o.type === "snapshot" && Math.hypot(o.player.pos[0], o.player.pos[2]) > 40 + 1e-3)
-      .map((o) => `tick ${o.tick}: người chơi ra ngoài đảo`);
+  /** Mây kết thúc trên tầng 2 (y = 6, r ≤ 8) ở snapshot cuối. */
+  player_on_tier2_at_end(objs) {
+    const last = [...objs].reverse().find((o) => o.type === "snapshot");
+    const p = last.player.pos;
+    return p[1] === 6 && Math.hypot(p[0], p[2]) <= 8 ? [] : [`cuối trận Mây không ở tầng 2: ${JSON.stringify(p)}`];
+  },
+  /** Cơn gió: dịch chuyển giữa snapshot 1700 và 2100 phải đúng 2 m/s × 5 s theo dir_deg đọc ở snapshot 1800. */
+  wind_pushes_2mps(objs) {
+    const a = snapshotAt(objs, 1700);
+    const mid = snapshotAt(objs, 1800);
+    const b = snapshotAt(objs, 2100);
+    if (!a || !mid || !b) return ["thiếu snapshot 1700/1800/2100 cho kiểm tra gió"];
+    if (!mid.wind.active) return ["tick 1800 gió phải đang thổi"];
+    const th = (mid.wind.dir_deg * Math.PI) / 180;
+    const ex = a.player.pos[0] + 10 * Math.cos(th);
+    const ez = a.player.pos[2] + 10 * Math.sin(th);
+    const errs = [];
+    if (Math.abs(b.player.pos[0] - ex) > 0.002 || Math.abs(b.player.pos[2] - ez) > 0.002)
+      errs.push(`gió: mong đợi (${ex.toFixed(3)}, ${ez.toFixed(3)}), nhận (${b.player.pos[0]}, ${b.player.pos[2]}), dir_deg=${mid.wind.dir_deg}`);
+    if (!Number.isInteger(mid.wind.dir_deg) || mid.wind.dir_deg < 0 || mid.wind.dir_deg > 359) errs.push(`dir_deg ngoài [0,360): ${mid.wind.dir_deg}`);
+    return errs;
   },
 };
 

@@ -1,0 +1,29 @@
+{
+  "requirement": "Bùa Gió",
+  "description": "Bùa đang hồi (còn 10 tick) xuất hiện lại đúng tick 10",
+  "seed": 1,
+  "ticks": 15,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "9": {
+        "charms": [
+          {
+            "id": "C1",
+            "available": false,
+            "respawn_s": 0.017
+          }
+        ]
+      },
+      "10": {
+        "charms": [
+          {
+            "id": "C1",
+            "available": true,
+            "respawn_s": 0
+          }
+        ]
+      }
+    }
+  }
+}

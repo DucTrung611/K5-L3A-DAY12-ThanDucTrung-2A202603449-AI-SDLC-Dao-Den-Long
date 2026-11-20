@@ -1,0 +1,8 @@
+{
+  "requirement": "R2/C7",
+  "description": "L6 chỉ có từ Đêm 2: ở Đêm 1 -> exit 2",
+  "seed": 1,
+  "ticks": 10,
+  "exit_code": 2,
+  "night": 1
+}

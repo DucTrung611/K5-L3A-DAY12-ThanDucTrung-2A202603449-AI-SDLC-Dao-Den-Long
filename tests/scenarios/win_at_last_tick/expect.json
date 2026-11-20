@@ -1,0 +1,23 @@
+{
+  "requirement": "C2",
+  "description": "Thắp đèn cuối đúng tick hết giờ (tick 60, time_left = 0) vẫn THẮNG; điểm = 100 + 100 + floor(0)·2 + 150 = 350",
+  "seed": 1,
+  "ticks": 100,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "won",
+          "reason": "all_lit"
+        }
+      }
+    ],
+    "end": {
+      "ticks": 60,
+      "state": "won",
+      "score": 350
+    }
+  }
+}

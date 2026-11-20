@@ -1,0 +1,23 @@
+{
+  "requirement": "C1",
+  "description": "Trần 30 đom đóm: có 29, tick 240 sinh thêm 1 (=30); tick 480 và 720 không sinh nữa",
+  "seed": 3,
+  "ticks": 740,
+  "snapshot_every": 10,
+  "expect": {
+    "snapshots": {
+      "230": {
+        "motes_active": 29
+      },
+      "240": {
+        "motes_active": 30
+      },
+      "480": {
+        "motes_active": 30
+      },
+      "720": {
+        "motes_active": 30
+      }
+    }
+  }
+}

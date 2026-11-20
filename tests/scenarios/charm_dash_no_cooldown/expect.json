@@ -1,0 +1,46 @@
+{
+  "requirement": "Bùa Gió",
+  "description": "Còn bùa: lướt không hồi chiêu (dash_cd_s luôn 0). Lướt tick 1..12 (z=2.8); bấm lúc đang lướt (tick 6) bị bỏ; bấm tick 15 lướt ngay lần hai (không chờ hồi chiêu) -> z = 5.6 ở tick 26",
+  "seed": 1,
+  "ticks": 30,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "dash",
+        "data": {}
+      },
+      {
+        "tick": 15,
+        "name": "dash",
+        "data": {}
+      }
+    ],
+    "event_counts": {
+      "dash": 2
+    },
+    "snapshots": {
+      "12": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            2.8
+          ],
+          "dash_cd_s": 0
+        }
+      },
+      "26": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            5.6
+          ],
+          "dash_cd_s": 0
+        }
+      }
+    }
+  }
+}

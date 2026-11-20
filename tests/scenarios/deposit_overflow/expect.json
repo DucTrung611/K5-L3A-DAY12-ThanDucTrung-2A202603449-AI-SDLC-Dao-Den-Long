@@ -1,6 +1,6 @@
 {
   "requirement": "R7",
-  "description": "L1 đã có 3/5, mang 4 -> chỉ nạp 2 cho đủ lantern_cost, còn giữ 2",
+  "description": "L1 đã 8/10, mang 5 -> chỉ nạp 2 (min(đang mang, còn thiếu)), còn giữ 3. Điểm = 2·10 + 100 = 120",
   "seed": 1,
   "ticks": 10,
   "expect": {
@@ -11,7 +11,7 @@
         "data": {
           "lantern_id": "L1",
           "amount": 2,
-          "deposited": 5
+          "deposited": 10
         }
       },
       {
@@ -25,9 +25,9 @@
     "snapshots": {
       "10": {
         "player": {
-          "carried": 2
+          "carried": 3
         },
-        "score": 100
+        "score": 120
       }
     }
   }

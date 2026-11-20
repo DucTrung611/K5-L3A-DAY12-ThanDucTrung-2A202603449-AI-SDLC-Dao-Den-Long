@@ -1,0 +1,52 @@
+{
+  "requirement": "Gió Lạc",
+  "description": "Gió Lạc sinh ở tick 1200 (D1) và 2400 (D2), tối đa 2 con: tick 3600 không sinh thêm. Người chơi không mang đom đóm nên chúng luôn idle",
+  "seed": 3,
+  "ticks": 3700,
+  "snapshot_every": 100,
+  "expect": {
+    "snapshots": {
+      "1100": {
+        "drifters": []
+      },
+      "1200": {
+        "drifters": [
+          {
+            "id": "D1",
+            "state": "idle",
+            "stolen": 0
+          }
+        ]
+      },
+      "2300": {
+        "drifters": [
+          {
+            "id": "D1"
+          }
+        ]
+      },
+      "2400": {
+        "drifters": [
+          {
+            "id": "D1"
+          },
+          {
+            "id": "D2",
+            "state": "idle"
+          }
+        ]
+      },
+      "3600": {
+        "drifters": [
+          {
+            "id": "D1"
+          },
+          {
+            "id": "D2"
+          }
+        ]
+      }
+    }
+  },
+  "night": 2
+}

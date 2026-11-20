@@ -1,0 +1,41 @@
+{
+  "requirement": "Bùa Gió",
+  "description": "Còn 5 tick bùa: tick 1..4 chạy 7.2 m/s (0.12 m/tick, z=0.48 ở tick 4), tick 5 bùa hết (charm_s 0) quay về 6.0 m/s",
+  "seed": 1,
+  "ticks": 10,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "4": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            0.48
+          ],
+          "vel": [
+            0,
+            0,
+            7.2
+          ],
+          "charm_s": 0.017
+        }
+      },
+      "5": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            0.58
+          ],
+          "vel": [
+            0,
+            0,
+            6
+          ],
+          "charm_s": 0
+        }
+      }
+    }
+  }
+}

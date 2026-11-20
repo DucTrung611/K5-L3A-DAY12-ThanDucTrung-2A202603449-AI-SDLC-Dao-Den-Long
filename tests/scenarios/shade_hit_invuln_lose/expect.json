@@ -1,8 +1,9 @@
 {
-  "requirement": "R9",
-  "description": "Bóng Mực áp sát: hit ở tick 1 (rơi floor(4·0.5)=2), bất tử 1.5 s = 90 tick -> hit tiếp ở tick 92 (rơi 1), tick 183 (hết lửa) -> thua no_flames",
+  "requirement": "R9/R12/C5",
+  "description": "Bóng Mực áp sát: hit ở tick 1 (rơi floor(5/2)=2); lùi 2 m trong 60 tick (x: 0.433 -> 2.433, hết lùi ở tick 61 -> chase); bất tử 90 tick nên hit tiếp ở tick 91 (rơi floor(3/2)=1) và tick 181 (rơi floor(2/2)=1, hết lửa) -> thua no_flames",
   "seed": 1,
   "ticks": 300,
+  "snapshot_every": 1,
   "expect": {
     "events": [
       {
@@ -15,7 +16,7 @@
         }
       },
       {
-        "tick": 92,
+        "tick": 91,
         "name": "player_hit",
         "data": {
           "by": "shade",
@@ -24,16 +25,16 @@
         }
       },
       {
-        "tick": 183,
+        "tick": 181,
         "name": "player_hit",
         "data": {
           "by": "shade",
           "flames": 0,
-          "dropped": 0
+          "dropped": 1
         }
       },
       {
-        "tick": 183,
+        "tick": 181,
         "name": "game_over",
         "data": {
           "result": "lost",
@@ -45,8 +46,62 @@
       "player_hit": 3,
       "game_over": 1
     },
+    "snapshots": {
+      "1": {
+        "player": {
+          "invuln": true,
+          "flames": 2,
+          "carried": 3
+        },
+        "shades": [
+          {
+            "id": "S1",
+            "state": "recoil",
+            "pos": [
+              0.433,
+              1,
+              0
+            ]
+          }
+        ]
+      },
+      "60": {
+        "shades": [
+          {
+            "state": "recoil",
+            "pos": [
+              2.4,
+              1,
+              0
+            ]
+          }
+        ]
+      },
+      "61": {
+        "shades": [
+          {
+            "state": "chase",
+            "pos": [
+              2.433,
+              1,
+              0
+            ]
+          }
+        ]
+      },
+      "90": {
+        "player": {
+          "invuln": true
+        }
+      },
+      "91": {
+        "player": {
+          "flames": 1
+        }
+      }
+    },
     "end": {
-      "ticks": 183,
+      "ticks": 181,
       "state": "lost",
       "score": 0
     }

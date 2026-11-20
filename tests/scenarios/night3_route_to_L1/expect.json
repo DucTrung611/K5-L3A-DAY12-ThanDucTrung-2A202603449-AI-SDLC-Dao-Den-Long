@@ -1,0 +1,45 @@
+{
+  "requirement": "C4/Chơi được",
+  "description": "Đêm 3: đèn L1 ở tầng 2 chỉ tới được bằng: đi vòng ngoài tầng 0 -> leo dốc 30° (r 30 -> 24) -> đi trên tầng 1 -> bục nhảy (0,3,13) -> hạ cánh tầng 2 -> nạp 10 đom đóm. Kiểm kết quả: L1 sáng, điểm 10·10 + 100 = 200, Mây đứng trên tầng 2 (y=6), không bị rơi/chạm",
+  "seed": 1,
+  "ticks": 1150,
+  "snapshot_every": 10,
+  "expect": {
+    "absent_events": [
+      "player_hit"
+    ],
+    "events": [
+      {
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 10,
+          "deposited": 10
+        }
+      },
+      {
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L1"
+        }
+      }
+    ],
+    "event_counts": {
+      "lantern_lit": 1
+    },
+    "snapshots": {
+      "1150": {
+        "score": 200,
+        "player": {
+          "carried": 0,
+          "grounded": true,
+          "flames": 3
+        }
+      }
+    },
+    "invariants": [
+      "player_on_tier2_at_end"
+    ]
+  },
+  "night": 3
+}

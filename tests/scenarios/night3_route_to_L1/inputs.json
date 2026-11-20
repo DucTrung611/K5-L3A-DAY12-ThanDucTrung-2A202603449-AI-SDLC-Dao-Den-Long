@@ -1,0 +1,111 @@
+{
+  "frames": [
+    {
+      "tick": 0,
+      "move": [
+        0.844,
+        0.536
+      ]
+    },
+    {
+      "tick": 410,
+      "move": [
+        0,
+        1
+      ]
+    },
+    {
+      "tick": 590,
+      "move": [
+        -0.866,
+        -0.5
+      ]
+    },
+    {
+      "tick": 810,
+      "move": [
+        -0.969,
+        0.249
+      ]
+    },
+    {
+      "tick": 1020,
+      "move": [
+        0,
+        0
+      ]
+    },
+    {
+      "tick": 1025,
+      "interact": true
+    },
+    {
+      "tick": 1030,
+      "interact": false
+    },
+    {
+      "tick": 1035,
+      "interact": true
+    },
+    {
+      "tick": 1040,
+      "interact": false
+    },
+    {
+      "tick": 1045,
+      "interact": true
+    },
+    {
+      "tick": 1050,
+      "interact": false
+    },
+    {
+      "tick": 1055,
+      "interact": true
+    },
+    {
+      "tick": 1060,
+      "interact": false
+    },
+    {
+      "tick": 1065,
+      "interact": true
+    },
+    {
+      "tick": 1070,
+      "interact": false
+    },
+    {
+      "tick": 1075,
+      "interact": true
+    },
+    {
+      "tick": 1080,
+      "interact": false
+    },
+    {
+      "tick": 1085,
+      "interact": true
+    },
+    {
+      "tick": 1090,
+      "interact": false
+    },
+    {
+      "tick": 1095,
+      "interact": true
+    },
+    {
+      "tick": 1100,
+      "interact": false
+    },
+    {
+      "tick": 1105,
+      "interact": true
+    },
+    {
+      "tick": 1110,
+      "interact": false
+    }
+  ]
+}

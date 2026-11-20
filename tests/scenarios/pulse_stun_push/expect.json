@@ -1,8 +1,8 @@
 {
-  "requirement": "R8",
-  "description": "Pulse (tốn 2): A cách 5 m (≤ 6) bị choáng + đẩy 4 m ra x=9; B cách 10 m vẫn đuổi (10 - 3.5/60 = 9.942). Choáng 2.5 s = 150 tick: tick 150 còn stunned, tick 151 chase. +20 điểm",
+  "requirement": "R8/C1/C5",
+  "description": "Tỏa sáng (3 đom đóm, 5 m 3D, cd 3 s): A cách 4 m (3D=4.005) choáng 120 tick + bị đẩy 4 m trong 15 tick đầu (4/15 mỗi tick: x = 4 + 0.267 t, đủ x=8 ở tick 15); B cách 12 m (không trúng) đuổi 4 m/s (x = 12 - t/15). +5 điểm. Choáng hết ở tick 121 -> chase",
   "seed": 1,
-  "ticks": 152,
+  "ticks": 125,
   "snapshot_every": 1,
   "expect": {
     "events": [
@@ -24,16 +24,17 @@
     ],
     "snapshots": {
       "1": {
-        "score": 20,
+        "score": 5,
         "player": {
-          "carried": 1
+          "carried": 2,
+          "pulse_cd_s": 3
         },
         "shades": [
           {
             "id": "A",
             "pos": [
-              9,
-              0,
+              4.267,
+              1,
               0
             ],
             "state": "stunned"
@@ -41,21 +42,43 @@
           {
             "id": "B",
             "pos": [
-              9.942,
-              0,
+              11.933,
+              1,
               0
             ],
             "state": "chase"
           }
         ]
       },
-      "150": {
+      "15": {
         "shades": [
           {
             "id": "A",
             "pos": [
-              9,
-              0,
+              8,
+              1,
+              0
+            ],
+            "state": "stunned"
+          },
+          {
+            "id": "B",
+            "pos": [
+              11,
+              1,
+              0
+            ],
+            "state": "chase"
+          }
+        ]
+      },
+      "16": {
+        "shades": [
+          {
+            "id": "A",
+            "pos": [
+              8,
+              1,
               0
             ],
             "state": "stunned"
@@ -65,14 +88,65 @@
           }
         ]
       },
-      "151": {
+      "61": {
+        "player": {
+          "pulse_cd_s": 2
+        }
+      },
+      "120": {
         "shades": [
           {
             "id": "A",
-            "state": "chase"
+            "pos": [
+              8,
+              1,
+              0
+            ],
+            "state": "stunned"
+          },
+          {
+            "id": "B",
+            "pos": [
+              4,
+              1,
+              0
+            ]
+          }
+        ]
+      },
+      "121": {
+        "shades": [
+          {
+            "id": "A",
+            "state": "chase",
+            "pos": [
+              7.933,
+              1,
+              0
+            ]
           },
           {
             "id": "B"
+          }
+        ]
+      },
+      "125": {
+        "shades": [
+          {
+            "id": "A",
+            "pos": [
+              7.667,
+              1,
+              0
+            ]
+          },
+          {
+            "id": "B",
+            "pos": [
+              3.667,
+              1,
+              0
+            ]
           }
         ]
       }

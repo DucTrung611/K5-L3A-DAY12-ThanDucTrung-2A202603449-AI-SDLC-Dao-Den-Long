@@ -1,0 +1,41 @@
+{
+  "requirement": "C5",
+  "description": "Phát hiện ≤ 12 m (XZ): A (12.0) chase, B (12.001) vẫn wander. Bỏ đuổi > 18 m: C (18.0) vẫn chase, D (18.001) về wander",
+  "seed": 1,
+  "ticks": 1,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "1": {
+        "shades": [
+          {
+            "id": "A",
+            "state": "chase",
+            "pos": [
+              11.933,
+              1,
+              0
+            ]
+          },
+          {
+            "id": "B",
+            "state": "wander"
+          },
+          {
+            "id": "C",
+            "state": "chase",
+            "pos": [
+              17.933,
+              1,
+              0
+            ]
+          },
+          {
+            "id": "D",
+            "state": "wander"
+          }
+        ]
+      }
+    }
+  }
+}

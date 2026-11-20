@@ -1,0 +1,32 @@
+{
+  "requirement": "C4",
+  "description": "Đêm 3: dốc 30° dài 6 m từ chân (r=30, Y=0) lên đỉnh (r=24, Y=3), độ cao tuyến tính 0.5 m mỗi mét. Đi dọc trục dốc 6 m/s: tick 30 y=1.5, tick 60 y=3.0 (lên tầng 1)",
+  "seed": 1,
+  "ticks": 60,
+  "snapshot_every": 30,
+  "expect": {
+    "snapshots": {
+      "30": {
+        "player": {
+          "pos": [
+            23.383,
+            1.5,
+            13.5
+          ],
+          "grounded": true
+        }
+      },
+      "60": {
+        "player": {
+          "pos": [
+            20.785,
+            3,
+            12
+          ],
+          "grounded": true
+        }
+      }
+    }
+  },
+  "night": 3
+}

@@ -1,0 +1,38 @@
+{
+  "requirement": "C5",
+  "description": "Bóng Mực spawning (còn 20 tick) đứng yên, không gây sát thương; hết spawning ở tick 20 thì chase và chạm ngay trong tick đó",
+  "seed": 1,
+  "ticks": 30,
+  "snapshot_every": 10,
+  "expect": {
+    "events": [
+      {
+        "tick": 20,
+        "name": "player_hit",
+        "data": {
+          "by": "shade",
+          "flames": 2,
+          "dropped": 0
+        }
+      }
+    ],
+    "event_counts": {
+      "player_hit": 1
+    },
+    "snapshots": {
+      "10": {
+        "shades": [
+          {
+            "id": "S1",
+            "state": "spawning",
+            "pos": [
+              0.5,
+              1,
+              0
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

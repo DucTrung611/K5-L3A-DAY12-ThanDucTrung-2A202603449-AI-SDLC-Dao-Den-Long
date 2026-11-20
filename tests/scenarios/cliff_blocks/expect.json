@@ -1,0 +1,32 @@
+{
+  "requirement": "C4",
+  "description": "Đêm 3: vách tầng 2 (r ≤ 8) là vách đứng, không đi lên được: đi +Z từ z=-9 dừng ở z=-8.1 (bước kế tiếp r=8.0 đã thuộc tầng 2)",
+  "seed": 1,
+  "ticks": 30,
+  "snapshot_every": 10,
+  "expect": {
+    "snapshots": {
+      "10": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            -8.1
+          ],
+          "grounded": true
+        }
+      },
+      "30": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            -8.1
+          ],
+          "grounded": true
+        }
+      }
+    }
+  },
+  "night": 3
+}

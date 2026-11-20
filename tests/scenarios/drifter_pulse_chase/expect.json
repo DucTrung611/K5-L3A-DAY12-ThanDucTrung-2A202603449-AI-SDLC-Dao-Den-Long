@@ -1,0 +1,38 @@
+{
+  "requirement": "Gió Lạc",
+  "description": "Tỏa sáng trúng Gió Lạc đang chase (3D 4.005 ≤ 5) -> flee, KHÔNG cướp (stolen 0); không cộng điểm (chỉ Bóng Mực được +5)",
+  "seed": 1,
+  "ticks": 5,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "pulse",
+        "data": {
+          "stunned_ids": []
+        }
+      }
+    ],
+    "absent_events": [
+      "drifter_steal",
+      "drifter_drop"
+    ],
+    "snapshots": {
+      "1": {
+        "score": 0,
+        "player": {
+          "carried": 3
+        },
+        "drifters": [
+          {
+            "id": "D1",
+            "state": "flee",
+            "stolen": 0
+          }
+        ]
+      }
+    }
+  },
+  "night": 2
+}

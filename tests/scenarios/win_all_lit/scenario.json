@@ -1,8 +1,12 @@
 {
   "random_motes": false,
   "random_shades": false,
+  "random_drifters": false,
+  "wind_enabled": false,
   "motes": [],
   "shades": [],
+  "drifters": [],
+  "charms": [],
   "time_left_s": 300,
   "player": {
     "pos": [
@@ -10,7 +14,7 @@
       0,
       -8
     ],
-    "carried": 5
+    "carried": 10
   },
   "lanterns": [
     {

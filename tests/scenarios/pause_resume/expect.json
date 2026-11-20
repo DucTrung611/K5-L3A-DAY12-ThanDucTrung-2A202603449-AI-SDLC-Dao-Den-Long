@@ -1,0 +1,111 @@
+{
+  "requirement": "C6/Tạm dừng",
+  "description": "Tạm dừng: bấm ở tick 11 -> event paused, state paused, tick vẫn tăng nhưng sim_tick/thời gian/vị trí đứng yên (sim 10, z=1.0, 299.833 s); bấm lại ở tick 31 -> resumed và bước đó chạy luôn (sim 11, z=1.1); tick 40: sim 20, z=2.0",
+  "seed": 1,
+  "ticks": 60,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "night_start",
+        "data": {
+          "night": 1
+        }
+      },
+      {
+        "tick": 11,
+        "name": "paused",
+        "data": {}
+      },
+      {
+        "tick": 31,
+        "name": "resumed",
+        "data": {}
+      }
+    ],
+    "event_counts": {
+      "paused": 1,
+      "resumed": 1
+    },
+    "snapshots": {
+      "10": {
+        "state": "playing",
+        "sim_tick": 10,
+        "player": {
+          "pos": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "11": {
+        "state": "paused",
+        "tick": 11,
+        "sim_tick": 10,
+        "player": {
+          "pos": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "20": {
+        "state": "paused",
+        "tick": 20,
+        "sim_tick": 10,
+        "time_left_s": 299.833,
+        "player": {
+          "pos": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "30": {
+        "state": "paused",
+        "sim_tick": 10
+      },
+      "31": {
+        "state": "playing",
+        "sim_tick": 11,
+        "player": {
+          "pos": [
+            0,
+            0,
+            1.1
+          ]
+        }
+      },
+      "40": {
+        "state": "playing",
+        "sim_tick": 20,
+        "time_left_s": 299.667,
+        "player": {
+          "pos": [
+            0,
+            0,
+            2
+          ]
+        }
+      },
+      "60": {
+        "sim_tick": 40,
+        "player": {
+          "pos": [
+            0,
+            0,
+            4
+          ]
+        }
+      }
+    },
+    "end": {
+      "ticks": 60,
+      "state": "playing"
+    }
+  }
+}

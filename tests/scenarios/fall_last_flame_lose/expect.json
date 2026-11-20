@@ -1,0 +1,33 @@
+{
+  "requirement": "C3",
+  "description": "Rơi khi chỉ còn 1 lửa: thua ngay no_flames ở tick 81, không hồi sinh",
+  "seed": 1,
+  "ticks": 150,
+  "expect": {
+    "events": [
+      {
+        "tick": 81,
+        "name": "player_hit",
+        "data": {
+          "by": "fall",
+          "flames": 0,
+          "dropped": 0,
+          "lost": 0
+        }
+      },
+      {
+        "tick": 81,
+        "name": "game_over",
+        "data": {
+          "result": "lost",
+          "reason": "no_flames"
+        }
+      }
+    ],
+    "end": {
+      "ticks": 81,
+      "state": "lost",
+      "score": 0
+    }
+  }
+}

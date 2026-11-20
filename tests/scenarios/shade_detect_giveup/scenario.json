@@ -1,0 +1,45 @@
+{
+  "random_motes": false,
+  "random_shades": false,
+  "random_drifters": false,
+  "wind_enabled": false,
+  "motes": [],
+  "shades": [
+    {
+      "id": "A",
+      "pos": [
+        12,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "B",
+      "pos": [
+        12.001,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "C",
+      "pos": [
+        18,
+        0,
+        0
+      ],
+      "state": "chase"
+    },
+    {
+      "id": "D",
+      "pos": [
+        18.001,
+        0,
+        0
+      ],
+      "state": "chase"
+    }
+  ],
+  "drifters": [],
+  "charms": []
+}

@@ -1,0 +1,7 @@
+{
+  "requirement": "R2/C7",
+  "description": "state Bóng Mực ngoài {spawning,wander,chase,recoil,stunned} -> exit 2",
+  "seed": 1,
+  "ticks": 10,
+  "exit_code": 2
+}

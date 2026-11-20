@@ -1,0 +1,8 @@
+{
+  "requirement": "C7",
+  "description": "--night 4 không hợp lệ -> exit 1 (lỗi tham số) + stderr",
+  "night": 4,
+  "seed": 1,
+  "ticks": 10,
+  "exit_code": 1
+}

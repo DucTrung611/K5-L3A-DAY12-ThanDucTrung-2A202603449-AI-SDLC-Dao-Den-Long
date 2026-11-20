@@ -1,0 +1,52 @@
+{
+  "requirement": "C4/Bục nhảy",
+  "description": "Đêm 2: chân Mây chạm bục (20,0,18) ở tick 1 -> bắn lên vy 14 và 24 m/s về tâm đảo B (70,0,0). Bay k tick: y = (14k - k(k+1)/6)/60 (đúng 0 ở k=83), ngang = (24·(50,-18)/53.14)/60 mỗi tick; phím đi không ghi đè; chạm đất ở tick 84 trên đảo B",
+  "seed": 1,
+  "ticks": 90,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "1": {
+        "player": {
+          "grounded": false,
+          "vel": [
+            22.581,
+            14,
+            -8.129
+          ]
+        }
+      },
+      "40": {
+        "player": {
+          "pos": [
+            34.678,
+            4.767,
+            12.016
+          ],
+          "vel": [
+            22.581,
+            1,
+            -8.129
+          ],
+          "grounded": false
+        }
+      },
+      "83": {
+        "player": {
+          "grounded": false
+        }
+      },
+      "84": {
+        "player": {
+          "pos": [
+            51.237,
+            0,
+            6.055
+          ],
+          "grounded": true
+        }
+      }
+    }
+  },
+  "night": 2
+}

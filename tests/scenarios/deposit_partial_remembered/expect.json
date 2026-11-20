@@ -1,0 +1,28 @@
+{
+  "requirement": "R7",
+  "description": "Đèn nhớ tiến độ: L1 đã có 3/10, nạp 4 -> 7/10 chưa sáng, +40 điểm (đúng biên 2.0 m). Lần bấm thứ hai không còn gì để nạp",
+  "seed": 1,
+  "ticks": 10,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 4,
+          "deposited": 7
+        }
+      }
+    ],
+    "event_counts": {
+      "deposit": 1
+    },
+    "absent_events": [
+      "lantern_lit"
+    ],
+    "end": {
+      "score": 40
+    }
+  }
+}

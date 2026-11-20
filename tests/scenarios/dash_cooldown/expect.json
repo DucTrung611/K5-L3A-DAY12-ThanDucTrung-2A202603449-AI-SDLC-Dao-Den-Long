@@ -1,0 +1,113 @@
+{
+  "requirement": "C6/Lướt",
+  "description": "Lướt 14 m/s × 12 tick (0.2333 m/tick, giữ độ cao), hồi chiêu 90 tick từ lúc bắt đầu: bấm ở tick 11 -> dash; z = 1.0 + 0.2333·t; tick 22 z=3.8 cd 79 tick (1.317 s); bấm ở tick 31 (còn hồi chiêu) bị bỏ; hết hồi chiêu đúng tick 101 -> dash thứ hai",
+  "seed": 1,
+  "ticks": 120,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 11,
+        "name": "dash",
+        "data": {}
+      },
+      {
+        "tick": 101,
+        "name": "dash",
+        "data": {}
+      }
+    ],
+    "event_counts": {
+      "dash": 2
+    },
+    "snapshots": {
+      "10": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            1
+          ],
+          "vel": [
+            0,
+            0,
+            6
+          ]
+        }
+      },
+      "11": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            1.233
+          ],
+          "vel": [
+            0,
+            0,
+            14
+          ],
+          "dash_cd_s": 1.5
+        }
+      },
+      "22": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            3.8
+          ],
+          "vel": [
+            0,
+            0,
+            14
+          ],
+          "dash_cd_s": 1.317
+        }
+      },
+      "23": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            3.9
+          ],
+          "vel": [
+            0,
+            0,
+            6
+          ]
+        }
+      },
+      "100": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            11.6
+          ],
+          "dash_cd_s": 0.017
+        }
+      },
+      "101": {
+        "player": {
+          "dash_cd_s": 1.5,
+          "vel": [
+            0,
+            0,
+            14
+          ]
+        }
+      },
+      "112": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            14.4
+          ]
+        }
+      }
+    }
+  }
+}

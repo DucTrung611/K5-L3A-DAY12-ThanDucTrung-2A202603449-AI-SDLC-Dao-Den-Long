@@ -1,6 +1,6 @@
 {
-  "requirement": "R11",
-  "description": "Thắp đèn cuối -> won/all_lit ở tick 1. Điểm = 100 + floor(299.983)·2 + 3 lửa·50 = 100 + 598 + 150 = 848",
+  "requirement": "R11/C2",
+  "description": "Thắp đèn cuối -> thắng all_lit ở tick 1. Điểm = 10·10 (nạp) + 100 (đèn) + floor(299.983)·2 = 598 + 3 lửa·50 = 150 -> 948",
   "seed": 1,
   "ticks": 100,
   "expect": {
@@ -10,8 +10,8 @@
         "name": "deposit",
         "data": {
           "lantern_id": "L5",
-          "amount": 5,
-          "deposited": 5
+          "amount": 10,
+          "deposited": 10
         }
       },
       {
@@ -33,7 +33,7 @@
     "end": {
       "ticks": 1,
       "state": "won",
-      "score": 848
+      "score": 948
     }
   }
 }

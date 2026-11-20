@@ -1,6 +1,6 @@
 {
   "requirement": "R8",
-  "description": "Mang 1 < pulse_cost 2 -> không tỏa sáng được: không có event pulse, Bóng Mực không bị choáng",
+  "description": "Mang 2 < pulse_cost 3 -> không kích hoạt: không event, không hồi chiêu, Bóng Mực không choáng",
   "seed": 1,
   "ticks": 1,
   "snapshot_every": 1,
@@ -11,7 +11,8 @@
     "snapshots": {
       "1": {
         "player": {
-          "carried": 1
+          "carried": 2,
+          "pulse_cd_s": 0
         },
         "shades": [
           {

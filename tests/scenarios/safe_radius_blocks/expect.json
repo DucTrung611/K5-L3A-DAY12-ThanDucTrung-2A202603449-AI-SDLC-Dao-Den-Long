@@ -1,6 +1,6 @@
 {
   "requirement": "R10",
-  "description": "Đứng tại L1 đã thắp: Bóng Mực không vào được bán kính 8 m quanh đèn -> dừng ở z=33, không bao giờ chạm người chơi",
+  "description": "Đứng tại L1 đã sáng: Bóng Mực (11 m, chase) bị chặn ở mép 6 m quanh đèn -> dừng ở z = 25 + 6 = 31, không bao giờ chạm người chơi",
   "seed": 1,
   "ticks": 600,
   "expect": {
@@ -14,8 +14,8 @@
             "id": "A",
             "pos": [
               0,
-              0,
-              33
+              1,
+              31
             ],
             "state": "chase"
           }

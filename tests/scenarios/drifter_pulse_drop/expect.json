@@ -1,0 +1,95 @@
+{
+  "requirement": "Gió Lạc",
+  "description": "Tỏa sáng trúng Gió Lạc đang flee có đồ: thả lại 3 đom đóm tại chỗ (kind dropped, TTL 480 tick: ở tick 10 còn 471 = 7.85 s, hết ở tick 481), Gió Lạc biến mất sau tối đa 120 tick (tick 120)",
+  "seed": 1,
+  "ticks": 500,
+  "snapshot_every": 10,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "pulse",
+        "data": {
+          "stunned_ids": []
+        }
+      },
+      {
+        "tick": 1,
+        "name": "drifter_drop",
+        "data": {
+          "drifter_id": "D1",
+          "amount": 3
+        }
+      }
+    ],
+    "event_counts": {
+      "drifter_drop": 1
+    },
+    "snapshots": {
+      "10": {
+        "motes_active": 3,
+        "motes": [
+          {
+            "id": "M1",
+            "pos": [
+              3,
+              0,
+              0
+            ],
+            "kind": "dropped",
+            "ttl_s": 7.85
+          },
+          {
+            "id": "M2",
+            "kind": "dropped"
+          },
+          {
+            "id": "M3",
+            "kind": "dropped"
+          }
+        ],
+        "drifters": [
+          {
+            "id": "D1",
+            "state": "flee",
+            "stolen": 0
+          }
+        ],
+        "player": {
+          "carried": 0
+        }
+      },
+      "110": {
+        "drifters": [
+          {
+            "id": "D1",
+            "state": "flee",
+            "stolen": 0
+          }
+        ]
+      },
+      "120": {
+        "drifters": []
+      },
+      "480": {
+        "motes_active": 3,
+        "motes": [
+          {
+            "ttl_s": 0.017
+          },
+          {
+            "ttl_s": 0.017
+          },
+          {
+            "ttl_s": 0.017
+          }
+        ]
+      },
+      "490": {
+        "motes_active": 0,
+        "motes": []
+      }
+    }
+  },
+  "night": 2
+}

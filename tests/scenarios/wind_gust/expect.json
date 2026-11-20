@@ -1,0 +1,48 @@
+{
+  "requirement": "C6/Gió mạnh",
+  "description": "Đêm 3: cơn gió thổi tick 1800..2099 (5 s), dir_deg nguyên [0,360), đẩy người chơi đứng yên đúng 2 m/s × 5 s = 10 m theo dir_deg; trước 1800 và từ 2100 không gió",
+  "seed": 4,
+  "ticks": 2200,
+  "snapshot_every": 100,
+  "expect": {
+    "snapshots": {
+      "1700": {
+        "wind": {
+          "active": false,
+          "dir_deg": 0
+        },
+        "player": {
+          "pos": [
+            0,
+            0,
+            -20
+          ]
+        }
+      },
+      "1800": {
+        "wind": {
+          "active": true
+        }
+      },
+      "2000": {
+        "wind": {
+          "active": true
+        }
+      },
+      "2100": {
+        "wind": {
+          "active": false,
+          "dir_deg": 0
+        }
+      }
+    },
+    "invariants": [
+      "wind_pushes_2mps"
+    ],
+    "end": {
+      "ticks": 2200,
+      "state": "playing"
+    }
+  },
+  "night": 3
+}

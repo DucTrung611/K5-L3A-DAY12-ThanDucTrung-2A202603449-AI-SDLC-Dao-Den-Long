@@ -1,0 +1,48 @@
+{
+  "requirement": "R5/R8",
+  "description": "Cạnh lên + hồi chiêu 3 s = 180 tick: pulse tick 1; bấm ở tick 61 (còn hồi chiêu 120) bị bỏ; giữ nút qua tick 181 không kích hoạt lại (không có cạnh lên); bấm lại ở tick 201 -> pulse thứ hai. Mang 10 - 3 - 3 = 4",
+  "seed": 1,
+  "ticks": 220,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "pulse",
+        "data": {
+          "stunned_ids": []
+        }
+      },
+      {
+        "tick": 201,
+        "name": "pulse",
+        "data": {
+          "stunned_ids": []
+        }
+      }
+    ],
+    "event_counts": {
+      "pulse": 2
+    },
+    "snapshots": {
+      "1": {
+        "player": {
+          "carried": 7,
+          "pulse_cd_s": 3
+        }
+      },
+      "181": {
+        "player": {
+          "carried": 7,
+          "pulse_cd_s": 0
+        }
+      },
+      "201": {
+        "player": {
+          "carried": 4,
+          "pulse_cd_s": 3
+        }
+      }
+    }
+  }
+}

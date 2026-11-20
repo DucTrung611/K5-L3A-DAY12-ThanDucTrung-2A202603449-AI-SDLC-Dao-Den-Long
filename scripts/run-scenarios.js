@@ -31,7 +31,8 @@ for (const name of fs.readdirSync(scenDir).sort()) {
   const spec = JSON.parse(fs.readFileSync(specFile, "utf8"));
   const out = path.join(outDir, `${name}.jsonl`);
   if (fs.existsSync(out)) fs.rmSync(out);
-  const argv = [...cmdArgs, "--seed", String(spec.seed ?? 1), "--night", "1", "--ticks", String(spec.ticks), "--out", path.relative(ROOT, out)];
+  const night = spec.night ?? 1;
+  const argv = [...cmdArgs, "--seed", String(spec.seed ?? 1), "--night", String(night), "--ticks", String(spec.ticks), "--out", path.relative(ROOT, out)];
   if (spec.snapshot_every) argv.push("--snapshot-every", String(spec.snapshot_every));
   for (const f of ["scenario", "inputs"]) {
     const p = path.join(dir, `${f}.json`);
@@ -47,7 +48,7 @@ for (const name of fs.readdirSync(scenDir).sort()) {
   if (wantExit !== 0 && !(r.stderr || "").trim()) errs.push("lỗi nhưng không có thông báo stderr");
   if (wantExit === 0 && r.status === 0) {
     const objs = parseJsonl(fs.readFileSync(out, "utf8"));
-    errs.push(...validateOutput(objs, { snapshotEvery: spec.snapshot_every || 10, ticks: spec.ticks, fallEnabled: contract.tuning.fall_enabled }));
+    errs.push(...validateOutput(objs, { snapshotEvery: spec.snapshot_every || 10, ticks: spec.ticks, fallEnabled: contract.tuning.fall_enabled, night }));
     errs.push(...checkExpect(objs, spec, contract.tuning));
   }
   results.push({ name, requirement: spec.requirement, description: spec.description, pass: errs.length === 0, errors: errs, ms: Math.round(ms) });

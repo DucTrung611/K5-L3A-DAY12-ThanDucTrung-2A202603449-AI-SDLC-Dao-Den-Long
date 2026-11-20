@@ -1,6 +1,6 @@
 {
   "requirement": "R13",
-  "description": "Dựng scenario (4 đèn lit:true, player carried/flames) không phát sự kiện, không cộng điểm",
+  "description": "Dựng scenario (4 đèn lit:true, player carried/flames) không phát sự kiện (trừ night_start ở tick 1), không cộng điểm",
   "seed": 1,
   "ticks": 10,
   "expect": {
@@ -11,7 +11,13 @@
       "pulse",
       "player_hit",
       "shade_spawned",
-      "game_over"
+      "game_over",
+      "dash",
+      "charm_picked",
+      "drifter_steal",
+      "drifter_drop",
+      "paused",
+      "resumed"
     ],
     "snapshots": {
       "0": {

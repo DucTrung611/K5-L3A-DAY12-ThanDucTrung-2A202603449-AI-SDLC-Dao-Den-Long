@@ -1,6 +1,6 @@
 {
-  "requirement": "R6",
-  "description": "Đom đóm cách đúng 1.5 m (= pickup_radius, ≤ r) được nhặt; cách 1.501 m thì không. +10 điểm",
+  "requirement": "R6/C1",
+  "description": "Nhặt khi XZ ≤ 1.0: đom đóm cách đúng 1.0 m được nhặt; cách 1.001 m thì không. Nhặt KHÔNG cộng điểm (Ticket-02: +10 khi NẠP)",
   "seed": 1,
   "ticks": 5,
   "snapshot_every": 1,
@@ -24,7 +24,7 @@
       },
       "1": {
         "motes_active": 1,
-        "score": 10,
+        "score": 0,
         "player": {
           "carried": 1
         }
@@ -34,7 +34,7 @@
       }
     },
     "end": {
-      "score": 10
+      "score": 0
     }
   }
 }

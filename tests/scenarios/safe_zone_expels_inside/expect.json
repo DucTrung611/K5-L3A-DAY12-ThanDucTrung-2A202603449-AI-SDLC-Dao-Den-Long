@@ -1,0 +1,52 @@
+{
+  "requirement": "C1/C5",
+  "description": "Bóng Mực đang trong vùng an toàn (cách người chơi 0.8 m): bị đẩy đều ra mép 6 m trong đúng 30 tick (mỗi tick (31-25.8)/30 = 0.173 m), trạng thái recoil, KHÔNG gây sát thương; xong thì chase và bị chặn ở z=31",
+  "seed": 1,
+  "ticks": 60,
+  "snapshot_every": 10,
+  "expect": {
+    "absent_events": [
+      "player_hit"
+    ],
+    "snapshots": {
+      "10": {
+        "shades": [
+          {
+            "id": "S1",
+            "pos": [
+              0,
+              1,
+              27.533
+            ],
+            "state": "recoil"
+          }
+        ]
+      },
+      "30": {
+        "shades": [
+          {
+            "pos": [
+              0,
+              1,
+              31
+            ],
+            "state": "chase"
+          }
+        ]
+      },
+      "60": {
+        "shades": [
+          {
+            "pos": [
+              0,
+              1,
+              31
+            ],
+            "state": "chase"
+          }
+        ]
+      }
+    },
+    "invariants": []
+  }
+}

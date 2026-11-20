@@ -1,0 +1,59 @@
+{
+  "requirement": "C5",
+  "description": "Đêm 1: 2 con ở tick 300 rồi 1 con mỗi 8 s (480 tick): 780, 1260, 1740, 2220; tối đa 6 nên tick 2700 không sinh thêm",
+  "seed": 5,
+  "ticks": 3000,
+  "expect": {
+    "events": [
+      {
+        "tick": 300,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S1"
+        }
+      },
+      {
+        "tick": 300,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S2"
+        }
+      },
+      {
+        "tick": 780,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S3"
+        }
+      },
+      {
+        "tick": 1260,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S4"
+        }
+      },
+      {
+        "tick": 1740,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S5"
+        }
+      },
+      {
+        "tick": 2220,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S6"
+        }
+      }
+    ],
+    "event_counts": {
+      "shade_spawned": 6
+    },
+    "end": {
+      "ticks": 3000,
+      "state": "playing"
+    }
+  }
+}

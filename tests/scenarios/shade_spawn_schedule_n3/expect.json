@@ -1,0 +1,84 @@
+{
+  "requirement": "C5",
+  "description": "Đêm 3: 2 con ở tick 300 rồi 1 con mỗi 6 s (360 tick) đến 10 con (tick 3180); tick 3540 không sinh thêm",
+  "seed": 5,
+  "ticks": 3600,
+  "expect": {
+    "events": [
+      {
+        "tick": 300,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S1"
+        }
+      },
+      {
+        "tick": 300,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S2"
+        }
+      },
+      {
+        "tick": 660,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S3"
+        }
+      },
+      {
+        "tick": 1020,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S4"
+        }
+      },
+      {
+        "tick": 1380,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S5"
+        }
+      },
+      {
+        "tick": 1740,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S6"
+        }
+      },
+      {
+        "tick": 2100,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S7"
+        }
+      },
+      {
+        "tick": 2460,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S8"
+        }
+      },
+      {
+        "tick": 2820,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S9"
+        }
+      },
+      {
+        "tick": 3180,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S10"
+        }
+      }
+    ],
+    "event_counts": {
+      "shade_spawned": 10
+    }
+  },
+  "night": 3
+}

@@ -1,0 +1,36 @@
+{
+  "requirement": "C1",
+  "description": "Mây ở y=1.6 rơi tự do y_k = 1.6 - k(k+1)/360: k=5 -> 1.5167 (> 1.5, chưa nhặt), k=6 -> 1.4833 (≤ 1.5) nhặt đúng tick 6",
+  "seed": 1,
+  "ticks": 8,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 6,
+        "name": "mote_picked",
+        "data": {
+          "carried": 1
+        }
+      }
+    ],
+    "event_counts": {
+      "mote_picked": 1
+    },
+    "snapshots": {
+      "5": {
+        "motes_active": 1,
+        "player": {
+          "pos": [
+            0,
+            1.517,
+            0
+          ]
+        }
+      },
+      "6": {
+        "motes_active": 0
+      }
+    }
+  }
+}

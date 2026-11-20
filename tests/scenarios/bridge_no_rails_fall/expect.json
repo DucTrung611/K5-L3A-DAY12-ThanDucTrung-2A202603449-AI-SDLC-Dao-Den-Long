@@ -1,0 +1,39 @@
+{
+  "requirement": "C4",
+  "description": "Đêm 2: cầu tre rộng |z| ≤ 2, không lan can: đi +Z từ giữa cầu, z=2.0 ở tick 20 còn đứng được, tick 21 ra khỏi cầu -> rơi, player_hit by fall ở tick 81",
+  "seed": 1,
+  "ticks": 100,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 81,
+        "name": "player_hit",
+        "data": {
+          "by": "fall",
+          "flames": 2,
+          "dropped": 0,
+          "lost": 0
+        }
+      }
+    ],
+    "snapshots": {
+      "20": {
+        "player": {
+          "pos": [
+            35,
+            0,
+            2
+          ],
+          "grounded": true
+        }
+      },
+      "21": {
+        "player": {
+          "grounded": false
+        }
+      }
+    }
+  },
+  "night": 2
+}

@@ -1,0 +1,124 @@
+{
+  "requirement": "C3",
+  "description": "Rơi khỏi đảo (thay island_boundary_no_fall): chạy +X từ x=38, x=40 ở tick 20 (còn đứng được), tick 21 ra hư không; rơi y_k = -k(k+1)/360 < -10 lần đầu ở k=60 -> tick 81: player_hit by fall {flames 2, dropped 0, lost 4}; chờ 60 tick (không nhặt, bị đóng băng); tick 141 hồi sinh tại (0,0,0) bất tử 90 tick (còn ở tick 230, hết ở tick 231)",
+  "seed": 1,
+  "ticks": 235,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 81,
+        "name": "player_hit",
+        "data": {
+          "by": "fall",
+          "flames": 2,
+          "dropped": 0,
+          "lost": 4
+        }
+      }
+    ],
+    "event_counts": {
+      "player_hit": 1
+    },
+    "snapshots": {
+      "20": {
+        "player": {
+          "pos": [
+            40,
+            0,
+            0
+          ],
+          "grounded": true
+        }
+      },
+      "21": {
+        "player": {
+          "pos": [
+            40.1,
+            0,
+            0
+          ],
+          "grounded": false
+        }
+      },
+      "22": {
+        "player": {
+          "pos": [
+            40.2,
+            -0.006,
+            0
+          ]
+        }
+      },
+      "80": {
+        "player": {
+          "pos": [
+            46,
+            -9.833,
+            0
+          ],
+          "flames": 3,
+          "carried": 4
+        }
+      },
+      "81": {
+        "player": {
+          "pos": [
+            46.1,
+            -10.167,
+            0
+          ],
+          "flames": 2,
+          "carried": 0,
+          "vel": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "140": {
+        "player": {
+          "flames": 2,
+          "invuln": false
+        }
+      },
+      "141": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "grounded": true,
+          "invuln": true,
+          "vel": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "150": {
+        "player": {
+          "pos": [
+            0.9,
+            0,
+            0
+          ],
+          "invuln": true
+        }
+      },
+      "230": {
+        "player": {
+          "invuln": true
+        }
+      },
+      "231": {
+        "player": {
+          "invuln": false
+        }
+      }
+    }
+  }
+}

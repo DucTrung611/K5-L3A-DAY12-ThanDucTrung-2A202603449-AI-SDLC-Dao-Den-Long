@@ -18,6 +18,7 @@
     "determinism": "node scripts/check-determinism.js",
     "contract": "node scripts/check-contract.js",
     "bot": "node scripts/bot-playthrough.js",
+    "mutation": "node scripts/mutation-check.js",
     "verify": "npm run --silent contract && npm test --silent && npm run --silent scenarios && npm run --silent determinism && npm run --silent bot",
     "proof": "node scripts/make-proof.js"
   },

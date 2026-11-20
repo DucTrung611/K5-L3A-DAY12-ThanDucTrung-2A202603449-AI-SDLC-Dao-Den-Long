@@ -1,0 +1,47 @@
+{
+  "requirement": "C4/Bục nhảy",
+  "description": "Đêm 3: đứng trên tầng 1 (y=3) trong bán kính 1.0 m của bục (0,3,13) -> bắn vy 12 và 8 m/s hướng -Z. y = 3 + (12k - k(k+1)/6)/60, z = 12.5 - 8k/60; hạ cánh lên tầng 2 (y=6) ở k=49 (tick 50) tại z=5.967",
+  "seed": 1,
+  "ticks": 60,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "1": {
+        "player": {
+          "grounded": false
+        }
+      },
+      "20": {
+        "player": {
+          "pos": [
+            0,
+            5.744,
+            9.967
+          ],
+          "vel": [
+            0,
+            5.667,
+            -8
+          ],
+          "grounded": false
+        }
+      },
+      "49": {
+        "player": {
+          "grounded": false
+        }
+      },
+      "50": {
+        "player": {
+          "pos": [
+            0,
+            6,
+            5.967
+          ],
+          "grounded": true
+        }
+      }
+    }
+  },
+  "night": 3
+}
