@@ -1,0 +1,280 @@
+TAP version 13
+# Subtest: chạy thành công: exit 0, output đúng định dạng, dòng cuối là end
+ok 1 - chạy thành công: exit 0, output đúng định dạng, dòng cuối là end
+  ---
+  duration_ms: 227.8571
+  type: 'test'
+  ...
+# Subtest: --snapshot-every mặc định 10
+ok 2 - --snapshot-every mặc định 10
+  ---
+  duration_ms: 158.2383
+  type: 'test'
+  ...
+# Subtest: thiếu --seed -> exit 1 + stderr
+ok 3 - thiếu --seed -> exit 1 + stderr
+  ---
+  duration_ms: 169.5585
+  type: 'test'
+  ...
+# Subtest: tham số lạ / night ngoài 1..3 -> exit khác 0; night 2 và 3 chạy được
+ok 4 - tham số lạ / night ngoài 1..3 -> exit khác 0; night 2 và 3 chạy được
+  ---
+  duration_ms: 767.8131
+  type: 'test'
+  ...
+# Subtest: scenario: id đèn phải thuộc đúng đêm (L6 hợp lệ ở Đêm 2, sai ở Đêm 1) -> exit 2
+ok 5 - scenario: id đèn phải thuộc đúng đêm (L6 hợp lệ ở Đêm 2, sai ở Đêm 1) -> exit 2
+  ---
+  duration_ms: 257.5873
+  type: 'test'
+  ...
+# Subtest: scenario: state Bóng Mực/Gió Lạc sai tên -> exit 2
+ok 6 - scenario: state Bóng Mực/Gió Lạc sai tên -> exit 2
+  ---
+  duration_ms: 434.9956
+  type: 'test'
+  ...
+# Subtest: inputs: pause/dash phải là boolean
+ok 7 - inputs: pause/dash phải là boolean
+  ---
+  duration_ms: 284.1728
+  type: 'test'
+  ...
+# Subtest: inputs JSON hỏng -> exit 2
+ok 8 - inputs JSON hỏng -> exit 2
+  ---
+  duration_ms: 125.0634
+  type: 'test'
+  ...
+# Subtest: inputs thiếu frames / nút không phải boolean -> exit 2
+ok 9 - inputs thiếu frames / nút không phải boolean -> exit 2
+  ---
+  duration_ms: 285.0734
+  type: 'test'
+  ...
+# Subtest: scenario sai kiểu -> exit 2
+ok 10 - scenario sai kiểu -> exit 2
+  ---
+  duration_ms: 434.6602
+  type: 'test'
+  ...
+# Subtest: file inputs có BOM UTF-8 vẫn đọc được
+ok 11 - file inputs có BOM UTF-8 vẫn đọc được
+  ---
+  duration_ms: 146.6778
+  type: 'test'
+  ...
+# Subtest: game.contract.json: tuning khớp đúng số game đang dùng
+ok 12 - game.contract.json: tuning khớp đúng số game đang dùng
+  ---
+  duration_ms: 5.2918
+  type: 'test'
+  ...
+# Subtest: game.contract.json: các khóa bắt buộc của v1.1
+ok 13 - game.contract.json: các khóa bắt buộc của v1.1
+  ---
+  duration_ms: 0.6464
+  type: 'test'
+  ...
+# Subtest: số chuẩn của Ticket-02 (viết tay lại, độc lập với tuning.js)
+ok 14 - số chuẩn của Ticket-02 (viết tay lại, độc lập với tuning.js)
+  ---
+  duration_ms: 0.8571
+  type: 'test'
+  ...
+# Subtest: src/sim không dùng nguồn bất định (Math.random, Date, performance) và không import render
+ok 15 - src/sim không dùng nguồn bất định (Math.random, Date, performance) và không import render
+  ---
+  duration_ms: 3.8624
+  type: 'test'
+  ...
+# Subtest: mặc định: move [0,0], yaw 0, mọi nút false
+ok 16 - mặc định: move [0,0], yaw 0, mọi nút false
+  ---
+  duration_ms: 3.117
+  type: 'test'
+  ...
+# Subtest: yaw 0: x là +X, z là +Z
+ok 17 - yaw 0: x là +X, z là +Z
+  ---
+  duration_ms: 0.4861
+  type: 'test'
+  ...
+# Subtest: yaw 90°: move [0,1] -> +X ; move [1,0] -> -Z (theo công thức contract)
+ok 18 - yaw 90°: move [0,1] -> +X ; move [1,0] -> -Z (theo công thức contract)
+  ---
+  duration_ms: 0.52
+  type: 'test'
+  ...
+# Subtest: vector dài hơn 1 được chuẩn hóa, ngắn hơn 1 giữ nguyên
+ok 19 - vector dài hơn 1 được chuẩn hóa, ngắn hơn 1 giữ nguyên
+  ---
+  duration_ms: 1.8104
+  type: 'test'
+  ...
+# Subtest: frame chỉ đổi trường có mặt
+ok 20 - frame chỉ đổi trường có mặt
+  ---
+  duration_ms: 0.5393
+  type: 'test'
+  ...
+# Subtest: nút chỉ kích hoạt khi false -> true
+ok 21 - nút chỉ kích hoạt khi false -> true
+  ---
+  duration_ms: 0.5467
+  type: 'test'
+  ...
+# Subtest: Đêm 1: 5 đèn theo tọa độ chuẩn, xuất phát (0,0,0), 300 s
+ok 22 - Đêm 1: 5 đèn theo tọa độ chuẩn, xuất phát (0,0,0), 300 s
+  ---
+  duration_ms: 5.9706
+  type: 'test'
+  ...
+# Subtest: Đêm 2: 6 đèn, 330 s, 1 bùa; Đêm 3: 7 đèn, 360 s, 2 bùa
+ok 23 - Đêm 2: 6 đèn, 330 s, 1 bùa; Đêm 3: 7 đèn, 360 s, 2 bùa
+  ---
+  duration_ms: 1.3976
+  type: 'test'
+  ...
+# Subtest: điểm sinh đom đóm: Đêm 1 có 24 điểm, Đêm 2 có 24, Đêm 3 có 30; bắt đầu 20 con ở 20 điểm khác nhau
+ok 24 - điểm sinh đom đóm: Đêm 1 có 24 điểm, Đêm 2 có 24, Đêm 3 có 30; bắt đầu 20 con ở 20 điểm khác nhau
+  ---
+  duration_ms: 1.0036
+  type: 'test'
+  ...
+# Subtest: Đêm 3 địa hình: tầng 2 = 6, tầng 1 = 3 (chỉ z > 0), dốc 30° nội suy 0 → 3, tháp là vật cản, ngoài 45 m là hư không
+ok 25 - Đêm 3 địa hình: tầng 2 = 6, tầng 1 = 3 (chỉ z > 0), dốc 30° nội suy 0 → 3, tháp là vật cản, ngoài 45 m là hư không
+  ---
+  duration_ms: 0.6336
+  type: 'test'
+  ...
+# Subtest: Đêm 2 địa hình: hai đảo r=28, cầu tre rộng 4 m, ngoài ra là hư không
+ok 26 - Đêm 2 địa hình: hai đảo r=28, cầu tre rộng 4 m, ngoài ra là hư không
+  ---
+  duration_ms: 0.3785
+  type: 'test'
+  ...
+# Subtest: tick 0 trước input, sự kiện ghi tick = k+1, night_start ở bước đầu
+ok 27 - tick 0 trước input, sự kiện ghi tick = k+1, night_start ở bước đầu
+  ---
+  duration_ms: 2.8179
+  type: 'test'
+  ...
+# Subtest: time_left_s = thời lượng - sim_tick/60
+ok 28 - time_left_s = thời lượng - sim_tick/60
+  ---
+  duration_ms: 2.0911
+  type: 'test'
+  ...
+# Subtest: dựng scenario không cộng điểm và không phát sự kiện
+ok 29 - dựng scenario không cộng điểm và không phát sự kiện
+  ---
+  duration_ms: 0.9516
+  type: 'test'
+  ...
+# Subtest: điểm: +10 mỗi đom đóm NẠP (không phải nhặt), +100 mỗi đèn
+ok 30 - điểm: +10 mỗi đom đóm NẠP (không phải nhặt), +100 mỗi đèn
+  ---
+  duration_ms: 0.593
+  type: 'test'
+  ...
+# Subtest: tỏa sáng: đo 3D từ tâm (chân + 0.8) tới tâm Bóng Mực (mặt đất + 1.0), trúng khi ≤ 5
+ok 31 - tỏa sáng: đo 3D từ tâm (chân + 0.8) tới tâm Bóng Mực (mặt đất + 1.0), trúng khi ≤ 5
+  ---
+  duration_ms: 1.8997
+  type: 'test'
+  ...
+# Subtest: tỏa sáng cộng +5 cho từng con trúng, kể cả con đang choáng
+ok 32 - tỏa sáng cộng +5 cho từng con trúng, kể cả con đang choáng
+  ---
+  duration_ms: 0.4841
+  type: 'test'
+  ...
+# Subtest: không đủ 3 đom đóm thì tỏa sáng không kích hoạt (không event, không hồi chiêu)
+ok 33 - không đủ 3 đom đóm thì tỏa sáng không kích hoạt (không event, không hồi chiêu)
+  ---
+  duration_ms: 0.3864
+  type: 'test'
+  ...
+# Subtest: bị chạm: rơi floor(mang/2), bất tử 90 tick, Bóng Mực lùi (recoil) và không gây hit lần nữa trong lúc bất tử
+ok 34 - bị chạm: rơi floor(mang/2), bất tử 90 tick, Bóng Mực lùi (recoil) và không gây hit lần nữa trong lúc bất tử
+  ---
+  duration_ms: 2.259
+  type: 'test'
+  ...
+# Subtest: đom đóm rơi nằm trên vành 1.5–2.5 m quanh Mây
+ok 35 - đom đóm rơi nằm trên vành 1.5–2.5 m quanh Mây
+  ---
+  duration_ms: 0.7206
+  type: 'test'
+  ...
+# Subtest: Bóng Mực đang choáng/lùi/spawning không gây sát thương
+ok 36 - Bóng Mực đang choáng/lùi/spawning không gây sát thương
+  ---
+  duration_ms: 2.1782
+  type: 'test'
+  ...
+# Subtest: chạm cùng tick: con id nhỏ gây hit trước (so id tự nhiên) và chỉ 1 lần mất lửa
+ok 37 - chạm cùng tick: con id nhỏ gây hit trước (so id tự nhiên) và chỉ 1 lần mất lửa
+  ---
+  duration_ms: 1.1861
+  type: 'test'
+  ...
+# Subtest: thắng: bonus = floor(giây còn) × 2 + lửa × 50, kể cả đúng tick hết giờ; hết lửa luôn thua trước
+ok 38 - thắng: bonus = floor(giây còn) × 2 + lửa × 50, kể cả đúng tick hết giờ; hết lửa luôn thua trước
+  ---
+  duration_ms: 1.1517
+  type: 'test'
+  ...
+# Subtest: đã kết thúc thì stepGame không làm gì thêm
+ok 39 - đã kết thúc thì stepGame không làm gì thêm
+  ---
+  duration_ms: 0.664
+  type: 'test'
+  ...
+# Subtest: rơi khỏi đảo: đúng 1 lần, bỏ qua bất tử, mất hết đom đóm, hồi sinh sau 60 tick bất tử 90 tick
+ok 40 - rơi khỏi đảo: đúng 1 lần, bỏ qua bất tử, mất hết đom đóm, hồi sinh sau 60 tick bất tử 90 tick
+  ---
+  duration_ms: 2.5282
+  type: 'test'
+  ...
+# Subtest: tạm dừng: tick vẫn tăng, sim_tick/thời gian đứng yên; bấm lần nữa thì tiếp tục
+ok 41 - tạm dừng: tick vẫn tăng, sim_tick/thời gian đứng yên; bấm lần nữa thì tiếp tục
+  ---
+  duration_ms: 0.6752
+  type: 'test'
+  ...
+# Subtest: tất định trong cùng tiến trình: cùng seed -> cùng output (cả 3 đêm); khác seed -> khác
+ok 42 - tất định trong cùng tiến trình: cùng seed -> cùng output (cả 3 đêm); khác seed -> khác
+  ---
+  duration_ms: 392.7457
+  type: 'test'
+  ...
+# Subtest: id Bóng Mực tự sinh không trùng id do scenario đặt; 2 con ở tick 300
+ok 43 - id Bóng Mực tự sinh không trùng id do scenario đặt; 2 con ở tick 300
+  ---
+  duration_ms: 3.3778
+  type: 'test'
+  ...
+# Subtest: Gió Lạc: chỉ chase khi mang ≥ 5 (nếu không tự về idle, không cướp); cướp 3; bay đi 240 tick rồi biến mất
+ok 44 - Gió Lạc: chỉ chase khi mang ≥ 5 (nếu không tự về idle, không cướp); cướp 3; bay đi 240 tick rồi biến mất
+  ---
+  duration_ms: 3.4303
+  type: 'test'
+  ...
+# Subtest: Bùa Gió: nhặt như đom đóm, 600 tick, hồi sau 2700 tick
+ok 45 - Bùa Gió: nhặt như đom đóm, 600 tick, hồi sau 2700 tick
+  ---
+  duration_ms: 1.26
+  type: 'test'
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3512.8189

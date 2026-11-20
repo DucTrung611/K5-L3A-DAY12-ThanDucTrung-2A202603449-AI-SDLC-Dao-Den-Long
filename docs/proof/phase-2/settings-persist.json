@@ -1,0 +1,12 @@
+{
+  "requirement": "Cài đặt (âm lượng, độ nhạy chuột) được lưu giữa các lần mở game",
+  "method": "ở phiên trước đặt âm lượng 0.35 và độ nhạy 1.8 qua giao diện Cài đặt; sau đó tải lại trang (phiên mới) và đọc lại",
+  "after_reload": {
+    "volume_slider": "0.35",
+    "sensitivity_slider": "1.8",
+    "volume_label": "35%",
+    "sensitivity_label": "×1.8"
+  },
+  "stored": "{\"volume\":0.35,\"sensitivity\":1.8}",
+  "pass": true
+}

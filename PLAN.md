@@ -12,7 +12,8 @@
 | Phase 1: sim + headless + client + 26 scenario + 28 unit test + proof | Xong, `npm run verify` xanh. Bằng chứng: [docs/proof/phase-1/report.md](docs/proof/phase-1/report.md) |
 | Phase 1: commit, `npm run proof -- --phase 1` sau commit, tag `phase-1`, push | **Chưa làm** (người dùng tự commit) |
 | Điền token/chi phí vào `docs/notes/phase-1.md` | **Chưa làm** (lấy từ `/cost`) |
-| Phase 2–4 | Chờ ticket phát hành |
+| Phase 2 (Ticket-02 "Ba hòn đảo", Contract v1.1) | Xong phần code, kiểm chứng và tài liệu (xem [docs/proof/phase-2/report.md](docs/proof/phase-2/report.md)). **Chưa làm**: commit, `npm run proof -- --phase 2` sau commit cuối, tag `phase-2`, push, điền token vào `docs/notes/phase-2.md` |
+| Phase 3–4 | Chờ ticket phát hành |
 
 Khác với kế hoạch ban đầu: `index.html` đặt ở gốc repo (mặc định của Vite) thay vì `src/`. Có thêm `scripts/bot-playthrough.js` (bot chơi tới thắng + phát lại qua CLI) và `scripts/make-proof.js`.
 

@@ -1,0 +1,44 @@
+{
+  "build": "production (vite build + vite preview)",
+  "viewport": "1647x752",
+  "checks": {
+    "prompt_near_lantern": "E — Nạp ánh sáng (0/10)",
+    "arrow_shown_when_lantern_offscreen": {
+      "hidden": false,
+      "label": "L3 · 18 m"
+    },
+    "clock_last_30s": {
+      "text": "00:18",
+      "urgent": true,
+      "blink_toggles": true,
+      "color": "rgb(255, 90, 95)"
+    },
+    "clock_normal": {
+      "text": "03:20",
+      "urgent": false
+    },
+    "wind_warning": {
+      "text": "Gió sắp nổi – bám chắc!",
+      "visible": true,
+      "sim_tick": 1708
+    },
+    "wind_blowing": {
+      "text": "Gió mạnh đang thổi!",
+      "visible": true,
+      "active": true,
+      "dir_deg": 320
+    },
+    "mote_bar": {
+      "slots": 10,
+      "filled": 7,
+      "label": "7/10"
+    },
+    "charm_badge": {
+      "visible": true,
+      "text": "Bùa Gió 4.7 s"
+    },
+    "settings_saved_value": null,
+    "runtime_errors": [],
+    "fps_now": 59
+  }
+}

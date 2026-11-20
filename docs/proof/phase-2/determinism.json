@@ -1,0 +1,97 @@
+{
+  "ticks": 21600,
+  "runs": [
+    {
+      "night": 1,
+      "seed": 1,
+      "run1": "f5901905cc3d7d3f",
+      "run2": "f5901905cc3d7d3f",
+      "bytes": 4451921,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":18000,\"state\":\"lost\",\"score\":0}",
+      "ms": 454
+    },
+    {
+      "night": 1,
+      "seed": 7,
+      "run1": "8ac78db746167c1a",
+      "run2": "8ac78db746167c1a",
+      "bytes": 4447417,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":18000,\"state\":\"lost\",\"score\":0}",
+      "ms": 480
+    },
+    {
+      "night": 1,
+      "seed": 42,
+      "run1": "426c2cf98bcd1015",
+      "run2": "426c2cf98bcd1015",
+      "bytes": 4450353,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":18000,\"state\":\"lost\",\"score\":0}",
+      "ms": 435
+    },
+    {
+      "night": 2,
+      "seed": 1,
+      "run1": "6cdb8a90c28a45e3",
+      "run2": "6cdb8a90c28a45e3",
+      "bytes": 5335555,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":19800,\"state\":\"lost\",\"score\":0}",
+      "ms": 590
+    },
+    {
+      "night": 2,
+      "seed": 7,
+      "run1": "5e3fc3338b615b15",
+      "run2": "5e3fc3338b615b15",
+      "bytes": 5337755,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":19800,\"state\":\"lost\",\"score\":0}",
+      "ms": 599
+    },
+    {
+      "night": 2,
+      "seed": 42,
+      "run1": "668d4d7567623c7a",
+      "run2": "668d4d7567623c7a",
+      "bytes": 5333240,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":19800,\"state\":\"lost\",\"score\":0}",
+      "ms": 615
+    },
+    {
+      "night": 3,
+      "seed": 1,
+      "run1": "af74fcc29a883306",
+      "run2": "af74fcc29a883306",
+      "bytes": 7216428,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":21600,\"state\":\"lost\",\"score\":0}",
+      "ms": 759
+    },
+    {
+      "night": 3,
+      "seed": 7,
+      "run1": "0cbca5b38c5dbf5c",
+      "run2": "0cbca5b38c5dbf5c",
+      "bytes": 7240779,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":21600,\"state\":\"lost\",\"score\":0}",
+      "ms": 754
+    },
+    {
+      "night": 3,
+      "seed": 42,
+      "run1": "a6a77c2e27497324",
+      "run2": "a6a77c2e27497324",
+      "bytes": 7217699,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":21600,\"state\":\"lost\",\"score\":0}",
+      "ms": 786
+    }
+  ],
+  "distinct_seeds_differ": true,
+  "pass": true
+}

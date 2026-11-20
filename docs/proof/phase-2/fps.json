@@ -1,0 +1,32 @@
+{
+  "requirement": "Bản thường đạt >= 30 FPS trung bình ở 1280x720 (DoD Ticket-02)",
+  "build": "production: npm run build + vite preview",
+  "viewport": "1281x720",
+  "webgl_renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Safari/537.36",
+  "method": "ván thật mặc định (đom đóm, Bóng Mực, Gió Lạc, gió bật), người chơi bất tử đi vòng + nhảy + lướt liên tục bằng sự kiện phím thật; lấy mẫu window.__fps (trung bình 120 khung gần nhất) mỗi 250 ms trong 8 s, bỏ 1.5 s đầu",
+  "nights": {
+    "1": {
+      "avg_fps": 60,
+      "min_sample_fps": 60,
+      "samples": 27,
+      "shades": 2,
+      "motes": 22
+    },
+    "2": {
+      "avg_fps": 60,
+      "min_sample_fps": 60,
+      "samples": 27,
+      "shades": 2,
+      "motes": 22
+    },
+    "3": {
+      "avg_fps": 60,
+      "min_sample_fps": 60,
+      "samples": 27,
+      "shades": 2,
+      "motes": 22
+    }
+  },
+  "pass": true
+}

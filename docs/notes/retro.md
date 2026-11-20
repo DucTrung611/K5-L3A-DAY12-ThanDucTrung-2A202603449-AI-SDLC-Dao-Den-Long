@@ -7,7 +7,7 @@
 | Phase | Yêu cầu chính | Đạt | Scenario | Unit test | Token/chi phí ước tính | Thời gian |
 |---|---|---|---|---|---|---|
 | 1 | R1–R19 | 18 đạt, 1 đạt một phần (R18 chưa clone từ GitHub) | 26 | 28 | _điền từ /cost_ | |
-| 2 | | | | | | |
+| 2 | S1–S14, M1–M4, F1–F9, C1–C7 | 32 đạt (một số kèm giả định), 2 chưa kiểm hết (F7 âm thanh, F9 đo màu) trên tổng 34 mục | 66 | 45 | _điền từ /cost_ | |
 | 3 | | | | | | |
 | 4 | | | | | | |
 

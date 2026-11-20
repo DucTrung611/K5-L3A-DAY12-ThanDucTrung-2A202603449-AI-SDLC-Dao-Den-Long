@@ -1,0 +1,201 @@
+{
+  "total": 25,
+  "killed": 25,
+  "survived": [],
+  "rows": [
+    {
+      "mutation": "nhặt: pickup_radius 1.0 → 1.1",
+      "killed": true,
+      "failing_scenarios": [
+        "charm_pickup_speed",
+        "pickup_radius_boundary"
+      ]
+    },
+    {
+      "mutation": "nhặt: pickup_height 1.5 → 2.0",
+      "killed": true,
+      "failing_scenarios": [
+        "pickup_height_too_high"
+      ]
+    },
+    {
+      "mutation": "nhảy: jump_velocity 7 → 6",
+      "killed": true,
+      "failing_scenarios": [
+        "dash_air_altitude",
+        "jump_arc"
+      ]
+    },
+    {
+      "mutation": "tỏa sáng: choáng 2.0 → 1.5 s",
+      "killed": true,
+      "failing_scenarios": [
+        "pulse_stun_push"
+      ]
+    },
+    {
+      "mutation": "tỏa sáng: đẩy 4 → 3 m",
+      "killed": true,
+      "failing_scenarios": [
+        "pulse_stun_push"
+      ]
+    },
+    {
+      "mutation": "vùng an toàn: 6 → 5 m",
+      "killed": true,
+      "failing_scenarios": [
+        "lantern_lit_expels_shade",
+        "safe_radius_blocks",
+        "safe_zone_expels_inside"
+      ]
+    },
+    {
+      "mutation": "Bóng Mực: tốc độ 4.0 → 3.5",
+      "killed": true,
+      "failing_scenarios": [
+        "pulse_stun_push",
+        "shade_detect_giveup",
+        "shade_hit_invuln_lose",
+        "unlit_lantern_no_protection"
+      ]
+    },
+    {
+      "mutation": "lướt: 14 → 12 m/s",
+      "killed": true,
+      "failing_scenarios": [
+        "charm_dash_no_cooldown",
+        "dash_air_altitude",
+        "dash_cooldown"
+      ]
+    },
+    {
+      "mutation": "lướt: hồi chiêu 1.5 → 1.0 s",
+      "killed": true,
+      "failing_scenarios": [
+        "dash_cooldown"
+      ]
+    },
+    {
+      "mutation": "rơi: chờ 60 → 30 tick",
+      "killed": true,
+      "failing_scenarios": [
+        "island_edge_fall"
+      ]
+    },
+    {
+      "mutation": "hồi sinh: bất tử 90 → 60 tick",
+      "killed": true,
+      "failing_scenarios": [
+        "island_edge_fall"
+      ]
+    },
+    {
+      "mutation": "bùa: hiệu lực 600 → 300 tick",
+      "killed": true,
+      "failing_scenarios": [
+        "charm_pickup_speed"
+      ]
+    },
+    {
+      "mutation": "bùa: tốc độ 7.2 → 7.0",
+      "killed": true,
+      "failing_scenarios": [
+        "charm_expiry",
+        "charm_pickup_speed"
+      ]
+    },
+    {
+      "mutation": "Gió Lạc: cướp 3 → 2",
+      "killed": true,
+      "failing_scenarios": [
+        "drifter_steal"
+      ]
+    },
+    {
+      "mutation": "Gió Lạc: bay đi 240 → 200 tick",
+      "killed": true,
+      "failing_scenarios": [
+        "drifter_steal"
+      ]
+    },
+    {
+      "mutation": "gió mạnh: 2.0 → 1.5 m/s",
+      "killed": true,
+      "failing_scenarios": [
+        "wind_gust"
+      ]
+    },
+    {
+      "mutation": "Bóng Mực: phát hiện 12 → 10 m",
+      "killed": true,
+      "failing_scenarios": [
+        "pulse_stun_push",
+        "safe_radius_blocks",
+        "shade_detect_giveup"
+      ]
+    },
+    {
+      "mutation": "điểm: tỏa sáng +5 → +10",
+      "killed": true,
+      "failing_scenarios": [
+        "pulse_stun_push"
+      ]
+    },
+    {
+      "mutation": "input: bỏ phát hiện cạnh lên",
+      "killed": true,
+      "failing_scenarios": [
+        "jump_arc",
+        "pulse_cooldown_edge"
+      ]
+    },
+    {
+      "mutation": "va chạm: bỏ qua bất tử",
+      "killed": true,
+      "failing_scenarios": [
+        "shade_hit_invuln_lose"
+      ]
+    },
+    {
+      "mutation": "địa hình: vách không chặn",
+      "killed": true,
+      "failing_scenarios": [
+        "cliff_blocks"
+      ]
+    },
+    {
+      "mutation": "nạp đèn: nạp quá mức cần",
+      "killed": true,
+      "failing_scenarios": [
+        "deposit_overflow"
+      ]
+    },
+    {
+      "mutation": "điểm: không cộng khi nạp",
+      "killed": true,
+      "failing_scenarios": [
+        "deposit_and_light",
+        "deposit_overflow",
+        "deposit_partial_remembered",
+        "interact_nearest_tiebreak",
+        "win_all_lit",
+        "win_at_last_tick"
+      ]
+    },
+    {
+      "mutation": "thắng: bỏ thưởng thời gian",
+      "killed": true,
+      "failing_scenarios": [
+        "win_all_lit"
+      ]
+    },
+    {
+      "mutation": "tick: không đếm hồi chiêu tỏa sáng",
+      "killed": true,
+      "failing_scenarios": [
+        "pulse_cooldown_edge",
+        "pulse_stun_push"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,530 @@
+[
+  {
+    "name": "bad_inputs_move_range",
+    "requirement": "R2",
+    "description": "move ngoài [-1,1] -> exit 2",
+    "pass": true,
+    "errors": [],
+    "ms": 148
+  },
+  {
+    "name": "bad_inputs_pause_type",
+    "requirement": "R2/C7",
+    "description": "pause không phải boolean -> exit 2",
+    "pass": true,
+    "errors": [],
+    "ms": 134
+  },
+  {
+    "name": "bad_inputs_tick_order",
+    "requirement": "R2",
+    "description": "inputs có tick không tăng nghiêm ngặt -> exit 2 + stderr",
+    "pass": true,
+    "errors": [],
+    "ms": 131
+  },
+  {
+    "name": "bad_night_argument",
+    "requirement": "C7",
+    "description": "--night 4 không hợp lệ -> exit 1 (lỗi tham số) + stderr",
+    "pass": true,
+    "errors": [],
+    "ms": 127
+  },
+  {
+    "name": "bad_scenario_json",
+    "requirement": "R2",
+    "description": "scenario.json không phải JSON hợp lệ -> exit 2",
+    "pass": true,
+    "errors": [],
+    "ms": 127
+  },
+  {
+    "name": "bad_scenario_lantern_id",
+    "requirement": "R2",
+    "description": "scenario tham chiếu đèn không tồn tại L9 -> exit 2",
+    "pass": true,
+    "errors": [],
+    "ms": 140
+  },
+  {
+    "name": "bad_scenario_lantern_wrong_night",
+    "requirement": "R2/C7",
+    "description": "L6 chỉ có từ Đêm 2: ở Đêm 1 -> exit 2",
+    "pass": true,
+    "errors": [],
+    "ms": 136
+  },
+  {
+    "name": "bad_scenario_shade_state",
+    "requirement": "R2/C7",
+    "description": "state Bóng Mực ngoài {spawning,wander,chase,recoil,stunned} -> exit 2",
+    "pass": true,
+    "errors": [],
+    "ms": 126
+  },
+  {
+    "name": "bridge_no_rails_fall",
+    "requirement": "C4",
+    "description": "Đêm 2: cầu tre rộng |z| ≤ 2, không lan can: đi +Z từ giữa cầu, z=2.0 ở tick 20 còn đứng được, tick 21 ra khỏi cầu -> rơi, player_hit by fall ở tick 81",
+    "pass": true,
+    "errors": [],
+    "ms": 149
+  },
+  {
+    "name": "carry_capacity_full",
+    "requirement": "R6",
+    "description": "Đang mang đủ carry_capacity (10) thì không nhặt thêm; đom đóm vẫn nằm đó",
+    "pass": true,
+    "errors": [],
+    "ms": 140
+  },
+  {
+    "name": "charm_dash_no_cooldown",
+    "requirement": "Bùa Gió",
+    "description": "Còn bùa: lướt không hồi chiêu (dash_cd_s luôn 0). Lướt tick 1..12 (z=2.8); bấm lúc đang lướt (tick 6) bị bỏ; bấm tick 15 lướt ngay lần hai (không chờ hồi chiêu) -> z = 5.6 ở tick 26",
+    "pass": true,
+    "errors": [],
+    "ms": 137
+  },
+  {
+    "name": "charm_expiry",
+    "requirement": "Bùa Gió",
+    "description": "Còn 5 tick bùa: tick 1..4 chạy 7.2 m/s (0.12 m/tick, z=0.48 ở tick 4), tick 5 bùa hết (charm_s 0) quay về 6.0 m/s",
+    "pass": true,
+    "errors": [],
+    "ms": 135
+  },
+  {
+    "name": "charm_pickup_speed",
+    "requirement": "Bùa Gió",
+    "description": "Nhặt bùa ở XZ ≤ 1.0 (z=2.0 ở tick 20): charm_picked {C1, 600}; bùa biến mất, hồi sau 2700 tick (45 s); từ tick 21 chạy 7.2 m/s (z = 2.0 + 0.12·t); charm_s đếm ngược từ 10 s",
+    "pass": true,
+    "errors": [],
+    "ms": 140
+  },
+  {
+    "name": "charm_respawn",
+    "requirement": "Bùa Gió",
+    "description": "Bùa đang hồi (còn 10 tick) xuất hiện lại đúng tick 10",
+    "pass": true,
+    "errors": [],
+    "ms": 144
+  },
+  {
+    "name": "cliff_blocks",
+    "requirement": "C4",
+    "description": "Đêm 3: vách tầng 2 (r ≤ 8) là vách đứng, không đi lên được: đi +Z từ z=-9 dừng ở z=-8.1 (bước kế tiếp r=8.0 đã thuộc tầng 2)",
+    "pass": true,
+    "errors": [],
+    "ms": 145
+  },
+  {
+    "name": "dash_air_altitude",
+    "requirement": "Lướt",
+    "description": "Lướt trên không giữ nguyên độ cao: nhảy tick 1; tick 10 y = 0.861; lướt tick 11..22 y đứng yên 0.861 (hướng mặt +Z, đi 2.8 m); sau lướt rơi từ nghỉ: y_k = 0.861 - k(k+1)/360, chạm đất ở k=18 -> tick 40",
+    "pass": true,
+    "errors": [],
+    "ms": 147
+  },
+  {
+    "name": "dash_cooldown",
+    "requirement": "C6/Lướt",
+    "description": "Lướt 14 m/s × 12 tick (0.2333 m/tick, giữ độ cao), hồi chiêu 90 tick từ lúc bắt đầu: bấm ở tick 11 -> dash; z = 1.0 + 0.2333·t; tick 22 z=3.8 cd 79 tick (1.317 s); bấm ở tick 31 (còn hồi chiêu) bị bỏ; hết hồi chiêu đúng tick 101 -> dash thứ hai",
+    "pass": true,
+    "errors": [],
+    "ms": 149
+  },
+  {
+    "name": "deposit_and_light",
+    "requirement": "R7/C2",
+    "description": "Mang 10, cách L1 1.5 m (≤ 2.0), nhấn interact -> nạp 10 (lantern_cost 10), L1 sáng. Điểm = 10·10 (mỗi đom đóm NẠP) + 100 (đèn) = 200",
+    "pass": true,
+    "errors": [],
+    "ms": 151
+  },
+  {
+    "name": "deposit_out_of_range",
+    "requirement": "R7",
+    "description": "Cách L1 2.001 m (> interact_radius 2.0) thì nhấn interact không có tác dụng",
+    "pass": true,
+    "errors": [],
+    "ms": 150
+  },
+  {
+    "name": "deposit_overflow",
+    "requirement": "R7",
+    "description": "L1 đã 8/10, mang 5 -> chỉ nạp 2 (min(đang mang, còn thiếu)), còn giữ 3. Điểm = 2·10 + 100 = 120",
+    "pass": true,
+    "errors": [],
+    "ms": 154
+  },
+  {
+    "name": "deposit_partial_remembered",
+    "requirement": "R7",
+    "description": "Đèn nhớ tiến độ: L1 đã có 3/10, nạp 4 -> 7/10 chưa sáng, +40 điểm (đúng biên 2.0 m). Lần bấm thứ hai không còn gì để nạp",
+    "pass": true,
+    "errors": [],
+    "ms": 154
+  },
+  {
+    "name": "drifter_pulse_chase",
+    "requirement": "Gió Lạc",
+    "description": "Tỏa sáng trúng Gió Lạc đang chase (3D 4.005 ≤ 5) -> flee, KHÔNG cướp (stolen 0); không cộng điểm (chỉ Bóng Mực được +5)",
+    "pass": true,
+    "errors": [],
+    "ms": 146
+  },
+  {
+    "name": "drifter_pulse_drop",
+    "requirement": "Gió Lạc",
+    "description": "Tỏa sáng trúng Gió Lạc đang flee có đồ: thả lại 3 đom đóm tại chỗ (kind dropped, TTL 480 tick: ở tick 10 còn 471 = 7.85 s, hết ở tick 481), Gió Lạc biến mất sau tối đa 120 tick (tick 120)",
+    "pass": true,
+    "errors": [],
+    "ms": 158
+  },
+  {
+    "name": "drifter_spawn_schedule",
+    "requirement": "Gió Lạc",
+    "description": "Gió Lạc sinh ở tick 1200 (D1) và 2400 (D2), tối đa 2 con: tick 3600 không sinh thêm. Người chơi không mang đom đóm nên chúng luôn idle",
+    "pass": true,
+    "errors": [],
+    "ms": 200
+  },
+  {
+    "name": "drifter_steal",
+    "requirement": "Gió Lạc",
+    "description": "Mang 6 ≥ 5 và cách 10 m ≤ 15: idle -> chase (7 m/s, x = 10 - 0.1167 t); chạm ≤ 1.2 m lần đầu ở t=76 (x=1.133) -> drifter_steal {amount 3, carried 3}, flee 240 tick rồi biến mất (tick 316)",
+    "pass": true,
+    "errors": [],
+    "ms": 136
+  },
+  {
+    "name": "fall_last_flame_lose",
+    "requirement": "C3",
+    "description": "Rơi khi chỉ còn 1 lửa: thua ngay no_flames ở tick 81, không hồi sinh",
+    "pass": true,
+    "errors": [],
+    "ms": 147
+  },
+  {
+    "name": "input_fields_persist",
+    "requirement": "R3",
+    "description": "Trường vắng giữ giá trị cũ: tick 30 chỉ đổi yaw 180° nên move [0,1] vẫn giữ -> đi ngược về gốc; tick 60 dừng",
+    "pass": true,
+    "errors": [],
+    "ms": 149
+  },
+  {
+    "name": "interact_nearest_tiebreak",
+    "requirement": "R5",
+    "description": "L1 (z=25) và L2 (z=21) cùng cách 2.0 m: chọn đèn id nhỏ hơn (L1); L2 không bị đụng tới",
+    "pass": true,
+    "errors": [],
+    "ms": 138
+  },
+  {
+    "name": "island_edge_fall",
+    "requirement": "C3",
+    "description": "Rơi khỏi đảo (thay island_boundary_no_fall): chạy +X từ x=38, x=40 ở tick 20 (còn đứng được), tick 21 ra hư không; rơi y_k = -k(k+1)/360 < -10 lần đầu ở k=60 -> tick 81: player_hit by fall {flames 2, dropped 0, lost 4}; chờ 60 tick (không nhặt, bị đóng băng); tick 141 hồi sinh tại (0,0,0) bất tử 90 tick (còn ở tick 230, hết ở tick 231)",
+    "pass": true,
+    "errors": [],
+    "ms": 142
+  },
+  {
+    "name": "jump_arc",
+    "requirement": "R17/C1",
+    "description": "Nhảy 7.0 m/s, trọng lực 20 m/s²: y_n = (7n - n(n+1)/6)/60 -> tick 10: 0.861; tick 20: 1.167 (đỉnh); tick 41 chạm đất (y = 0 đúng); giữ nút không nhảy lại; vy tick 10 = 7 - 10·20/60 = 3.667",
+    "pass": true,
+    "errors": [],
+    "ms": 142
+  },
+  {
+    "name": "jump_pad_night2",
+    "requirement": "C4/Bục nhảy",
+    "description": "Đêm 2: chân Mây chạm bục (20,0,18) ở tick 1 -> bắn lên vy 14 và 24 m/s về tâm đảo B (70,0,0). Bay k tick: y = (14k - k(k+1)/6)/60 (đúng 0 ở k=83), ngang = (24·(50,-18)/53.14)/60 mỗi tick; phím đi không ghi đè; chạm đất ở tick 84 trên đảo B",
+    "pass": true,
+    "errors": [],
+    "ms": 151
+  },
+  {
+    "name": "jump_pad_night3",
+    "requirement": "C4/Bục nhảy",
+    "description": "Đêm 3: đứng trên tầng 1 (y=3) trong bán kính 1.0 m của bục (0,3,13) -> bắn vy 12 và 8 m/s hướng -Z. y = 3 + (12k - k(k+1)/6)/60, z = 12.5 - 8k/60; hạ cánh lên tầng 2 (y=6) ở k=49 (tick 50) tại z=5.967",
+    "pass": true,
+    "errors": [],
+    "ms": 168
+  },
+  {
+    "name": "lantern_lit_expels_shade",
+    "requirement": "C1/C5",
+    "description": "Đèn vừa sáng ở tick 1: Bóng Mực cách đèn 3 m bị đẩy ra mép 6 m trong 30 tick (0.1 m/tick: z = 28 + 0.1 t), không chạm người chơi",
+    "pass": true,
+    "errors": [],
+    "ms": 150
+  },
+  {
+    "name": "lose_dawn",
+    "requirement": "R12",
+    "description": "time_left_s 1 -> hết giờ sau 60 bước: game_over lost/dawn ở tick 60, dừng sớm dù --ticks 200",
+    "pass": true,
+    "errors": [],
+    "ms": 134
+  },
+  {
+    "name": "mote_cap_30",
+    "requirement": "C1",
+    "description": "Trần 30 đom đóm: có 29, tick 240 sinh thêm 1 (=30); tick 480 và 720 không sinh nữa",
+    "pass": true,
+    "errors": [],
+    "ms": 160
+  },
+  {
+    "name": "move_cam_yaw90",
+    "requirement": "R4",
+    "description": "cam_yaw_deg=90, move [0,1]: x' = x·cosθ + z·sinθ = 1, z' = 0 -> đi +X, 6 m sau 60 tick",
+    "pass": true,
+    "errors": [],
+    "ms": 137
+  },
+  {
+    "name": "move_diagonal_normalized",
+    "requirement": "R4",
+    "description": "move [1,1] dài √2 > 1 phải chuẩn hóa: mỗi trục 6/√2 = 4.243 m sau 60 tick",
+    "pass": true,
+    "errors": [],
+    "ms": 140
+  },
+  {
+    "name": "move_forward",
+    "requirement": "R3",
+    "description": "Tick model: tick 0 trước input; move [0,1] ở 6 m/s (tăng tốc tức thời ≤ 0.1 s) -> 1 m sau 10 tick, 6 m sau 60 tick; time_left_s = 300 - 60/60",
+    "pass": true,
+    "errors": [],
+    "ms": 134
+  },
+  {
+    "name": "night2_defaults",
+    "requirement": "C4",
+    "description": "Đêm 2 mặc định: 330 s, xuất phát (0,0,0), 6 đèn tọa độ chuẩn, 20 đom đóm, bùa C1 sẵn sàng, chưa có Bóng Mực/Gió Lạc",
+    "pass": true,
+    "errors": [],
+    "ms": 146
+  },
+  {
+    "name": "night2_route_cross_bridge",
+    "requirement": "C4/Chơi được",
+    "description": "Đêm 2: đi thẳng +X từ (0,0,0) qua cầu tre sang đảo B (x=70 ở tick 700, không rơi vì |z| = 0), rồi +Z tới (70,0,19) (tick 890) và thắp L4 (70,0,20). Kiểm: không rơi, L4 sáng, điểm 200",
+    "pass": true,
+    "errors": [],
+    "ms": 205
+  },
+  {
+    "name": "night3_defaults",
+    "requirement": "C4",
+    "description": "Đêm 3 mặc định: 360 s, xuất phát (0,0,-20), 7 đèn tọa độ chuẩn (y=6, 3, 3, 0...), 20 đom đóm, hai bùa C1 C2, gió chưa thổi",
+    "pass": true,
+    "errors": [],
+    "ms": 147
+  },
+  {
+    "name": "night3_route_to_L1",
+    "requirement": "C4/Chơi được",
+    "description": "Đêm 3: đèn L1 ở tầng 2 chỉ tới được bằng: đi vòng ngoài tầng 0 -> leo dốc 30° (r 30 -> 24) -> đi trên tầng 1 -> bục nhảy (0,3,13) -> hạ cánh tầng 2 -> nạp 10 đom đóm. Kiểm kết quả: L1 sáng, điểm 10·10 + 100 = 200, Mây đứng trên tầng 2 (y=6), không bị rơi/chạm",
+    "pass": true,
+    "errors": [],
+    "ms": 157
+  },
+  {
+    "name": "pause_resume",
+    "requirement": "C6/Tạm dừng",
+    "description": "Tạm dừng: bấm ở tick 11 -> event paused, state paused, tick vẫn tăng nhưng sim_tick/thời gian/vị trí đứng yên (sim 10, z=1.0, 299.833 s); bấm lại ở tick 31 -> resumed và bước đó chạy luôn (sim 11, z=1.1); tick 40: sim 20, z=2.0",
+    "pass": true,
+    "errors": [],
+    "ms": 138
+  },
+  {
+    "name": "pickup_height_ok",
+    "requirement": "C1",
+    "description": "Nhặt cần chênh cao chân Mây - mặt đất nơi đặt ≤ 1.5: Mây ở y=1.4 (đang rơi, tick 1 còn 1.394) nhặt ngay tick 1",
+    "pass": true,
+    "errors": [],
+    "ms": 141
+  },
+  {
+    "name": "pickup_height_too_high",
+    "requirement": "C1",
+    "description": "Mây ở y=1.6 rơi tự do y_k = 1.6 - k(k+1)/360: k=5 -> 1.5167 (> 1.5, chưa nhặt), k=6 -> 1.4833 (≤ 1.5) nhặt đúng tick 6",
+    "pass": true,
+    "errors": [],
+    "ms": 153
+  },
+  {
+    "name": "pickup_radius_boundary",
+    "requirement": "R6/C1",
+    "description": "Nhặt khi XZ ≤ 1.0: đom đóm cách đúng 1.0 m được nhặt; cách 1.001 m thì không. Nhặt KHÔNG cộng điểm (Ticket-02: +10 khi NẠP)",
+    "pass": true,
+    "errors": [],
+    "ms": 140
+  },
+  {
+    "name": "pickup_tier_mismatch",
+    "requirement": "C1/C4",
+    "description": "Đêm 3: đom đóm trên tầng 2 (y=6) cách Mây 0.6 m theo XZ nhưng chân Mây ở tầng 0 (chênh 6 m > 1.5) -> không nhặt",
+    "pass": true,
+    "errors": [],
+    "ms": 148
+  },
+  {
+    "name": "pulse_cooldown_edge",
+    "requirement": "R5/R8",
+    "description": "Cạnh lên + hồi chiêu 3 s = 180 tick: pulse tick 1; bấm ở tick 61 (còn hồi chiêu 120) bị bỏ; giữ nút qua tick 181 không kích hoạt lại (không có cạnh lên); bấm lại ở tick 201 -> pulse thứ hai. Mang 10 - 3 - 3 = 4",
+    "pass": true,
+    "errors": [],
+    "ms": 155
+  },
+  {
+    "name": "pulse_insufficient_light",
+    "requirement": "R8",
+    "description": "Mang 2 < pulse_cost 3 -> không kích hoạt: không event, không hồi chiêu, Bóng Mực không choáng",
+    "pass": true,
+    "errors": [],
+    "ms": 194
+  },
+  {
+    "name": "pulse_stun_push",
+    "requirement": "R8/C1/C5",
+    "description": "Tỏa sáng (3 đom đóm, 5 m 3D, cd 3 s): A cách 4 m (3D=4.005) choáng 120 tick + bị đẩy 4 m trong 15 tick đầu (4/15 mỗi tick: x = 4 + 0.267 t, đủ x=8 ở tick 15); B cách 12 m (không trúng) đuổi 4 m/s (x = 12 - t/15). +5 điểm. Choáng hết ở tick 121 -> chase",
+    "pass": true,
+    "errors": [],
+    "ms": 156
+  },
+  {
+    "name": "ramp_climb",
+    "requirement": "C4",
+    "description": "Đêm 3: dốc 30° dài 6 m từ chân (r=30, Y=0) lên đỉnh (r=24, Y=3), độ cao tuyến tính 0.5 m mỗi mét. Đi dọc trục dốc 6 m/s: tick 30 y=1.5, tick 60 y=3.0 (lên tầng 1)",
+    "pass": true,
+    "errors": [],
+    "ms": 147
+  },
+  {
+    "name": "safe_radius_blocks",
+    "requirement": "R10",
+    "description": "Đứng tại L1 đã sáng: Bóng Mực (11 m, chase) bị chặn ở mép 6 m quanh đèn -> dừng ở z = 25 + 6 = 31, không bao giờ chạm người chơi",
+    "pass": true,
+    "errors": [],
+    "ms": 176
+  },
+  {
+    "name": "safe_zone_expels_inside",
+    "requirement": "C1/C5",
+    "description": "Bóng Mực đang trong vùng an toàn (cách người chơi 0.8 m): bị đẩy đều ra mép 6 m trong đúng 30 tick (mỗi tick (31-25.8)/30 = 0.173 m), trạng thái recoil, KHÔNG gây sát thương; xong thì chase và bị chặn ở z=31",
+    "pass": true,
+    "errors": [],
+    "ms": 155
+  },
+  {
+    "name": "scenario_setup_no_events",
+    "requirement": "R13",
+    "description": "Dựng scenario (4 đèn lit:true, player carried/flames) không phát sự kiện (trừ night_start ở tick 1), không cộng điểm",
+    "pass": true,
+    "errors": [],
+    "ms": 136
+  },
+  {
+    "name": "shade_detect_giveup",
+    "requirement": "C5",
+    "description": "Phát hiện ≤ 12 m (XZ): A (12.0) chase, B (12.001) vẫn wander. Bỏ đuổi > 18 m: C (18.0) vẫn chase, D (18.001) về wander",
+    "pass": true,
+    "errors": [],
+    "ms": 140
+  },
+  {
+    "name": "shade_hit_invuln_lose",
+    "requirement": "R9/R12/C5",
+    "description": "Bóng Mực áp sát: hit ở tick 1 (rơi floor(5/2)=2); lùi 2 m trong 60 tick (x: 0.433 -> 2.433, hết lùi ở tick 61 -> chase); bất tử 90 tick nên hit tiếp ở tick 91 (rơi floor(3/2)=1) và tick 181 (rơi floor(2/2)=1, hết lửa) -> thua no_flames",
+    "pass": true,
+    "errors": [],
+    "ms": 152
+  },
+  {
+    "name": "shade_spawn_schedule_n1",
+    "requirement": "C5",
+    "description": "Đêm 1: 2 con ở tick 300 rồi 1 con mỗi 8 s (480 tick): 780, 1260, 1740, 2220; tối đa 6 nên tick 2700 không sinh thêm",
+    "pass": true,
+    "errors": [],
+    "ms": 222
+  },
+  {
+    "name": "shade_spawn_schedule_n3",
+    "requirement": "C5",
+    "description": "Đêm 3: 2 con ở tick 300 rồi 1 con mỗi 6 s (360 tick) đến 10 con (tick 3180); tick 3540 không sinh thêm",
+    "pass": true,
+    "errors": [],
+    "ms": 218
+  },
+  {
+    "name": "shade_spawning_harmless",
+    "requirement": "C5",
+    "description": "Bóng Mực spawning (còn 20 tick) đứng yên, không gây sát thương; hết spawning ở tick 20 thì chase và chạm ngay trong tick đó",
+    "pass": true,
+    "errors": [],
+    "ms": 155
+  },
+  {
+    "name": "smoke_default",
+    "requirement": "R1/C7",
+    "description": "Đêm 1 mặc định seed 42: 20 đom đóm lúc đầu, thêm 1 ở tick 240 và 480; 2 Bóng Mực sinh đúng tick 300 (S1,S2) ở trạng thái spawning 60 tick rồi wander; night_start ở tick 1; không chạm trong 600 tick",
+    "pass": true,
+    "errors": [],
+    "ms": 173
+  },
+  {
+    "name": "step_off_tier",
+    "requirement": "C4",
+    "description": "Đêm 3: bước ra khỏi mép tầng 1 (r < 12) thì rơi xuống tầng 0 (không phạt): đi -X từ x=12.55, x=11.95 ở tick 6 ra khỏi mép; rơi y_k = 3 - k(k+1)/360 chạm đất ở k=33 -> tick 39",
+    "pass": true,
+    "errors": [],
+    "ms": 133
+  },
+  {
+    "name": "tower_blocks",
+    "requirement": "C4",
+    "description": "Đêm 3: tháp chuông (trụ r=2 ở tâm tầng 2) không đi xuyên được: đi -Z từ z=6 dừng ở z=2.1",
+    "pass": true,
+    "errors": [],
+    "ms": 149
+  },
+  {
+    "name": "unlit_lantern_no_protection",
+    "requirement": "R10",
+    "description": "Đèn CHƯA sáng không bảo vệ: Bóng Mực cách 5.5 m, 4 m/s: khoảng cách = 5.5 - t/15 ≤ 1.0 lần đầu ở t = 68 (0.967) -> hit tick 68",
+    "pass": true,
+    "errors": [],
+    "ms": 145
+  },
+  {
+    "name": "win_all_lit",
+    "requirement": "R11/C2",
+    "description": "Thắp đèn cuối -> thắng all_lit ở tick 1. Điểm = 10·10 (nạp) + 100 (đèn) + floor(299.983)·2 = 598 + 3 lửa·50 = 150 -> 948",
+    "pass": true,
+    "errors": [],
+    "ms": 143
+  },
+  {
+    "name": "win_at_last_tick",
+    "requirement": "C2",
+    "description": "Thắp đèn cuối đúng tick hết giờ (tick 60, time_left = 0) vẫn THẮNG; điểm = 100 + 100 + floor(0)·2 + 150 = 350",
+    "pass": true,
+    "errors": [],
+    "ms": 143
+  },
+  {
+    "name": "wind_gust",
+    "requirement": "C6/Gió mạnh",
+    "description": "Đêm 3: cơn gió thổi tick 1800..2099 (5 s), dir_deg nguyên [0,360), đẩy người chơi đứng yên đúng 2 m/s × 5 s = 10 m theo dir_deg; trước 1800 và từ 2100 không gió",
+    "pass": true,
+    "errors": [],
+    "ms": 192
+  }
+]
