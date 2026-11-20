@@ -1,0 +1,91 @@
+{
+  "rows": [
+    {
+      "seed": 1,
+      "bot": "won/all_lit",
+      "ticks": 2405,
+      "score": 1458,
+      "flames_left": 3,
+      "motes": 27,
+      "stuns": 1,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 2405,
+        "state": "won",
+        "score": 1458
+      },
+      "replay_matches": true
+    },
+    {
+      "seed": 2,
+      "bot": "won/all_lit",
+      "ticks": 3795,
+      "score": 1532,
+      "flames_left": 3,
+      "motes": 33,
+      "stuns": 4,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 3795,
+        "state": "won",
+        "score": 1532
+      },
+      "replay_matches": true
+    },
+    {
+      "seed": 3,
+      "bot": "won/all_lit",
+      "ticks": 3110,
+      "score": 1486,
+      "flames_left": 3,
+      "motes": 30,
+      "stuns": 2,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 3110,
+        "state": "won",
+        "score": 1486
+      },
+      "replay_matches": true
+    },
+    {
+      "seed": 4,
+      "bot": "won/all_lit",
+      "ticks": 5124,
+      "score": 1688,
+      "flames_left": 3,
+      "motes": 41,
+      "stuns": 10,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 5124,
+        "state": "won",
+        "score": 1688
+      },
+      "replay_matches": true
+    },
+    {
+      "seed": 5,
+      "bot": "won/all_lit",
+      "ticks": 4566,
+      "score": 1586,
+      "flames_left": 3,
+      "motes": 37,
+      "stuns": 6,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 4566,
+        "state": "won",
+        "score": 1586
+      },
+      "replay_matches": true
+    }
+  ],
+  "wins": 5,
+  "replay_ok": true
+}

@@ -1,0 +1,38 @@
+{
+  "seeds": [
+    {
+      "seed": 1,
+      "run1": "63092b5fcb8b78ab",
+      "run2": "63092b5fcb8b78ab",
+      "bytes": 200353,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":1235,\"state\":\"lost\",\"score\":10}"
+    },
+    {
+      "seed": 7,
+      "run1": "7eed1afa441d812c",
+      "run2": "7eed1afa441d812c",
+      "bytes": 589584,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":3572,\"state\":\"lost\",\"score\":70}"
+    },
+    {
+      "seed": 42,
+      "run1": "dd4263b9f3fa6c49",
+      "run2": "dd4263b9f3fa6c49",
+      "bytes": 206910,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":1241,\"state\":\"lost\",\"score\":0}"
+    },
+    {
+      "seed": 2026,
+      "run1": "514a961a9423250c",
+      "run2": "514a961a9423250c",
+      "bytes": 1053868,
+      "identical": true,
+      "end": "{\"type\":\"end\",\"ticks\":6564,\"state\":\"lost\",\"score\":110}"
+    }
+  ],
+  "distinct_seeds_differ": true,
+  "pass": true
+}

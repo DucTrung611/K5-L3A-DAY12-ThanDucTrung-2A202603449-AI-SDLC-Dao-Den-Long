@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: chạy thành công: exit 0, output đúng định dạng, dòng cuối là end
+ok 1 - chạy thành công: exit 0, output đúng định dạng, dòng cuối là end
+  ---
+  duration_ms: 196.2694
+  type: 'test'
+  ...
+# Subtest: --snapshot-every mặc định 10
+ok 2 - --snapshot-every mặc định 10
+  ---
+  duration_ms: 140.2243
+  type: 'test'
+  ...
+# Subtest: thiếu --seed -> exit 1 + stderr
+ok 3 - thiếu --seed -> exit 1 + stderr
+  ---
+  duration_ms: 142.8556
+  type: 'test'
+  ...
+# Subtest: tham số lạ / night khác 1 -> exit khác 0
+ok 4 - tham số lạ / night khác 1 -> exit khác 0
+  ---
+  duration_ms: 283.3902
+  type: 'test'
+  ...
+# Subtest: inputs JSON hỏng -> exit 2
+ok 5 - inputs JSON hỏng -> exit 2
+  ---
+  duration_ms: 151.2754
+  type: 'test'
+  ...
+# Subtest: inputs thiếu frames / nút không phải boolean -> exit 2
+ok 6 - inputs thiếu frames / nút không phải boolean -> exit 2
+  ---
+  duration_ms: 263.0174
+  type: 'test'
+  ...
+# Subtest: scenario sai kiểu -> exit 2
+ok 7 - scenario sai kiểu -> exit 2
+  ---
+  duration_ms: 401.4146
+  type: 'test'
+  ...
+# Subtest: file inputs có BOM UTF-8 vẫn đọc được
+ok 8 - file inputs có BOM UTF-8 vẫn đọc được
+  ---
+  duration_ms: 147.3048
+  type: 'test'
+  ...
+# Subtest: game.contract.json: tuning khớp đúng số game đang dùng
+ok 9 - game.contract.json: tuning khớp đúng số game đang dùng
+  ---
+  duration_ms: 3.4386
+  type: 'test'
+  ...
+# Subtest: game.contract.json: các khóa bắt buộc
+ok 10 - game.contract.json: các khóa bắt buộc
+  ---
+  duration_ms: 1.9215
+  type: 'test'
+  ...
+# Subtest: src/sim không dùng nguồn bất định (Math.random, Date, performance) và không import render
+ok 11 - src/sim không dùng nguồn bất định (Math.random, Date, performance) và không import render
+  ---
+  duration_ms: 3.8799
+  type: 'test'
+  ...
+# Subtest: mặc định: move [0,0], yaw 0, mọi nút false
+ok 12 - mặc định: move [0,0], yaw 0, mọi nút false
+  ---
+  duration_ms: 3.7333
+  type: 'test'
+  ...
+# Subtest: yaw 0: x là +X, z là +Z
+ok 13 - yaw 0: x là +X, z là +Z
+  ---
+  duration_ms: 0.519
+  type: 'test'
+  ...
+# Subtest: yaw 90°: move [0,1] -> +X ; move [1,0] -> -Z (theo công thức contract)
+ok 14 - yaw 90°: move [0,1] -> +X ; move [1,0] -> -Z (theo công thức contract)
+  ---
+  duration_ms: 1.0753
+  type: 'test'
+  ...
+# Subtest: vector dài hơn 1 được chuẩn hóa, ngắn hơn 1 giữ nguyên
+ok 15 - vector dài hơn 1 được chuẩn hóa, ngắn hơn 1 giữ nguyên
+  ---
+  duration_ms: 2.2779
+  type: 'test'
+  ...
+# Subtest: frame chỉ đổi trường có mặt
+ok 16 - frame chỉ đổi trường có mặt
+  ---
+  duration_ms: 0.5612
+  type: 'test'
+  ...
+# Subtest: nút chỉ kích hoạt khi false -> true
+ok 17 - nút chỉ kích hoạt khi false -> true
+  ---
+  duration_ms: 0.647
+  type: 'test'
+  ...
+# Subtest: đèn mặc định: 5 đèn, L1 ở (0,0,25), bán kính 25
+ok 18 - đèn mặc định: 5 đèn, L1 ở (0,0,25), bán kính 25
+  ---
+  duration_ms: 5.9197
+  type: 'test'
+  ...
+# Subtest: tick 0 trước input, sự kiện ghi tick = k+1
+ok 19 - tick 0 trước input, sự kiện ghi tick = k+1
+  ---
+  duration_ms: 1.6728
+  type: 'test'
+  ...
+# Subtest: time_left_s = thời lượng - bước/60
+ok 20 - time_left_s = thời lượng - bước/60
+  ---
+  duration_ms: 1.2655
+  type: 'test'
+  ...
+# Subtest: dựng scenario không cộng điểm và không phát sự kiện
+ok 21 - dựng scenario không cộng điểm và không phát sự kiện
+  ---
+  duration_ms: 0.9815
+  type: 'test'
+  ...
+# Subtest: pulse: trúng trong bán kính (≤ r), trượt ngoài bán kính
+ok 22 - pulse: trúng trong bán kính (≤ r), trượt ngoài bán kính
+  ---
+  duration_ms: 0.8214
+  type: 'test'
+  ...
+# Subtest: bị chạm: dropped = floor(carried * hit_drop_ratio)
+ok 23 - bị chạm: dropped = floor(carried * hit_drop_ratio)
+  ---
+  duration_ms: 1.8391
+  type: 'test'
+  ...
+# Subtest: Bóng Mực đang choáng không gây sát thương
+ok 24 - Bóng Mực đang choáng không gây sát thương
+  ---
+  duration_ms: 0.9651
+  type: 'test'
+  ...
+# Subtest: thắng: bonus = floor(time_left)*per_second_left + flames*per_flame_left
+ok 25 - thắng: bonus = floor(time_left)*per_second_left + flames*per_flame_left
+  ---
+  duration_ms: 0.654
+  type: 'test'
+  ...
+# Subtest: đã kết thúc thì stepGame không làm gì thêm
+ok 26 - đã kết thúc thì stepGame không làm gì thêm
+  ---
+  duration_ms: 0.4275
+  type: 'test'
+  ...
+# Subtest: tất định trong cùng tiến trình: cùng seed -> cùng output; khác seed -> khác
+ok 27 - tất định trong cùng tiến trình: cùng seed -> cùng output; khác seed -> khác
+  ---
+  duration_ms: 72.1321
+  type: 'test'
+  ...
+# Subtest: id Bóng Mực tự sinh không trùng id do scenario đặt
+ok 28 - id Bóng Mực tự sinh không trùng id do scenario đặt
+  ---
+  duration_ms: 4.164
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1932.1347
