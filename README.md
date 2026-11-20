@@ -1,7 +1,7 @@
 # Đảo Đèn Lồng
 
 > **Video demo:** sẽ cập nhật ở Phase 4 (Release `v1.0.0`).
-> Day 12 AI SDLC Lab · Thân Đức Trung · 2A202603449 · Tài liệu lab gốc: [docs/lab/](docs/lab/README.md) · Kế hoạch: [PLAN.md](PLAN.md) · Trạng thái: **Phase 2 (Ticket-02 "Ba hòn đảo", Contract v1.1)**
+> Day 12 AI SDLC Lab · Thân Đức Trung · 2A202603449 · Tài liệu lab gốc: [docs/lab/](docs/lab/README.md) · Kế hoạch: [PLAN.md](PLAN.md) · Trạng thái: **Phase 3 (Ticket-03 "Đèn cạn dầu", Contract v1.2)**
 
 Game 3D góc nhìn thứ ba. **Mây**, người giữ đèn nhỏ tuổi đội nón lá treo một chiếc đèn lồng nhỏ, đi qua **ba hòn đảo** trong ba đêm, gom đom đóm để thắp lại các **Đèn Lồng Lớn**, né **Bóng Mực** và **Gió Lạc** trước khi trời sáng.
 
@@ -53,9 +53,11 @@ Bản web tĩnh: `npm run build` sinh `dist/` (chạy bằng `npm run preview` h
 **Gió Lạc** (Đêm 2, 3): dải lụa xám xanh bay 7 m/s. Khi Mây mang ≥ 5 đom đóm trong 15 m nó lao tới, chạm thì cướp 3 đom đóm rồi bỏ chạy. Tỏa sáng khi nó đang lao tới → nó bỏ chạy không cướp được; khi nó đang chạy mang đồ → nó làm rơi lại đồ.
 **Bùa Gió**: lá bùa đỏ viền vàng, 10 s chạy 7.2 m/s và lướt không hồi chiêu, xuất hiện lại sau 45 s.
 
-**Điểm**: +10 mỗi đom đóm **nạp** · +100 mỗi đèn thắp · +5 mỗi Bóng Mực trúng Tỏa sáng (kể cả con đang choáng) · khi thắng: `floor(giây còn lại) × 2 + 50 × Ngọn Lửa còn lại`. Tổng điểm là tổng các đêm đã thắng.
+**Đèn cạn dầu (Phase 3)**: mục tiêu là **giữ đảo sáng tới bình minh**. Đèn thắp xong có dầu 100, hao 1/giây; bấm **E** ở đèn đang sáng để châm dầu (mỗi đom đóm +10, đèn đầy dầu thì không chọn). Hết dầu thì đèn tắt, thắp lại chỉ cần 5 đom đóm (đèn chưa từng sáng cần 10). Đèn dưới 30 dầu **mất vùng an toàn** và nhấp nháy; **Bóng Mực** đang lang thang sẽ tìm tới đèn yếu nhất, đứng hút 5 dầu/giây (cộng dồn). Thắng khi hết giờ còn sống và có ≥ 60% số đèn đang sáng (3/5, 4/6, 5/7); đêm dài 240/270/300 s. Sức chứa đom đóm tăng 2 mỗi lần thắp thành công (tối đa 20, đặt lại mỗi đêm). Cài đặt có **Bảng màu dễ phân biệt**.
 
-## Chế độ headless (Test Contract v1.1)
+**Điểm (Phase 3)**: +5 mỗi đom đóm nạp (thắp, thắp lại, châm dầu) · thắp lần đầu +100 · thắp lại +40 · Bóng Mực trúng Tỏa sáng +5 (+15 nếu đang hút dầu) · khi thắng, mỗi đèn sáng `+50 + floor(dầu)` và mỗi Ngọn Lửa còn lại +50. Không còn thưởng thời gian. Tổng điểm là tổng các đêm đã thắng.
+
+## Chế độ headless (Test Contract v1.2)
 
 Khai báo ở [game.contract.json](game.contract.json). Logic chạy 60 tick/giây cố định, không cần cửa sổ hay GPU. Một đêm đầy đủ (tối đa 21 600 tick) chạy trong dưới 1 giây.
 
@@ -66,6 +68,8 @@ node src/headless/cli.js --seed 1 --night 1|2|3 --ticks 3600 --out out/run.jsonl
 
 Mã thoát: `0` thành công · `1` sai tham số hoặc lỗi chạy (kể cả `--night` ngoài 1..3) · `2` file scenario/inputs sai định dạng (JSON hỏng, `move` ngoài [-1,1], `tick` không tăng nghiêm ngặt, id đèn không thuộc đêm đó, `state` lạ...). Lỗi luôn in ra stderr.
 
+Phase 3 (v1.2) thêm: snapshot đèn `fuel` (1 chữ số), `ever_lit`, `relit_count`, `player.capacity`, Bóng Mực `state: "drain"`; event `refuel`, `lantern_out`, `fuel_drain` (mỗi 60 tick), `lantern_lit.relight`, `game_over.reason` `dawn_survived`; scenario `lanterns[].{fuel,ever_lit}`, `player.successful_lights`, `shades[].target_lantern_id`. Giả định B31…B48 ở [docs/notes/phase-3.md](docs/notes/phase-3.md); quyết định thiết kế ở [docs/adr-phase-3.md](docs/adr-phase-3.md).
+
 Có thêm so với v1.0: input `dash`, `pause`; scenario `player.{invuln_ticks,dash_cd_ticks,pulse_cd_ticks,charm_ticks}`, `shades[].{state,state_ticks_left}`, `drifters`, `charms`, `random_drifters`, `wind_enabled`; snapshot `night`, `wind`, `player.{vel,grounded,invuln,dash_cd_s,pulse_cd_s,charm_s}`, `motes[kind,ttl_s]`, `drifters`, `charms`; event `dash`, `charm_picked`, `drifter_steal`, `drifter_drop`, `night_start`, `paused`, `resumed`.
 
 **Giá trị đặc biệt trong contract:** `fall_enabled: true` (rơi khỏi đảo có phạt). Không khóa tuning nào là `null`. Điểm xuất phát Đêm 3 là **(0,0,−20)** (ticket không nêu; (0,0,0) nằm trong tháp chuông). `shade_speed` khai 4.0, riêng Đêm 3 là 4.5 (số nội bộ `RULES.shade_speed_night3`). Toàn bộ giả định B1…B30 ở [docs/notes/phase-2.md](docs/notes/phase-2.md).
@@ -73,12 +77,12 @@ Có thêm so với v1.0: input `dash`, `pause`; scenario `player.{invuln_ticks,d
 ## Kiểm thử
 
 ```bash
-npm run verify      # contract v1.1 + unit test + 66 scenario headless + determinism 3 đêm + bot Đêm 1
+npm run verify      # contract v1.2 + 58 unit test + 101 scenario headless + determinism 3 đêm + bot Đêm 1
 npm run mutation    # sửa cố ý hằng số/logic, scenario phải FAIL (test không phải loại luôn đạt)
-npm run proof -- --phase 2   # chạy lại toàn bộ và lưu bằng chứng vào docs/proof/phase-2/
+npm run proof -- --phase 3   # chạy lại toàn bộ và lưu bằng chứng vào docs/proof/phase-3/
 ```
 
-- Bằng chứng Phase 2: [docs/proof/phase-2/report.md](docs/proof/phase-2/report.md) (yêu cầu → bằng chứng) và [results.md](docs/proof/phase-2/results.md) (tự sinh). Phase 1: [docs/proof/phase-1/](docs/proof/phase-1/report.md).
+- Bằng chứng Phase 3: [docs/proof/phase-3/report.md](docs/proof/phase-3/report.md) và [results.md](docs/proof/phase-3/results.md) (tự sinh). Phase 2: [docs/proof/phase-2/report.md](docs/proof/phase-2/report.md). Phase 1: [docs/proof/phase-1/](docs/proof/phase-1/report.md).
 - Mọi `expect.json` được tính **tay** từ ticket (công thức trong [tests/scenarios/_generate.mjs](tests/scenarios/_generate.mjs)), không chép từ output chương trình.
 - CI: [.github/workflows/ci.yml](.github/workflows/ci.yml) chạy `npm run verify` trên Ubuntu và macOS mỗi lần push.
 

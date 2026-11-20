@@ -1,0 +1,155 @@
+# Kết quả kiểm chứng Phase 3 (tự sinh bởi `npm run proof -- --phase 3`)
+
+- Thời điểm: 2026-11-20T09:38:02.364Z
+- Mã nguồn: commit `2ccc33c` + thay đổi chưa commit
+- Máy: Windows_NT 10.0.26300 · AMD Ryzen 7 5700U with Radeon Graphics ×16 · RAM 15 GB · Node v24.14.0
+- Tổng: **TẤT CẢ ĐẠT**
+
+| Kiểm chứng | Lệnh | Kết quả |
+|---|---|---|
+| Contract v1.2 khớp số chuẩn | `npm run contract` | ĐẠT |
+| Unit test | `npm test` | ĐẠT (58 pass / 0 fail) – [unit-tests.tap](unit-tests.tap) |
+| Scenario headless (hộp đen qua CLI) | `npm run scenarios` | 101/101 ĐẠT – [scenarios.json](scenarios.json) |
+| Tất định (3 đêm × 3 seed × 2 lần, trọn đêm) | `npm run determinism` | ĐẠT – [determinism.json](determinism.json) |
+| Bot chơi Đêm 1 từ đầu tới kết thúc + phát lại CLI | `npm run bot` | thắng 4/5, phát lại khớp – [bot.json](bot.json) |
+| Headless 1 đêm đầy đủ ≤ 30 s | (xem mục Hiệu năng) | ĐẠT |
+
+## Scenario
+
+| Scenario | Yêu cầu | Mô tả (expect tính tay) | Kết quả | Output |
+|---|---|---|---|---|
+| `all_lit_no_early_win` | T3/Thắng | Thay win_all_lit: thắp đèn cuối (tick 1) KHÔNG còn kết thúc Đêm; điểm 10·5 + 100 = 150; game vẫn playing ở tick 100 (còn 98.3 s), không có game_over | ĐẠT | [jsonl](scenarios/all_lit_no_early_win.jsonl) |
+| `bad_inputs_move_range` | R2 | move ngoài [-1,1] -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_inputs_pause_type` | R2/C7 | pause không phải boolean -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_inputs_tick_order` | R2 | inputs có tick không tăng nghiêm ngặt -> exit 2 + stderr | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_night_argument` | C7 | --night 4 không hợp lệ -> exit 1 (lỗi tham số) + stderr | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_scenario_ever_lit_type` | T3/Định dạng | ever_lit không phải boolean -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_scenario_fuel_range` | T3/Định dạng | lanterns[].fuel ngoài [0,100] -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_scenario_json` | R2 | scenario.json không phải JSON hợp lệ -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_scenario_lantern_id` | R2 | scenario tham chiếu đèn không tồn tại L9 -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_scenario_lantern_wrong_night` | R2/C7 | L6 chỉ có từ Đêm 2: ở Đêm 1 -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_scenario_shade_state` | R2/C7 | state Bóng Mực ngoài {spawning,wander,chase,recoil,stunned} -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_scenario_successful_lights` | T3/Định dạng | player.successful_lights âm -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bad_scenario_target_lantern` | T3/Định dạng | shades[].target_lantern_id không phải đèn của Đêm -> exit 2 | ĐẠT | (exit ≠ 0, không có output) |
+| `bridge_no_rails_fall` | C4 | Đêm 2: cầu tre rộng /z/ ≤ 2, không lan can: đi +Z từ giữa cầu, z=2.0 ở tick 20 còn đứng được, tick 21 ra khỏi cầu -> rơi, player_hit by fall ở tick 81 | ĐẠT | [jsonl](scenarios/bridge_no_rails_fall.jsonl) |
+| `capacity_caps_at_20` | T3/Sức chứa | successful_lights 7 -> min(20, 24) = 20: nhặt đúng 20 trong 25 đom đóm | ĐẠT | [jsonl](scenarios/capacity_caps_at_20.jsonl) |
+| `capacity_grows_after_light` | T3/Sức chứa | Sức chứa = min(20, 10 + 2·successful_lights). Tick 1 mang 10/10 không nhặt, thắp L1 (+1 lần thành công) -> 12; tick 2 nhặt đúng 12 (13 đom đóm, còn 1 trên đất) | ĐẠT | [jsonl](scenarios/capacity_grows_after_light.jsonl) |
+| `capacity_scenario_lit_not_counted` | T3/Sức chứa | Đèn đặt sẵn sáng bằng scenario không tính vào successful_lights: sức chứa vẫn 10, nhặt 10 trong 12 | ĐẠT | [jsonl](scenarios/capacity_scenario_lit_not_counted.jsonl) |
+| `carry_capacity_full` | R6 | Đang mang đủ carry_capacity (10) thì không nhặt thêm; đom đóm vẫn nằm đó | ĐẠT | [jsonl](scenarios/carry_capacity_full.jsonl) |
+| `charm_dash_no_cooldown` | Bùa Gió | Còn bùa: lướt không hồi chiêu (dash_cd_s luôn 0). Lướt tick 1..12 (z=2.8); bấm lúc đang lướt (tick 6) bị bỏ; bấm tick 15 lướt ngay lần hai (không chờ hồi chiêu) -> z = 5.6 ở tick 26 | ĐẠT | [jsonl](scenarios/charm_dash_no_cooldown.jsonl) |
+| `charm_expiry` | Bùa Gió | Còn 5 tick bùa: tick 1..4 chạy 7.2 m/s (0.12 m/tick, z=0.48 ở tick 4), tick 5 bùa hết (charm_s 0) quay về 6.0 m/s | ĐẠT | [jsonl](scenarios/charm_expiry.jsonl) |
+| `charm_pickup_speed` | Bùa Gió | Nhặt bùa ở XZ ≤ 1.0 (z=2.0 ở tick 20): charm_picked {C1, 600}; bùa biến mất, hồi sau 2700 tick (45 s); từ tick 21 chạy 7.2 m/s (z = 2.0 + 0.12·t); charm_s đếm ngược từ 10 s | ĐẠT | [jsonl](scenarios/charm_pickup_speed.jsonl) |
+| `charm_respawn` | Bùa Gió | Bùa đang hồi (còn 10 tick) xuất hiện lại đúng tick 10 | ĐẠT | [jsonl](scenarios/charm_respawn.jsonl) |
+| `cliff_blocks` | C4 | Đêm 3: vách tầng 2 (r ≤ 8) là vách đứng, không đi lên được: đi +Z từ z=-9 dừng ở z=-8.1 (bước kế tiếp r=8.0 đã thuộc tầng 2) | ĐẠT | [jsonl](scenarios/cliff_blocks.jsonl) |
+| `dash_air_altitude` | Lướt | Lướt trên không giữ nguyên độ cao: nhảy tick 1; tick 10 y = 0.861; lướt tick 11..22 y đứng yên 0.861 (hướng mặt +Z, đi 2.8 m); sau lướt rơi từ nghỉ: y_k = 0.861 - k(k+1)/360, chạm đất ở k=18 -> tick 40 | ĐẠT | [jsonl](scenarios/dash_air_altitude.jsonl) |
+| `dash_cooldown` | C6/Lướt | Lướt 14 m/s × 12 tick (0.2333 m/tick, giữ độ cao), hồi chiêu 90 tick từ lúc bắt đầu: bấm ở tick 11 -> dash; z = 1.0 + 0.2333·t; tick 22 z=3.8 cd 79 tick (1.317 s); bấm ở tick 31 (còn hồi chiêu) bị bỏ; hết hồi chiêu đúng tick 101 -> dash thứ hai | ĐẠT | [jsonl](scenarios/dash_cooldown.jsonl) |
+| `deposit_and_light` | R7/C2 | Mang 10, cách L1 1.5 m (≤ 2.0), nhấn interact -> nạp 10 (lantern_cost 10), L1 sáng. Ticket-03: điểm = 10·5 (mỗi đom đóm NẠP +5) + 100 (thắp lần đầu) = 150; đèn đầy dầu 100, ever_lit; sức chứa 10 -> 12 (thắp thành công lần 1) | ĐẠT | [jsonl](scenarios/deposit_and_light.jsonl) |
+| `deposit_out_of_range` | R7 | Cách L1 2.001 m (> interact_radius 2.0) thì nhấn interact không có tác dụng | ĐẠT | [jsonl](scenarios/deposit_out_of_range.jsonl) |
+| `deposit_overflow` | R7 | L1 đã 8/10, mang 5 -> chỉ nạp 2 (min(đang mang, còn thiếu)), còn giữ 3. Ticket-03: điểm = 2·5 + 100 = 110 | ĐẠT | [jsonl](scenarios/deposit_overflow.jsonl) |
+| `deposit_partial_remembered` | R7 | Đèn nhớ tiến độ: L1 đã có 3/10, nạp 4 -> 7/10 chưa sáng, +4·5 = 20 điểm (Ticket-03; đúng biên 2.0 m). Lần bấm thứ hai không còn gì để nạp | ĐẠT | [jsonl](scenarios/deposit_partial_remembered.jsonl) |
+| `drain_holds_beyond_6` | T3/Drain | Mây cách 6.001 m (> 6): Bóng Mực vẫn drain, đứng yên z=26; mỗi tick hao 6 đơn vị: tick 5 fuel = (1200-30)/60 = 19.5 | ĐẠT | [jsonl](scenarios/drain_holds_beyond_6.jsonl) |
+| `drain_pulse_stun_15` | T3/Điểm | Tỏa Sáng trúng S1 (đang drain, cách 3.0 m) và S2 (wander): S1 tổng +15, S2 +5 -> 20 điểm; cả hai choáng. Tick 1 S1 vẫn bị tính hút (hao 6): fuel 19.9; sau khi choáng thôi hút (tick 5: hao thêm 4 đơn vị: 1194-4 = 1190 -> 19.8) | ĐẠT | [jsonl](scenarios/drain_pulse_stun_15.jsonl) |
+| `drain_to_chase_within_6` | T3/Drain | drain -> chase khi Mây trong 6 m (đúng 6.0 tính là trong): Mây ở z=20, Bóng Mực z=26 -> tick 1 chase và đã bước 1/15 m: z = 25.933. Tick 1 vẫn bị hút (hao 6 đơn vị): fuel = 1194/60 = 19.9 | ĐẠT | [jsonl](scenarios/drain_to_chase_within_6.jsonl) |
+| `drifter_pulse_chase` | Gió Lạc | Tỏa sáng trúng Gió Lạc đang chase (3D 4.005 ≤ 5) -> flee, KHÔNG cướp (stolen 0); không cộng điểm (chỉ Bóng Mực được +5) | ĐẠT | [jsonl](scenarios/drifter_pulse_chase.jsonl) |
+| `drifter_pulse_drop` | Gió Lạc | Tỏa sáng trúng Gió Lạc đang flee có đồ: thả lại 3 đom đóm tại chỗ (kind dropped, TTL 480 tick: ở tick 10 còn 471 = 7.85 s, hết ở tick 481), Gió Lạc biến mất sau tối đa 120 tick (tick 120) | ĐẠT | [jsonl](scenarios/drifter_pulse_drop.jsonl) |
+| `drifter_spawn_schedule` | Gió Lạc | Gió Lạc sinh ở tick 1200 (D1) và 2400 (D2), tối đa 2 con: tick 3600 không sinh thêm. Người chơi không mang đom đóm nên chúng luôn idle | ĐẠT | [jsonl](scenarios/drifter_spawn_schedule.jsonl) |
+| `drifter_steal` | Gió Lạc | Mang 6 ≥ 5 và cách 10 m ≤ 15: idle -> chase (7 m/s, x = 10 - 0.1167 t); chạm ≤ 1.2 m lần đầu ở t=76 (x=1.133) -> drifter_steal {amount 3, carried 3}, flee 240 tick rồi biến mất (tick 316) | ĐẠT | [jsonl](scenarios/drifter_steal.jsonl) |
+| `fall_last_flame_lose` | C3 | Rơi khi chỉ còn 1 lửa: thua ngay no_flames ở tick 81, không hồi sinh | ĐẠT | [jsonl](scenarios/fall_last_flame_lose.jsonl) |
+| `fuel_decay_one_per_second` | T3/Nhiên liệu | Đèn lit:true không khai báo fuel mặc định 100; hao 1 fuel/s = 1 đơn vị/tick: tick 6 -> 99.9, tick 60 -> 99.0, tick 600 -> 90.0; ever_lit true, relit_count 0; đèn tắt fuel 0 | ĐẠT | [jsonl](scenarios/fuel_decay_one_per_second.jsonl) |
+| `input_fields_persist` | R3 | Trường vắng giữ giá trị cũ: tick 30 chỉ đổi yaw 180° nên move [0,1] vẫn giữ -> đi ngược về gốc; tick 60 dừng | ĐẠT | [jsonl](scenarios/input_fields_persist.jsonl) |
+| `interact_nearest_tiebreak` | R5 | L1 (z=25) và L2 (z=21) cùng cách 2.0 m: chọn đèn id nhỏ hơn (L1); L2 không bị đụng tới (Ticket-03: điểm 10·5 + 100 = 150) | ĐẠT | [jsonl](scenarios/interact_nearest_tiebreak.jsonl) |
+| `interact_prefers_nearest_receivable` | T3/Chọn đèn | L1 đang sáng (cần châm, cách 2.0 m) và L2 chưa sáng (cách 1.0 m): chọn đèn nhận được GẦN NHẤT = L2 -> nạp 10 thắp L2, L1 không được châm. Điểm 10·5 + 100 = 150 | ĐẠT | [jsonl](scenarios/interact_prefers_nearest_receivable.jsonl) |
+| `interact_tie_refuel_smaller_id` | T3/Chọn đèn | L1 (sáng, cần dầu) và L2 (tắt) cùng cách 2.0 m: bằng nhau chọn id nhỏ hơn = L1 -> châm dầu: fuel 49.98 -> cần ceil(5.0017) = 6 đom đóm: used 6, fuel 100, còn 4; L2 không bị đụng. Điểm 6·5 = 30 | ĐẠT | [jsonl](scenarios/interact_tie_refuel_smaller_id.jsonl) |
+| `island_edge_fall` | C3 | Rơi khỏi đảo (thay island_boundary_no_fall): chạy +X từ x=38, x=40 ở tick 20 (còn đứng được), tick 21 ra hư không; rơi y_k = -k(k+1)/360 < -10 lần đầu ở k=60 -> tick 81: player_hit by fall {flames 2, dropped 0, lost 4}; chờ 60 tick (không nhặt, bị đóng băng); tick 141 hồi sinh tại (0,0,0) bất tử 90 tick (còn ở tick 230, hết ở tick 231) | ĐẠT | [jsonl](scenarios/island_edge_fall.jsonl) |
+| `jump_arc` | R17/C1 | Nhảy 7.0 m/s, trọng lực 20 m/s²: y_n = (7n - n(n+1)/6)/60 -> tick 10: 0.861; tick 20: 1.167 (đỉnh); tick 41 chạm đất (y = 0 đúng); giữ nút không nhảy lại; vy tick 10 = 7 - 10·20/60 = 3.667 | ĐẠT | [jsonl](scenarios/jump_arc.jsonl) |
+| `jump_pad_night2` | C4/Bục nhảy | Đêm 2: chân Mây chạm bục (20,0,18) ở tick 1 -> bắn lên vy 14 và 24 m/s về tâm đảo B (70,0,0). Bay k tick: y = (14k - k(k+1)/6)/60 (đúng 0 ở k=83), ngang = (24·(50,-18)/53.14)/60 mỗi tick; phím đi không ghi đè; chạm đất ở tick 84 trên đảo B | ĐẠT | [jsonl](scenarios/jump_pad_night2.jsonl) |
+| `jump_pad_night3` | C4/Bục nhảy | Đêm 3: đứng trên tầng 1 (y=3) trong bán kính 1.0 m của bục (0,3,13) -> bắn vy 12 và 8 m/s hướng -Z. y = 3 + (12k - k(k+1)/6)/60, z = 12.5 - 8k/60; hạ cánh lên tầng 2 (y=6) ở k=49 (tick 50) tại z=5.967 | ĐẠT | [jsonl](scenarios/jump_pad_night3.jsonl) |
+| `lantern_lit_expels_shade` | C1/C5 | Đèn vừa sáng ở tick 1: Bóng Mực cách đèn 3 m bị đẩy ra mép 6 m trong 30 tick (0.1 m/tick: z = 28 + 0.1 t), không chạm người chơi | ĐẠT | [jsonl](scenarios/lantern_lit_expels_shade.jsonl) |
+| `lantern_out_at_fuel_zero` | T3/Nhiên liệu | fuel 0.5 = 30 đơn vị: hao 1/tick -> fuel <= 0 đúng tick 30: lantern_out, đèn tắt, deposited về 0, ever_lit vẫn true, fuel 0; không kết thúc game | ĐẠT | [jsonl](scenarios/lantern_out_at_fuel_zero.jsonl) |
+| `lantern_out_before_dawn_loses` | T3/Thua | L3 hết dầu ở tick 30 (fuel 0.5) -> còn 2/5 đèn sáng ở tick cuối -> thua dawn | ĐẠT | [jsonl](scenarios/lantern_out_before_dawn_loses.jsonl) |
+| `lose_dawn` | R12 | time_left_s 1 -> hết giờ sau 60 bước: game_over lost/dawn ở tick 60, dừng sớm dù --ticks 200 | ĐẠT | [jsonl](scenarios/lose_dawn.jsonl) |
+| `lose_dawn_threshold_n2` | T3/Thắng | Đêm 2: 3/6 đèn sáng ở tick cuối dưới ngưỡng ceil(0.6·6) = 4: thua dawn | ĐẠT | [jsonl](scenarios/lose_dawn_threshold_n2.jsonl) |
+| `lose_dawn_threshold_n3` | T3/Thắng | Đêm 3: 4/7 đèn sáng ở tick cuối dưới ngưỡng ceil(0.6·7) = 5: thua dawn | ĐẠT | [jsonl](scenarios/lose_dawn_threshold_n3.jsonl) |
+| `lose_dawn_two_of_five` | T3/Thua | Chỉ 2/5 đèn sáng ở tick cuối (< 3): thua dawn, không cộng điểm bình minh | ĐẠT | [jsonl](scenarios/lose_dawn_two_of_five.jsonl) |
+| `lose_no_flames_beats_dawn_win` | T3/Thua | Tick bình minh (60) Bóng Mực hết spawning và chạm Mây (1 lửa) cùng tick: dù 3/5 đèn sáng, hết Ngọn Lửa luôn thua no_flames, không thắng, điểm 0 | ĐẠT | [jsonl](scenarios/lose_no_flames_beats_dawn_win.jsonl) |
+| `mote_cap_30` | C1 | Trần 30 đom đóm: có 29, tick 240 sinh thêm 1 (=30); tick 480 và 720 không sinh nữa | ĐẠT | [jsonl](scenarios/mote_cap_30.jsonl) |
+| `move_cam_yaw90` | R4 | cam_yaw_deg=90, move [0,1]: x' = x·cosθ + z·sinθ = 1, z' = 0 -> đi +X, 6 m sau 60 tick | ĐẠT | [jsonl](scenarios/move_cam_yaw90.jsonl) |
+| `move_diagonal_normalized` | R4 | move [1,1] dài √2 > 1 phải chuẩn hóa: mỗi trục 6/√2 = 4.243 m sau 60 tick | ĐẠT | [jsonl](scenarios/move_diagonal_normalized.jsonl) |
+| `move_forward` | R3 | Tick model: tick 0 trước input; move [0,1] ở 6 m/s (tăng tốc tức thời ≤ 0.1 s) -> 1 m sau 10 tick, 6 m sau 60 tick; time_left_s = 240 - 60/60 (Ticket-03: Đêm 1 dài 240 s) | ĐẠT | [jsonl](scenarios/move_forward.jsonl) |
+| `night2_defaults` | C4 | Đêm 2 mặc định: 270 s (Ticket-03), xuất phát (0,0,0), 6 đèn tọa độ chuẩn, 20 đom đóm, bùa C1 sẵn sàng, chưa có Bóng Mực/Gió Lạc | ĐẠT | [jsonl](scenarios/night2_defaults.jsonl) |
+| `night2_route_cross_bridge` | C4/Chơi được | Đêm 2: đi thẳng +X từ (0,0,0) qua cầu tre sang đảo B (x=70 ở tick 700, không rơi vì /z/ = 0), rồi +Z tới (70,0,19) (tick 890) và thắp L4 (70,0,20). Kiểm: không rơi, L4 sáng, điểm 150 (Ticket-03) | ĐẠT | [jsonl](scenarios/night2_route_cross_bridge.jsonl) |
+| `night3_defaults` | C4 | Đêm 3 mặc định: 300 s (Ticket-03), xuất phát (0,0,-20), 7 đèn tọa độ chuẩn (y=6, 3, 3, 0...), 20 đom đóm, hai bùa C1 C2, gió chưa thổi | ĐẠT | [jsonl](scenarios/night3_defaults.jsonl) |
+| `night3_route_to_L1` | C4/Chơi được | Đêm 3: đèn L1 ở tầng 2 chỉ tới được bằng: đi vòng ngoài tầng 0 -> leo dốc 30° (r 30 -> 24) -> đi trên tầng 1 -> bục nhảy (0,3,13) -> hạ cánh tầng 2 -> nạp 10 đom đóm. Kiểm kết quả: L1 sáng, điểm 10·5 + 100 = 150 (Ticket-03), Mây đứng trên tầng 2 (y=6), không bị rơi/chạm | ĐẠT | [jsonl](scenarios/night3_route_to_L1.jsonl) |
+| `pause_resume` | C6/Tạm dừng | Tạm dừng: bấm ở tick 11 -> event paused, state paused, tick vẫn tăng nhưng sim_tick/thời gian/vị trí đứng yên (sim 10, z=1.0, 239.833 s); bấm lại ở tick 31 -> resumed và bước đó chạy luôn (sim 11, z=1.1); tick 40: sim 20, z=2.0 | ĐẠT | [jsonl](scenarios/pause_resume.jsonl) |
+| `pickup_height_ok` | C1 | Nhặt cần chênh cao chân Mây - mặt đất nơi đặt ≤ 1.5: Mây ở y=1.4 (đang rơi, tick 1 còn 1.394) nhặt ngay tick 1 | ĐẠT | [jsonl](scenarios/pickup_height_ok.jsonl) |
+| `pickup_height_too_high` | C1 | Mây ở y=1.6 rơi tự do y_k = 1.6 - k(k+1)/360: k=5 -> 1.5167 (> 1.5, chưa nhặt), k=6 -> 1.4833 (≤ 1.5) nhặt đúng tick 6 | ĐẠT | [jsonl](scenarios/pickup_height_too_high.jsonl) |
+| `pickup_radius_boundary` | R6/C1 | Nhặt khi XZ ≤ 1.0: đom đóm cách đúng 1.0 m được nhặt; cách 1.001 m thì không. Nhặt KHÔNG cộng điểm (Ticket-02: +10 khi NẠP) | ĐẠT | [jsonl](scenarios/pickup_radius_boundary.jsonl) |
+| `pickup_tier_mismatch` | C1/C4 | Đêm 3: đom đóm trên tầng 2 (y=6) cách Mây 0.6 m theo XZ nhưng chân Mây ở tầng 0 (chênh 6 m > 1.5) -> không nhặt | ĐẠT | [jsonl](scenarios/pickup_tier_mismatch.jsonl) |
+| `pulse_cooldown_edge` | R5/R8 | Cạnh lên + hồi chiêu 3 s = 180 tick: pulse tick 1; bấm ở tick 61 (còn hồi chiêu 120) bị bỏ; giữ nút qua tick 181 không kích hoạt lại (không có cạnh lên); bấm lại ở tick 201 -> pulse thứ hai. Mang 10 - 3 - 3 = 4 | ĐẠT | [jsonl](scenarios/pulse_cooldown_edge.jsonl) |
+| `pulse_insufficient_light` | R8 | Mang 2 < pulse_cost 3 -> không kích hoạt: không event, không hồi chiêu, Bóng Mực không choáng | ĐẠT | [jsonl](scenarios/pulse_insufficient_light.jsonl) |
+| `pulse_non_drain_stun_5` | T3/Điểm | Bóng Mực không ở drain trúng Tỏa Sáng: +5 (không phải +15) | ĐẠT | [jsonl](scenarios/pulse_non_drain_stun_5.jsonl) |
+| `pulse_stun_push` | R8/C1/C5 | Tỏa sáng (3 đom đóm, 5 m 3D, cd 3 s): A cách 4 m (3D=4.005) choáng 120 tick + bị đẩy 4 m trong 15 tick đầu (4/15 mỗi tick: x = 4 + 0.267 t, đủ x=8 ở tick 15); B cách 12 m (không trúng) đuổi 4 m/s (x = 12 - t/15). +5 điểm. Choáng hết ở tick 121 -> chase | ĐẠT | [jsonl](scenarios/pulse_stun_push.jsonl) |
+| `ramp_climb` | C4 | Đêm 3: dốc 30° dài 6 m từ chân (r=30, Y=0) lên đỉnh (r=24, Y=3), độ cao tuyến tính 0.5 m mỗi mét. Đi dọc trục dốc 6 m/s: tick 30 y=1.5, tick 60 y=3.0 (lên tầng 1) | ĐẠT | [jsonl](scenarios/ramp_climb.jsonl) |
+| `refuel_ceil_rounds_up` | T3/Châm dầu | Tick 1 hao trước: fuel = 3299 đơn vị (54.98). used = min(10, ceil((6000-3299)/600 = 4.50)) = 5; fuel = min(100, 54.98 + 50) = 100; carried 10-5 = 5; điểm 5·5 = 25; sự kiện refuel {amount 5, fuel 100}, KHÔNG có deposit/lantern_lit | ĐẠT | [jsonl](scenarios/refuel_ceil_rounds_up.jsonl) |
+| `refuel_exact_multiple` | T3/Châm dầu | fuel đầu 4801 đơn vị -> sau hao tick 1 còn 4800 (80.0): thiếu đúng 1200 = 2 đom đóm: used = ceil(2.0) = 2 (không phải 3); fuel 100; carried 8; điểm 10 | ĐẠT | [jsonl](scenarios/refuel_exact_multiple.jsonl) |
+| `refuel_limited_by_carried` | T3/Châm dầu | fuel 20 (còn 1199 đơn vị sau hao), mang 3 < cần 9: used = 3; fuel = (1199 + 1800)/60 = 49.98 -> 50.0; carried 0; điểm 15 | ĐẠT | [jsonl](scenarios/refuel_limited_by_carried.jsonl) |
+| `refuel_restores_zone_expels_drain_shade` | T3/Đẩy lùi | Châm dầu lên >= 30 lúc có Bóng Mực drain trong 6 m: tick 1 hao 6 -> 1494; used = ceil(4506/600 = 7.51) = 8 (còn 2), fuel 100, +40 điểm. Vùng an toàn trở lại: Bóng Mực bị đẩy từ z=26 ra mép z=31 trong 30 tick (5/30 mỗi tick), recoil, không gây sát thương; sau đó chase | ĐẠT | [jsonl](scenarios/refuel_restores_zone_expels_drain_shade.jsonl) |
+| `relight_after_out_sequence` | T3/Thắp lại | L1 hết dầu ở tick 30 (lantern_out), tick 41 người chơi nạp 5 -> thắp lại (relight true, +40), relit_count 1; điểm 5·5 + 40 = 65; capacity 12 | ĐẠT | [jsonl](scenarios/relight_after_out_sequence.jsonl) |
+| `relight_costs_5` | T3/Thắp lại | Đèn đã từng sáng (ever_lit) chỉ cần 5 đom đóm: mang 6 -> nạp 5, thắp lại, còn 1. Điểm = 5·5 + 40 (thắp lại) = 65; lantern_lit relight:true; relit_count 1; fuel 100; sức chứa 10 -> 12 | ĐẠT | [jsonl](scenarios/relight_costs_5.jsonl) |
+| `relight_partial_then_complete` | T3/Thắp lại | Thắp lại đã có 3/5: mang 3 -> chỉ nạp 2 (5-3), còn 1; thắp lại thành công. Điểm = 2·5 + 40 = 50 | ĐẠT | [jsonl](scenarios/relight_partial_then_complete.jsonl) |
+| `safe_radius_blocks` | R10 | Đứng tại L1 đã sáng: Bóng Mực (11 m, chase) bị chặn ở mép 6 m quanh đèn -> dừng ở z = 25 + 6 = 31, không bao giờ chạm người chơi | ĐẠT | [jsonl](scenarios/safe_radius_blocks.jsonl) |
+| `safe_zone_expels_inside` | C1/C5 | Bóng Mực đang trong vùng an toàn (cách người chơi 0.8 m): bị đẩy đều ra mép 6 m trong đúng 30 tick (mỗi tick (31-25.8)/30 = 0.173 m), trạng thái recoil, KHÔNG gây sát thương; xong thì chase và bị chặn ở z=31 | ĐẠT | [jsonl](scenarios/safe_zone_expels_inside.jsonl) |
+| `safe_zone_lost_below_30_boundary` | T3/Vùng an toàn | fuel 31 = 1860 đơn vị: đúng 30.0 ở tick 60 (vẫn còn vùng an toàn, Bóng Mực chase bị chặn ở z = 31 từ tick 30); tick 61 fuel 29.98 < 30 -> mất vùng an toàn: Bóng Mực tiến lên z = 31 - 1/15 = 30.933 | ĐẠT | [jsonl](scenarios/safe_zone_lost_below_30_boundary.jsonl) |
+| `scenario_setup_no_events` | R13 | Dựng scenario (4 đèn lit:true, player carried/flames) không phát sự kiện (trừ night_start ở tick 1), không cộng điểm | ĐẠT | [jsonl](scenarios/scenario_setup_no_events.jsonl) |
+| `shade_chase_keeps_chasing_weak_lantern` | T3/Drain | Chỉ Bóng Mực wander mới chọn đèn yếu: con đang chase (Mây ở gốc, L1 yếu ở z=25) vẫn đuổi Mây: z = 10 - t/15 (tick 30: z = 8.0), không sang drain | ĐẠT | [jsonl](scenarios/shade_chase_keeps_chasing_weak_lantern.jsonl) |
+| `shade_detect_giveup` | C5 | Phát hiện ≤ 12 m (XZ): A (12.0) chase, B (12.001) vẫn wander. Bỏ đuổi > 18 m: C (18.0) vẫn chase, D (18.001) về wander | ĐẠT | [jsonl](scenarios/shade_detect_giveup.jsonl) |
+| `shade_drain_burns_fuel` | T3/Drain | 1 Bóng Mực drain: mỗi tick hao 1 + 5 = 6 đơn vị (từ 1200): tick 60 fuel 14.0, tick 100 fuel 10.0, tick 120 fuel 8.0, tick 180 fuel 2.0; hết dầu (fuel <= 0) ở tick 200: lantern_out, Bóng Mực về wander. fuel_drain chỉ ghi mỗi 60 tick (60, 120, 180). Đèn fuel < 30 mất vùng an toàn nên Bóng Mực đứng cách 1 m không bị đẩy ra | ĐẠT | [jsonl](scenarios/shade_drain_burns_fuel.jsonl) |
+| `shade_drain_stacking` | T3/Drain | 2 Bóng Mực cùng hút: cộng dồn 1 + 5 + 5 = 11 đơn vị/tick: tick 60 fuel = (1200 - 660)/60 = 9.0 (mỗi con ghi fuel_drain ở tick 60); fuel <= 0 ở tick 110 (1200 - 11·109 = 1 > 0; tick 110 còn -10) | ĐẠT | [jsonl](scenarios/shade_drain_stacking.jsonl) |
+| `shade_hit_invuln_lose` | R9/R12/C5 | Bóng Mực áp sát: hit ở tick 1 (rơi floor(5/2)=2); lùi 2 m trong 60 tick (x: 0.433 -> 2.433, hết lùi ở tick 61 -> chase); bất tử 90 tick nên hit tiếp ở tick 91 (rơi floor(3/2)=1) và tick 181 (rơi floor(2/2)=1, hết lửa) -> thua no_flames | ĐẠT | [jsonl](scenarios/shade_hit_invuln_lose.jsonl) |
+| `shade_spawn_schedule_n1` | C5 | Đêm 1: 2 con ở tick 300 rồi 1 con mỗi 8 s (480 tick): 780, 1260, 1740, 2220; tối đa 6 nên tick 2700 không sinh thêm | ĐẠT | [jsonl](scenarios/shade_spawn_schedule_n1.jsonl) |
+| `shade_spawn_schedule_n3` | C5 | Đêm 3: 2 con ở tick 300 rồi 1 con mỗi 6 s (360 tick) đến 10 con (tick 3180); tick 3540 không sinh thêm | ĐẠT | [jsonl](scenarios/shade_spawn_schedule_n3.jsonl) |
+| `shade_spawning_harmless` | C5 | Bóng Mực spawning (còn 20 tick) đứng yên, không gây sát thương; hết spawning ở tick 20 thì chase và chạm ngay trong tick đó | ĐẠT | [jsonl](scenarios/shade_spawning_harmless.jsonl) |
+| `shade_wander_tiebreak_smaller_id` | T3/Drain | Hai đèn yếu L2 (23.8, 7.7) và L5 (-23.8, 7.7) cách Bóng Mực wander bằng nhau (23.8 m): chọn id nhỏ hơn = L2 -> đi +X: x = t/15 (tick 60: x = 4.0) | ĐẠT | [jsonl](scenarios/shade_wander_tiebreak_smaller_id.jsonl) |
+| `shade_wanders_to_weakest_lantern` | T3/Drain | Bóng Mực wander đi thẳng tới đèn sáng fuel < 30 (4 m/s): cách L1 10 m -> z = 35 - t/15; cách đúng 2.0 m ở tick 120 (z=27) thì chuyển drain; hao tick 1..120 = 1 đơn vị (còn 1080); từ tick 121 hao 6: tick 121 fuel = 1074/60 = 17.9 | ĐẠT | [jsonl](scenarios/shade_wanders_to_weakest_lantern.jsonl) |
+| `smoke_default` | R1/C7 | Đêm 1 mặc định seed 42 (240 s theo Ticket-03): 20 đom đóm lúc đầu, thêm 1 ở tick 240 và 480; 2 Bóng Mực sinh đúng tick 300 (S1,S2) ở trạng thái spawning 60 tick rồi wander; night_start ở tick 1; không chạm trong 600 tick | ĐẠT | [jsonl](scenarios/smoke_default.jsonl) |
+| `step_off_tier` | C4 | Đêm 3: bước ra khỏi mép tầng 1 (r < 12) thì rơi xuống tầng 0 (không phạt): đi -X từ x=12.55, x=11.95 ở tick 6 ra khỏi mép; rơi y_k = 3 - k(k+1)/360 chạm đất ở k=33 -> tick 39 | ĐẠT | [jsonl](scenarios/step_off_tier.jsonl) |
+| `tower_blocks` | C4 | Đêm 3: tháp chuông (trụ r=2 ở tâm tầng 2) không đi xuyên được: đi -Z từ z=6 dừng ở z=2.1 | ĐẠT | [jsonl](scenarios/tower_blocks.jsonl) |
+| `unlit_lantern_no_protection` | R10 | Đèn CHƯA sáng không bảo vệ: Bóng Mực cách 5.5 m, 4 m/s: khoảng cách = 5.5 - t/15 ≤ 1.0 lần đầu ở t = 68 (0.967) -> hit tick 68 | ĐẠT | [jsonl](scenarios/unlit_lantern_no_protection.jsonl) |
+| `win_dawn_survived_n1` | T3/Thắng | Đêm 1 cần 3/5 đèn (ceil(0.6·5)=3). Hết giờ ở tick 60 với 3 đèn sáng -> thắng dawn_survived. Dầu tick 60: L1 = (6000-60)/60 = 99, L2 = (3030-60)/60 = 49.5 -> 49, L3 = (600-60)/60 = 9. Điểm = (50+99) + (50+49) + (50+9) + 3 lửa·50 = 457 | ĐẠT | [jsonl](scenarios/win_dawn_survived_n1.jsonl) |
+| `win_dawn_threshold_n2` | T3/Thắng | Đêm 2: 4/6 đèn sáng ở tick cuối đạt ngưỡng ceil(0.6·6) = 4: thắng, điểm 4·149 + 150 = 746 | ĐẠT | [jsonl](scenarios/win_dawn_threshold_n2.jsonl) |
+| `win_dawn_threshold_n3` | T3/Thắng | Đêm 3: 5/7 đèn sáng ở tick cuối đạt ngưỡng ceil(0.6·7) = 5: thắng, điểm 5·149 + 150 = 895 | ĐẠT | [jsonl](scenarios/win_dawn_threshold_n3.jsonl) |
+| `wind_gust` | C6/Gió mạnh | Đêm 3: cơn gió thổi tick 1800..2099 (5 s), dir_deg nguyên [0,360), đẩy người chơi đứng yên đúng 2 m/s × 5 s = 10 m theo dir_deg; trước 1800 và từ 2100 không gió | ĐẠT | [jsonl](scenarios/wind_gust.jsonl) |
+
+## Tất định
+
+| Đêm | Seed | sha256 lần 1 | sha256 lần 2 | Giống nhau | Thời gian | Dòng end |
+|---|---|---|---|---|---|---|
+| 1 | 1 | `79683f64de2b1c56` | `79683f64de2b1c56` | Có | 467 ms | `{"type":"end","ticks":14400,"state":"lost","score":0}` |
+| 1 | 7 | `bf4f04f9c1dfff64` | `bf4f04f9c1dfff64` | Có | 498 ms | `{"type":"end","ticks":14400,"state":"lost","score":0}` |
+| 1 | 42 | `2e7e185463d0a722` | `2e7e185463d0a722` | Có | 460 ms | `{"type":"end","ticks":14400,"state":"lost","score":0}` |
+| 2 | 1 | `ede5320a3e9c69ec` | `ede5320a3e9c69ec` | Có | 620 ms | `{"type":"end","ticks":16200,"state":"lost","score":0}` |
+| 2 | 7 | `819b0f515efba4ca` | `819b0f515efba4ca` | Có | 554 ms | `{"type":"end","ticks":16200,"state":"lost","score":0}` |
+| 2 | 42 | `6adb225bf201c9a1` | `6adb225bf201c9a1` | Có | 621 ms | `{"type":"end","ticks":16200,"state":"lost","score":0}` |
+| 3 | 1 | `ad9c59b7a8f10cfa` | `ad9c59b7a8f10cfa` | Có | 705 ms | `{"type":"end","ticks":18000,"state":"lost","score":0}` |
+| 3 | 7 | `18534069588c7cfd` | `18534069588c7cfd` | Có | 627 ms | `{"type":"end","ticks":18000,"state":"lost","score":0}` |
+| 3 | 42 | `d331301e76f39339` | `d331301e76f39339` | Có | 798 ms | `{"type":"end","ticks":18000,"state":"lost","score":0}` |
+
+Seed khác nhau cho output khác nhau (mỗi đêm): Có.
+
+## Bot playthrough (Đêm 1 chơi được từ đầu tới thắng)
+
+| Seed | Kết quả | Tick | Điểm | Lửa còn | Đom đóm nhặt | Lần xua | Lần bị chạm | Phát lại CLI khớp |
+|---|---|---|---|---|---|---|---|---|
+| 1 | won/dawn_survived | 14400 | 1097 | 2 | 69 | 4 | 1 | Có – [inputs](bot/seed1-inputs.json) · [output](bot/seed1.jsonl) |
+| 2 | lost/dawn | 14400 | 710 | 3 | 72 | 17 | 0 | Có – [inputs](bot/seed2-inputs.json) · [output](bot/seed2.jsonl) |
+| 3 | won/dawn_survived | 14400 | 1229 | 3 | 75 | 0 | 0 | Có – [inputs](bot/seed3-inputs.json) · [output](bot/seed3.jsonl) |
+| 4 | won/dawn_survived | 14400 | 1259 | 3 | 75 | 3 | 0 | Có – [inputs](bot/seed4-inputs.json) · [output](bot/seed4.jsonl) |
+| 5 | won/dawn_survived | 14400 | 1271 | 3 | 77 | 1 | 0 | Có – [inputs](bot/seed5-inputs.json) · [output](bot/seed5.jsonl) |
+
+## Hiệu năng headless (yêu cầu: 1 đêm đầy đủ, tối đa 21 600 tick, ≤ 30 s)
+
+| Đêm | Số tick chạy | 3 lần chạy (gồm khởi động Node) | Nhanh nhất | tick/giây |
+|---|---|---|---|---|
+| 1 | 14400 | 443 ms, 406 ms, 419 ms | 406 ms | 35,494 |
+| 2 | 16200 | 481 ms, 512 ms, 457 ms | 457 ms | 35,480 |
+| 3 | 18000 | 594 ms, 605 ms, 606 ms | 594 ms | 30,288 |

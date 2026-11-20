@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## [phase-3] – Ticket-03 "Đèn cạn dầu" (Contract v1.2)
+Quyết định thiết kế: [docs/adr-phase-3.md](docs/adr-phase-3.md). Giả định B31…B48 và danh sách test bị thay: [docs/notes/phase-3.md](docs/notes/phase-3.md).
+
+### ⚠ Thay đổi phá vỡ tương thích (breaking changes)
+- **Luật thắng**: bỏ "thắng ngay khi tất cả đèn sáng". Thắng = còn sống khi hết giờ **và** số đèn sáng ở tick cuối ≥ `ceil(0.6 × tổng đèn)` (Đêm 1/2/3 cần 3/5, 4/6, 5/7). `game_over.reason`: `"all_lit"` **không còn dùng**; thắng là `"dawn_survived"`; thua là `"dawn"` (không đủ đèn) hoặc `"no_flames"` (hết lửa luôn thua trước, kể cả tick bình minh).
+- **Thời lượng đêm**: 300/330/360 s → **240/270/300 s** (`night1_duration_s`…).
+- **Đèn có nhiên liệu**: đèn đã sáng nhận thêm đom đóm (châm dầu), hao 1 fuel/s, `fuel <= 0` thì tắt (`lantern_out`). Thay luật "đèn đã sáng không nhận thêm đom đóm".
+- **Vùng an toàn**: đèn `fuel < 30` mất vùng an toàn (đúng 30 vẫn còn). Thay luật "Bóng Mực không bao giờ vào vùng an toàn".
+- **Công thức điểm** thay toàn bộ: +5 mỗi đom đóm nạp (trước +10); thắp lần đầu +100; thắp lại +40; Tỏa Sáng +5 (+15 tổng nếu con đó đang `drain`); bình minh (chỉ khi thắng) mỗi đèn sáng `+50 + floor(fuel)` và mỗi Ngọn Lửa `+50`. **Bỏ** thưởng thời gian (`per_second_left`).
+- **Sức chứa** tăng dần: `min(20, 10 + 2 × successful_lights)`, đặt lại mỗi Đêm (trước cố định 10).
+- **Contract v1.2** (`game.contract.json`): `contract_version "1.2"`; thêm `fuel_max, fuel_decay_per_s, fuel_per_mote, relight_cost, win_ratio, drain_per_s, low_fuel_threshold, capacity_max`; `night*_duration_s` đổi; khóa `score` đổi sang bộ khóa mới.
+- **Output headless**: snapshot đèn thêm `fuel` (1 chữ số thập phân), `ever_lit`, `relit_count`; `player.capacity`; trạng thái Bóng Mực `"drain"`; sự kiện mới `refuel`, `lantern_out`, `fuel_drain` (mỗi 60 tick hút); `lantern_lit` thêm `relight`.
+- **Scenario**: đèn thêm `fuel`, `ever_lit` (`lit: true` không khai `fuel` → 100); `player.successful_lights`; `shades[].target_lantern_id`, `shades[].state: "drain"`.
+
+### Thêm
+- Thắp lại đèn đã tắt chỉ cần 5 đom đóm (chưa từng sáng vẫn cần 10). Tương tác chọn đèn *nhận được* gần nhất (chưa sáng, hoặc sáng chưa đầy dầu).
+- Bóng Mực trạng thái `drain`: `wander` chọn đèn sáng `fuel < 30` gần nhất, tới ≤ 2 m thì đứng hút 5 fuel/s (cộng dồn nhiều con); sang `chase` khi Mây trong 6 m, `stunned` khi trúng Tỏa Sáng, `wander` khi đèn tắt/fuel ≥ 30/cách > 2 m. Châm dầu lên ≥ 30 đẩy các con trong 6 m ra mép vùng (30 tick, không sát thương).
+- **Client**: thanh dầu trên đèn, đèn và thanh dầu nhấp nháy 1 Hz khi fuel < 30, đèn tắt xẹp 20% + vết rách, tia hút dầu, HUD `đang_mang / sức_chứa`, "cần ≥ N đèn lúc bình minh", cảnh báo đèn sắp tắt, nhắc châm dầu/thắp lại; cài đặt **"Bảng màu dễ phân biệt"** (viền/mắt Bóng Mực #00B3FF, cảnh báo #FFFFFF kèm ⚠; có lưu).
+- **Kiểm chứng**: 101 scenario headless (37 scenario Phase 3, expect tính tay), 58 unit test, mutation check mở rộng, bot Đêm 1 biết thắp lại và châm dầu.
+
+### Đổi / xóa test (có lý do, không bỏ qua âm thầm)
+- Viết lại vì luật bị thay: `win_all_lit` → `all_lit_no_early_win` (+ `win_dawn_survived_n1`), `win_at_last_tick` → `win_dawn_survived_n1`/`lose_no_flames_beats_dawn_win`; thời lượng đêm trong `smoke_default`, `move_forward`, `pause_resume`, `night2_defaults`, `night3_defaults`; điểm trong `deposit_*`, `interact_nearest_tiebreak`, 2 lộ trình chơi được; unit test thắng/điểm/thời lượng/contract.
+- Chi tiết từng test: [docs/notes/phase-3.md](docs/notes/phase-3.md) mục 4.
+
 ## [phase-2] – Ticket-02 "Ba hòn đảo" (Contract v1.1)
 ### Thêm
 - **Số liệu chuẩn** của ticket thay mọi giá trị tự chọn (tốc độ, nhảy 7 m/s, mang 10, nhặt ≤ 1.0 m + chênh cao 1.5, đèn cost 10, vùng an toàn 6 m, tỏa sáng 3/5 m/3 s, choáng 120 tick, đẩy 4 m/15 tick, đêm 300/330/360 s...). Điểm: +10 khi NẠP, +5 mỗi Bóng Mực trúng tỏa sáng.

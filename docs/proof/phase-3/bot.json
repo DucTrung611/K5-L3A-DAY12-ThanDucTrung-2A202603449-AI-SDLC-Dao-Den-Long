@@ -1,0 +1,91 @@
+{
+  "rows": [
+    {
+      "seed": 1,
+      "bot": "won/dawn_survived",
+      "ticks": 14400,
+      "score": 1097,
+      "flames_left": 2,
+      "motes": 69,
+      "stuns": 4,
+      "hits": 1,
+      "replay_end": {
+        "type": "end",
+        "ticks": 14400,
+        "state": "won",
+        "score": 1097
+      },
+      "replay_matches": true
+    },
+    {
+      "seed": 2,
+      "bot": "lost/dawn",
+      "ticks": 14400,
+      "score": 710,
+      "flames_left": 3,
+      "motes": 72,
+      "stuns": 17,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 14400,
+        "state": "lost",
+        "score": 710
+      },
+      "replay_matches": true
+    },
+    {
+      "seed": 3,
+      "bot": "won/dawn_survived",
+      "ticks": 14400,
+      "score": 1229,
+      "flames_left": 3,
+      "motes": 75,
+      "stuns": 0,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 14400,
+        "state": "won",
+        "score": 1229
+      },
+      "replay_matches": true
+    },
+    {
+      "seed": 4,
+      "bot": "won/dawn_survived",
+      "ticks": 14400,
+      "score": 1259,
+      "flames_left": 3,
+      "motes": 75,
+      "stuns": 3,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 14400,
+        "state": "won",
+        "score": 1259
+      },
+      "replay_matches": true
+    },
+    {
+      "seed": 5,
+      "bot": "won/dawn_survived",
+      "ticks": 14400,
+      "score": 1271,
+      "flames_left": 3,
+      "motes": 77,
+      "stuns": 1,
+      "hits": 0,
+      "replay_end": {
+        "type": "end",
+        "ticks": 14400,
+        "state": "won",
+        "score": 1271
+      },
+      "replay_matches": true
+    }
+  ],
+  "wins": 4,
+  "replay_ok": true
+}
