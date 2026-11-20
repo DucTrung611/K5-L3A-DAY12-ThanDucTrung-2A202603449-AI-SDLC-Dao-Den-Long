@@ -34,6 +34,7 @@ for (let i = 0; i < nights; i++) {
   const night = soakNightOf(i);
   try {
     if (i === 0) {
+      for (let k = 0; k < 2; k++) runSoakNight(1000 + k, 1); // khởi động JIT/heap (ván bỏ đi) để mốc đầu không quá "lạnh"
       createGame({ seed: seed + i, night }); // "tải xong Đêm đầu tiên"
       memStart = mb();
     }

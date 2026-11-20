@@ -33,7 +33,7 @@ export function submitEntry(entry, file = leaderboardPath()) {
 /** Middleware vite (dev và preview): GET /api/leaderboard, POST /api/leaderboard. */
 export function leaderboardMiddleware() {
   return (req, res, next) => {
-    if (!req.url || !req.url.startsWith("/api/leaderboard")) return next();
+    if (!req.url || req.url.split("?")[0] !== "/api/leaderboard") return next();
     const send = (code, body) => {
       res.statusCode = code;
       res.setHeader("content-type", "application/json");

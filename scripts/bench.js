@@ -58,7 +58,7 @@ function serveDist() {
     const srv = http.createServer((req, res) => {
       const u = decodeURIComponent((req.url || "/").split("?")[0]);
       const file = path.join(DIST, path.normalize(u === "/" ? "/index.html" : u));
-      if (!file.startsWith(DIST) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
+      if (!file.startsWith(DIST + path.sep) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
         res.statusCode = 404;
         return res.end("not found");
       }

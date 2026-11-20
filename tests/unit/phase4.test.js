@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { addEntry, normalizeEntries, isValidName, nameError, qualifies, LEADERBOARD_SIZE } from "../../src/sim/leaderboard.js";
+import { addEntry, normalizeEntries, isoToMs, isValidName, nameError, qualifies, LEADERBOARD_SIZE } from "../../src/sim/leaderboard.js";
 import { benchStats, percentile } from "../../scripts/lib/benchstats.js";
 import { createBenchGame, stepBench, benchCamera, BENCH } from "../../src/sim/bench.js";
 import { runSoakNight, soakNightOf } from "../../src/sim/soak.js";
@@ -16,11 +16,14 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 const entry = (name, score, at, extra = {}) => ({ name, score, nights_won: 1, achieved_at: at, seed: 1, ...extra });
 
 // ---------- bảng xếp hạng ----------
-test("tên: 3–12 ký tự [A-Za-z0-9_] (cho phép chữ Latin có dấu)", () => {
-  for (const ok of ["abc", "Mây_01", "A".repeat(12), "Nguyen_Van", "x_1"]) assert.equal(isValidName(ok), true, ok);
-  for (const bad of ["ab", "A".repeat(13), "có khoảng", "a-b-c", "tên!", "", "日本語です", "a.b.c"]) assert.equal(isValidName(bad), false, bad);
+test("tên: 3–12 ký tự [A-Za-z0-9_] ", () => {
+  for (const ok of ["abc", "May_01", "A".repeat(12), "Nguyen_Van", "x_1"]) assert.equal(isValidName(ok), true, ok);
+  for (const bad of ["ab", "A".repeat(13), "có khoảng", "a-b-c", "tên!", "", "日本語です", "a.b.c", "Nguyễn", "Đào_An"]) assert.equal(isValidName(bad), false, bad);
   assert.equal(nameError("ab"), "Tên phải dài 3–12 ký tự");
-  assert.equal(nameError("a b c"), "Tên chỉ gồm chữ, số và dấu gạch dưới (_)");
+  assert.equal(nameError("a b c"), "Tên chỉ gồm A-Z, a-z, 0-9 và dấu gạch dưới (_)");
+  assert.equal(isoToMs("2026-11-20T10:00:00+07:00"), Date.UTC(2026, 10, 20, 3, 0, 0));
+  assert.equal(isoToMs("2024-02-29T00:00:00Z"), Date.UTC(2024, 1, 29));
+  assert.ok(Number.isNaN(isoToMs("2026-02-30T00:00:00Z")));
   assert.equal(nameError("hop_le"), null);
 });
 
