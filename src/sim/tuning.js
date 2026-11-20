@@ -13,7 +13,7 @@ export const TUNING = Object.freeze({
   interact_radius: 2.0,
   pulse_cost: 3,
   pulse_radius: 5.0,
-  night1_duration_s: 300,
+  night1_duration_s: 240,
   flames: 3,
   invuln_s: 1.5,
   hit_drop_ratio: 0.5,
@@ -27,14 +27,26 @@ export const TUNING = Object.freeze({
   dash_speed: 14.0,
   dash_duration_s: 0.2,
   dash_cooldown_s: 1.5,
-  night2_duration_s: 330,
-  night3_duration_s: 360,
+  night2_duration_s: 270,
+  night3_duration_s: 300,
+  // --- Ticket-03 (Contract v1.2): nhiên liệu đèn ---
+  fuel_max: 100,
+  fuel_decay_per_s: 1.0,
+  fuel_per_mote: 10,
+  relight_cost: 5,
+  win_ratio: 0.6,
+  drain_per_s: 5,
+  low_fuel_threshold: 30,
+  capacity_max: 20,
+  // Điểm Ticket-03 (thay toàn bộ công thức cũ; không còn thưởng thời gian)
   score: Object.freeze({
-    per_mote: 10,
-    per_lantern: 100,
-    per_stun: 5,
-    per_second_left: 2,
-    per_flame_left: 50,
+    per_mote: 5, // mỗi đom đóm nạp vào đèn (thắp mới, thắp lại, châm dầu)
+    per_lantern: 100, // thắp lần đầu
+    per_relight: 40, // thắp lại
+    per_stun: 5, // Bóng Mực trúng Tỏa Sáng
+    per_stun_drain: 15, // tổng nếu ngay trước đó đang `drain`
+    per_dawn_lantern: 50, // bình minh (thắng): mỗi đèn sáng +50 + floor(fuel)
+    per_flame_left: 50, // bình minh (thắng): mỗi Ngọn Lửa còn lại
   }),
 });
 
@@ -88,5 +100,9 @@ export const RULES = Object.freeze({
   wind_push: 2.0,
   pad_radius: 1.0,
   pad_height_tol: 0.5,
+  capacity_step: 2, // Ticket-03: sức chứa = min(capacity_max, carry_capacity + 2 × successful_lights)
+  drain_radius: 2, // Bóng Mực cách đèn mục tiêu <= 2 m (XZ) thì chuyển sang drain
+  drain_chase_radius: 6, // drain -> chase khi Mây trong 6 m
+  drain_event_every_ticks: 60, // fuel_drain chỉ ghi mỗi 60 tick
   eps: 1e-9,
 });

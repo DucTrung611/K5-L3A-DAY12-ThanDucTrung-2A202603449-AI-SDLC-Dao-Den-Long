@@ -1,6 +1,6 @@
 // Client có giao diện: chạy CÙNG lõi mô phỏng src/sim ở 60 tick/giây cố định, vẽ bằng Three.js.
 // Luồng: menu -> giới thiệu Đêm (tên đảo, lời Ông Đăng) -> chơi -> kết quả -> Đêm kế -> Bình Minh (thắng Đêm 3).
-// Thua thì chơi lại đúng Đêm đó. Tạm dừng (Esc/P) dừng hẳn logic bằng cơ chế pause của sim.
+// Ticket-03: thắng = sống tới bình minh với đủ đèn sáng. Thua thì chơi lại đúng Đêm đó. Tạm dừng (Esc/P) dừng hẳn logic bằng cơ chế pause của sim.
 import { createGame, stepGame } from "../sim/game.js";
 import { TUNING, TICK_RATE, RULES } from "../sim/tuning.js";
 import { MAPS, NIGHTS } from "../sim/maps.js";
@@ -19,16 +19,23 @@ const view = createView($("app"));
 const hud = createHud(TUNING);
 const controls = createControls(view.renderer.domElement, { sensitivity: settings.sensitivity });
 const audio = createAudio(settings.volume);
+// Ticket-03: bảng màu dễ phân biệt (lưu trạng thái cài đặt)
+const applyAccessible = () => {
+  document.body.classList.toggle("cb", settings.accessible);
+  view.setAccessible(settings.accessible);
+};
+applyAccessible();
 
+const needLights = (n) => Math.ceil(TUNING.win_ratio * MAPS[n].lanterns.length - 1e-9);
 const INTRO = {
-  1: "Mây à, sương đen đã nuốt hết ánh sáng của Đảo Bến. Gom đom đóm, thắp lại năm ngọn đèn. Nhớ nhé: Bóng Mực sợ ánh đèn.",
-  2: "Đảo Cầu có hai bờ và một nhịp cầu tre không lan can. Đừng lo, bục nhảy sẽ đưa con sang bờ bên kia. Coi chừng Gió Lạc, nó mê đom đóm lắm.",
-  3: "Đảo Chuông cao ba tầng, gió thổi mạnh lắm. Leo dốc, nhảy lên tháp chuông và thắp ngọn đèn cuối cùng để đón bình minh.",
+  1: `Mây à, sương đen đã nuốt hết ánh sáng của Đảo Bến. Đèn thắp rồi vẫn cạn dầu, con phải châm đom đóm cho đèn. Giữ ít nhất ${needLights(1)}/5 ngọn sáng tới bình minh nhé. Bóng Mực sợ ánh đèn, nhưng đèn yếu thì nó hút dầu đấy.`,
+  2: `Đảo Cầu có hai bờ và một nhịp cầu tre không lan can. Đừng lo, bục nhảy sẽ đưa con sang bờ bên kia. Giữ ít nhất ${needLights(2)}/6 đèn sáng tới bình minh. Coi chừng Gió Lạc, nó mê đom đóm lắm.`,
+  3: `Đảo Chuông cao ba tầng, gió thổi mạnh lắm. Leo dốc, nhảy lên tháp chuông, giữ ít nhất ${needLights(3)}/7 đèn sáng tới bình minh. Đèn dưới 30 dầu sẽ mất vùng an toàn, đừng để chúng cạn!`,
 };
 const REASON = {
-  all_lit: "Mọi Đèn Lồng đã sáng!",
+  dawn_survived: "Bình minh đã tới – đảo vẫn sáng!",
   no_flames: "Mây đã hết Ngọn Lửa.",
-  dawn: "Trời đã sáng mà đảo vẫn còn đèn tắt.",
+  dawn: "Trời sáng mà đảo chưa đủ đèn sáng.",
 };
 
 let ui = "menu"; // menu | intro | playing | paused | result | dawn | settings
@@ -104,9 +111,12 @@ function showResult() {
   }
   $("resKicker").textContent = `Đêm ${night} · ${MAPS[night].name}`;
   $("resTitle").textContent = won ? "Đảo đã sáng!" : "Sương đen thắng";
-  const list = [["Kết quả", REASON[game.reason] || game.reason], ["Đèn đã thắp", `${game.lanterns.filter((L) => L.lit).length}/${game.lanterns.length}`], ["Đom đóm đã nạp", String(s.deposited)], ["Bóng Mực bị xua", String(s.stunned)]];
+  const litNow = game.lanterns.filter((L) => L.lit).length;
+  const list = [["Kết quả", REASON[game.reason] || game.reason], ["Đèn sáng lúc bình minh", `${litNow}/${game.lanterns.length} (cần ${needLights(night)})`], ["Đom đóm đã nạp", String(s.deposited)], ["Bóng Mực bị xua", String(s.stunned)]];
+  if (s.relit) list.push(["Lần thắp lại", String(s.relit)]);
+  if (s.out) list.push(["Đèn đã cạn dầu", String(s.out)]);
   if (s.stolen) list.push(["Bị Gió Lạc cướp", String(s.stolen)]);
-  if (won) list.push(["Thưởng thời gian", `+${s.bonusTime}`], ["Thưởng Ngọn Lửa", `+${s.bonusFlames}`]);
+  if (won) list.push(["Thưởng đèn bình minh", `+${s.bonusLanterns}`], ["Thưởng Ngọn Lửa", `+${s.bonusFlames}`]);
   list.push(["Điểm đêm này", String(won ? game.score : 0)], ["Tổng điểm", String(total), "total"]);
   rows($("resStats"), list);
   $("btnNext").hidden = !won;
@@ -143,7 +153,10 @@ function handleEvents(events) {
   for (const e of events) {
     audio.play(e.name);
     if (e.name === "pulse") view.pulse();
-    else if (e.name === "lantern_lit") hud.toast(`Đèn ${e.data.lantern_id} đã sáng!`);
+    else if (e.name === "lantern_lit") hud.toast(e.data.relight ? `Đèn ${e.data.lantern_id} đã thắp lại!` : `Đèn ${e.data.lantern_id} đã sáng!`);
+    else if (e.name === "refuel") hud.toast(`Châm dầu đèn ${e.data.lantern_id}: ${Math.floor(e.data.fuel)}/${TUNING.fuel_max}`, 1400);
+    else if (e.name === "lantern_out") hud.toast(`Đèn ${e.data.lantern_id} đã cạn dầu! Nạp ${TUNING.relight_cost} đom đóm để thắp lại`, 2400);
+    else if (e.name === "fuel_drain") hud.toast(`Bóng Mực đang hút dầu đèn ${e.data.lantern_id} (${Math.floor(e.data.fuel)})!`, 1800);
     else if (e.name === "player_hit") {
       hud.flash();
       if (e.data.by === "fall") hud.toast(`Mây rơi khỏi đảo! (mất ${e.data.lost} đom đóm)`, 2200);
@@ -177,6 +190,14 @@ const openSettings = (from) => {
 };
 $("btnSettings").addEventListener("click", () => openSettings("menu"));
 $("btnPauseSettings").addEventListener("click", () => openSettings("pause"));
+$("cb").addEventListener("change", () => {
+  settings.accessible = $("cb").checked;
+  saveSettings(settings);
+  applyAccessible();
+  $("cbVal").textContent = settings.accessible ? "Bật" : "Tắt";
+});
+$("cb").checked = settings.accessible;
+$("cbVal").textContent = settings.accessible ? "Bật" : "Tắt";
 $("btnBack").addEventListener("click", () => {
   if (settingsFrom === "pause") {
     ui = "paused";

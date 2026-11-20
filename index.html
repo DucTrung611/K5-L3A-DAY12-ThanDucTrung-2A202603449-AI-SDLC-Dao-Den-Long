@@ -6,11 +6,15 @@
     <title>Đảo Đèn Lồng</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='9' y='8' width='14' height='16' rx='6' fill='%23ffb347'/%3E%3Crect x='12' y='5' width='8' height='3' fill='%235a3d26'/%3E%3C/svg%3E" />
     <style>
-      /* bảng màu chuẩn của Ticket-02 */
+      /* bảng màu chuẩn của Ticket-02; Ticket-03: body.cb = "Bảng màu dễ phân biệt" (viền/mắt Bóng Mực #00B3FF, cảnh báo #FFFFFF kèm ⚠) */
       :root {
         --sky: #0e1430; --fog: #1b2350; --lamp: #ffb347; --core: #ffe9b0; --off: #5b5f6e;
         --scarf: #c8102e; --yellow: #f2c14e; --danger: #ff5a5f; --text: #f5f1e6; --shade-rim: #7a3cff;
       }
+      body.cb { --danger: #ffffff; --shade-rim: #00b3ff; }
+      body.cb .flash { background: radial-gradient(ellipse at center, transparent 40%, rgba(255, 255, 255, 0.5)); }
+      .warn-icon { display: none; margin-right: 4px; }
+      body.cb .warn-icon { display: inline; }
       * { box-sizing: border-box; }
       html, body { margin: 0; height: 100%; background: var(--sky); color: var(--text); font-family: "Be Vietnam Pro", system-ui, sans-serif; overflow: hidden; }
       #app { position: fixed; inset: 0; }
@@ -29,6 +33,8 @@
       .flames span.out { background: #3a3150; box-shadow: none; }
       #clock { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
       #clock.urgent { color: var(--danger); }
+      .big.short { color: var(--danger); }
+      .lowfuel { position: absolute; top: 96px; left: 14px; color: var(--danger); background: rgba(14, 20, 48, 0.72); border: 1px solid var(--danger); border-radius: 10px; padding: 4px 12px; font-size: 13px; font-weight: 700; }
       #clock.urgent.blink { opacity: 0.25; }
       .big { font-size: 24px; font-weight: 700; color: var(--yellow); font-variant-numeric: tabular-nums; }
       .slots { display: flex; gap: 5px; justify-content: center; margin-top: 4px; }
@@ -75,6 +81,7 @@
         <div class="label">Ngọn Lửa</div>
         <div class="flames" id="flames"></div>
       </div>
+      <div class="lowfuel" id="lowFuel" hidden><span class="warn-icon">⚠</span><span id="lowFuelText"></span></div>
       <div class="panel tc">
         <div class="label">Còn tới bình minh</div>
         <div id="clock">05:00</div>
@@ -82,6 +89,7 @@
       <div class="panel tr">
         <div class="label">Đèn</div>
         <div class="big" id="lit">0/5</div>
+        <div class="label" id="litNeed"></div>
         <div class="label" style="margin-top: 4px">Điểm</div>
         <div class="big" id="score">0</div>
       </div>
@@ -106,12 +114,12 @@
       <div class="card">
         <h1>Đảo Đèn Lồng</h1>
         <div style="opacity: 0.8">Ba đêm · ba hòn đảo · một bình minh</div>
-        <p>Sương đen đã nuốt hết ánh sáng của quần đảo. Hãy giúp <b>Mây</b>, người giữ đèn nhỏ tuổi, gom đom đóm và thắp lại các <b>Đèn Lồng Lớn</b> trước khi trời sáng. Coi chừng <b>Bóng Mực</b> và <b>Gió Lạc</b>.</p>
+        <p>Sương đen đã nuốt hết ánh sáng của quần đảo. Hãy giúp <b>Mây</b>, người giữ đèn nhỏ tuổi, gom đom đóm, thắp các <b>Đèn Lồng Lớn</b> và <b>giữ đảo sáng tới bình minh</b>: đèn sẽ cạn dầu dần, hãy châm thêm đom đóm. Coi chừng <b>Bóng Mực</b> và <b>Gió Lạc</b>.</p>
         <div class="controls">
           <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><span>Đi lại (theo hướng camera)</span>
           <span><kbd>←</kbd><kbd>→</kbd> / kéo chuột</span><span>Xoay camera</span>
           <span><kbd>Space</kbd> · <kbd>Shift</kbd></span><span>Nhảy · Lướt</span>
-          <span><kbd>E</kbd> · <kbd>F</kbd></span><span>Nạp ánh sáng vào đèn · Tỏa sáng xua Bóng Mực</span>
+          <span><kbd>E</kbd> · <kbd>F</kbd></span><span>Nạp/châm dầu vào đèn · Tỏa sáng xua Bóng Mực</span>
           <span><kbd>Esc</kbd> / <kbd>P</kbd></span><span>Tạm dừng</span>
         </div>
         <button id="btnPlay">Chơi (Enter)</button><button class="ghost" id="btnSettings">Cài đặt</button>
@@ -140,6 +148,7 @@
         <h2>Cài đặt</h2>
         <div class="row"><label for="volume">Âm lượng</label><input type="range" id="volume" min="0" max="1" step="0.05" /><span id="volumeVal"></span></div>
         <div class="row"><label for="sens">Độ nhạy chuột</label><input type="range" id="sens" min="0.2" max="3" step="0.1" /><span id="sensVal"></span></div>
+        <div class="row"><label for="cb">Bảng màu dễ phân biệt</label><input type="checkbox" id="cb" /><span id="cbVal"></span></div>
         <p style="font-size: 13px; opacity: 0.7">Cài đặt được lưu và giữ nguyên ở lần mở game sau.</p>
         <button id="btnBack">Quay lại</button>
       </div>

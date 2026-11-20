@@ -1,4 +1,4 @@
-// Kiểm tra định dạng file scenario / inputs (Test Contract v1.1). Sai định dạng -> FormatError (CLI thoát mã 2).
+// Kiểm tra định dạng file scenario / inputs (Test Contract v1.2). Sai định dạng -> FormatError (CLI thoát mã 2).
 import { MAPS, lanternIds } from "./maps.js";
 
 export class FormatError extends Error {
@@ -18,7 +18,7 @@ const fail = (where, msg) => {
   throw new FormatError(`${where}: ${msg}`);
 };
 
-export const SHADE_STATES = ["spawning", "wander", "chase", "recoil", "stunned"];
+export const SHADE_STATES = ["spawning", "wander", "chase", "recoil", "stunned", "drain"];
 export const DRIFTER_STATES = ["idle", "chase", "flee"];
 
 export function validateScenario(sc, night = 1) {
@@ -28,7 +28,7 @@ export function validateScenario(sc, night = 1) {
     const p = sc.player;
     if (!isObj(p)) fail(W, "player phải là object");
     if (p.pos !== undefined && !isVec3(p.pos)) fail(W, "player.pos phải là [x,y,z] số");
-    for (const k of ["carried", "flames", "invuln_ticks", "dash_cd_ticks", "pulse_cd_ticks", "charm_ticks"]) {
+    for (const k of ["carried", "flames", "invuln_ticks", "dash_cd_ticks", "pulse_cd_ticks", "charm_ticks", "successful_lights"]) {
       if (p[k] !== undefined && !isNat(p[k])) fail(W, `player.${k} phải là số nguyên >= 0`);
     }
   }
@@ -56,6 +56,7 @@ export function validateScenario(sc, night = 1) {
       }
       if (s.state !== undefined && !SHADE_STATES.includes(s.state)) fail(W, `shades[${i}].state không hợp lệ: ${JSON.stringify(s.state)}`);
       if (s.state_ticks_left !== undefined && !isNat(s.state_ticks_left)) fail(W, `shades[${i}].state_ticks_left phải là số nguyên >= 0`);
+      if (s.target_lantern_id !== undefined && !lanternIds(night).includes(s.target_lantern_id)) fail(W, `shades[${i}].target_lantern_id không hợp lệ ở Đêm ${night}: ${JSON.stringify(s.target_lantern_id)}`);
     });
   }
   if (sc.drifters !== undefined) {
@@ -95,6 +96,8 @@ export function validateScenario(sc, night = 1) {
       if (l.pos !== undefined && !isVec3(l.pos)) fail(W, `lanterns[${i}].pos phải là [x,y,z] số`);
       if (l.deposited !== undefined && !isNat(l.deposited)) fail(W, `lanterns[${i}].deposited phải là số nguyên >= 0`);
       if (l.lit !== undefined && typeof l.lit !== "boolean") fail(W, `lanterns[${i}].lit phải là boolean`);
+      if (l.fuel !== undefined && !(isNum(l.fuel) && l.fuel >= 0 && l.fuel <= 100)) fail(W, `lanterns[${i}].fuel phải là số trong [0,100]`);
+      if (l.ever_lit !== undefined && typeof l.ever_lit !== "boolean") fail(W, `lanterns[${i}].ever_lit phải là boolean`);
     });
   }
   if (sc.time_left_s !== undefined && !(isNum(sc.time_left_s) && sc.time_left_s > 0)) fail(W, "time_left_s phải là số > 0");

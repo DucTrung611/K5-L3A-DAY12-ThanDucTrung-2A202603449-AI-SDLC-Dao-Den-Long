@@ -1,7 +1,11 @@
-// Ghi dòng JSONL theo Test Contract v1.1 mục E. Tọa độ và số thực làm tròn 3 chữ số thập phân.
+// Ghi dòng JSONL theo Test Contract v1.2 mục E. Tọa độ và số thực làm tròn 3 chữ số thập phân; fuel đèn làm tròn 1 chữ số.
 
 export const r3 = (v) => {
   const x = Math.round(v * 1000) / 1000;
+  return Object.is(x, -0) ? 0 : x;
+};
+export const r1 = (v) => {
+  const x = Math.round(v * 10) / 10;
   return Object.is(x, -0) ? 0 : x;
 };
 const v3 = (p) => [r3(p[0]), r3(p[1]), r3(p[2])];
@@ -26,8 +30,9 @@ export function snapshotLine(s) {
       dash_cd_s: r3(s.player.dash_cd_s),
       pulse_cd_s: r3(s.player.pulse_cd_s),
       charm_s: r3(s.player.charm_s),
+      capacity: s.player.capacity,
     },
-    lanterns: s.lanterns.map((l) => ({ id: l.id, pos: v3(l.pos), lit: l.lit, deposited: l.deposited })),
+    lanterns: s.lanterns.map((l) => ({ id: l.id, pos: v3(l.pos), lit: l.lit, deposited: l.deposited, fuel: r1(l.fuel), ever_lit: l.ever_lit, relit_count: l.relit_count })),
     shades: s.shades.map((x) => ({ id: x.id, pos: v3(x.pos), state: x.state })),
     motes_active: s.motes_active,
     motes: s.motes.map((m) => ({ id: m.id, pos: v3(m.pos), kind: m.kind, ttl_s: m.ttl_s === null ? null : r3(m.ttl_s) })),
