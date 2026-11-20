@@ -1,0 +1,83 @@
+{
+  "requirement": "T3/Điểm",
+  "description": "Tỏa Sáng trúng S1 (đang drain, cách 3.0 m) và S2 (wander): S1 tổng +15, S2 +5 -> 20 điểm; cả hai choáng. Tick 1 S1 vẫn bị tính hút (hao 6): fuel 19.9; sau khi choáng thôi hút (tick 5: hao thêm 4 đơn vị: 1194-4 = 1190 -> 19.8)",
+  "seed": 1,
+  "ticks": 5,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "pulse",
+        "data": {
+          "stunned_ids": [
+            "S1",
+            "S2"
+          ]
+        }
+      }
+    ],
+    "snapshots": {
+      "1": {
+        "score": 20,
+        "shades": [
+          {
+            "id": "S1",
+            "state": "stunned"
+          },
+          {
+            "id": "S2",
+            "state": "stunned"
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 19.9
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "5": {
+        "lanterns": [
+          {
+            "fuel": 19.8
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ],
+        "shades": [
+          {
+            "state": "stunned"
+          },
+          {
+            "state": "stunned"
+          }
+        ]
+      }
+    },
+    "end": {
+      "score": 20
+    }
+  }
+}

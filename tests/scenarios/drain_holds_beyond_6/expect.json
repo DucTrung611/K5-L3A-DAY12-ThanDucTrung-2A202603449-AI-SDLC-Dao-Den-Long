@@ -1,0 +1,53 @@
+{
+  "requirement": "T3/Drain",
+  "description": "Mây cách 6.001 m (> 6): Bóng Mực vẫn drain, đứng yên z=26; mỗi tick hao 6 đơn vị: tick 5 fuel = (1200-30)/60 = 19.5",
+  "seed": 1,
+  "ticks": 5,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "1": {
+        "shades": [
+          {
+            "id": "S1",
+            "state": "drain",
+            "pos": [
+              0,
+              1,
+              26
+            ]
+          }
+        ]
+      },
+      "5": {
+        "shades": [
+          {
+            "state": "drain",
+            "pos": [
+              0,
+              1,
+              26
+            ]
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 19.5
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      }
+    }
+  }
+}

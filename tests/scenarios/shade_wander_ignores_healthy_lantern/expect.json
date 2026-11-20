@@ -1,0 +1,24 @@
+{
+  "requirement": "T3/Drain",
+  "description": "Đèn khỏe L2 (fuel 100) và đèn yếu L5 (fuel 20) cách Bóng Mực wander bằng nhau (23.8 m): chỉ đèn fuel < 30 được chọn -> đi tới L5 (-X): x = -t/15 (tick 60: x = -4.0). Bắt mutation 'chọn cả đèn khỏe' (sẽ chọn L2, id nhỏ hơn, x = +4)",
+  "seed": 1,
+  "ticks": 60,
+  "snapshot_every": 60,
+  "expect": {
+    "snapshots": {
+      "60": {
+        "shades": [
+          {
+            "id": "S1",
+            "pos": [
+              -4,
+              1,
+              7.7
+            ],
+            "state": "wander"
+          }
+        ]
+      }
+    }
+  }
+}

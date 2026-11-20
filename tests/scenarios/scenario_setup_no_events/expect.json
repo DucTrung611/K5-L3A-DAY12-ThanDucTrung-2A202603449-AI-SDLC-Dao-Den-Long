@@ -17,7 +17,10 @@
       "drifter_steal",
       "drifter_drop",
       "paused",
-      "resumed"
+      "resumed",
+      "refuel",
+      "lantern_out",
+      "fuel_drain"
     ],
     "snapshots": {
       "0": {

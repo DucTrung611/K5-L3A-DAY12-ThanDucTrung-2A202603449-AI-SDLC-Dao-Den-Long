@@ -1,7 +1,8 @@
+// Ticket-03: bot thắp đèn tắt (thắp lại cần 5), châm dầu đèn yếu (fuel < 55), sống tới bình minh.
 // Bot tham lam đơn giản – CHỈ dùng để kiểm chứng (game thắng được từ đầu tới cuối), không phải một phần của game.
 // Bot đọc trạng thái mô phỏng và quyết định input; input được ghi lại thành file inputs theo contract
 // để phát lại bằng CLI headless (hộp đen).
-import { createGame, stepGame } from "../../src/sim/game.js";
+import { createGame, stepGame, capacityOf } from "../../src/sim/game.js";
 
 
 const d2 = (a, b) => Math.hypot(a[0] - b[0], a[2] - b[2]);
@@ -19,15 +20,17 @@ export function playBot({ seed, maxTicks = 18000 }) {
     const active = g.shades.filter((s) => s.state === "wander" || s.state === "chase"); // chỉ các trạng thái gây hit
     const nearShade = active.reduce((b, s) => (!b || d2(s.pos, P.pos) < d2(b.pos, P.pos) ? s : b), null);
     const shadeD = nearShade ? d2(nearShade.pos, P.pos) : Infinity;
-    const unlit = g.lanterns.filter((L) => !L.lit);
-    const lantern = unlit.reduce((b, L) => (!b || d2(L.pos, P.pos) < d2(b.pos, P.pos) ? L : b), null);
-    const need = lantern ? T.lantern_cost - lantern.deposited : Infinity;
+    // đèn cần chăm: đèn tắt (nạp để thắp/thắp lại) hoặc đèn sáng sắp cạn (châm dầu)
+    const needy = g.lanterns.filter((L) => !L.lit || L.fuelU / 60 < 55);
+    const lantern = needy.reduce((b, L) => (!b || d2(L.pos, P.pos) < d2(b.pos, P.pos) ? L : b), null);
+    const need = lantern ? (lantern.lit ? Math.ceil((100 - lantern.fuelU / 60) / T.fuel_per_mote) : (lantern.everLit ? T.relight_cost : T.lantern_cost) - lantern.deposited) : Infinity;
+    const cap = capacityOf(g);
 
     let target = null;
     let interact = false;
     let pulse = false;
     if (nearShade && nearShade.state === "chase" && shadeD < 2.2 && P.carried >= T.pulse_cost && P.pulseCd === 0) pulse = !pulseToggle;
-    if (lantern && (P.carried >= need + T.pulse_cost || P.carried >= T.carry_capacity || (P.carried >= need && shadeD > 10))) {
+    if (lantern && (P.carried >= need + T.pulse_cost || P.carried >= cap || (P.carried >= need && shadeD > 10))) {
       target = lantern.pos;
       if (d2(lantern.pos, P.pos) <= T.interact_radius - 0.5) interact = !interactToggle;
     } else if (g.motes.length) {

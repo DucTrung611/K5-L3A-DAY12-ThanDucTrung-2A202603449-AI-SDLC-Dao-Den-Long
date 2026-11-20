@@ -1,0 +1,24 @@
+{
+  "requirement": "T3/Drain",
+  "description": "Chỉ Bóng Mực wander mới chọn đèn yếu: con đang chase (Mây ở gốc, L1 yếu ở z=25) vẫn đuổi Mây: z = 10 - t/15 (tick 30: z = 8.0), không sang drain",
+  "seed": 1,
+  "ticks": 30,
+  "snapshot_every": 30,
+  "expect": {
+    "snapshots": {
+      "30": {
+        "shades": [
+          {
+            "id": "S1",
+            "pos": [
+              0,
+              1,
+              8
+            ],
+            "state": "chase"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "requirement": "R3",
-  "description": "Tick model: tick 0 trước input; move [0,1] ở 6 m/s (tăng tốc tức thời ≤ 0.1 s) -> 1 m sau 10 tick, 6 m sau 60 tick; time_left_s = 300 - 60/60",
+  "description": "Tick model: tick 0 trước input; move [0,1] ở 6 m/s (tăng tốc tức thời ≤ 0.1 s) -> 1 m sau 10 tick, 6 m sau 60 tick; time_left_s = 240 - 60/60 (Ticket-03: Đêm 1 dài 240 s)",
   "seed": 1,
   "ticks": 60,
   "expect": {
@@ -17,7 +17,7 @@
             0
           ]
         },
-        "time_left_s": 300
+        "time_left_s": 240
       },
       "10": {
         "sim_tick": 10,
@@ -43,7 +43,7 @@
             6
           ]
         },
-        "time_left_s": 299
+        "time_left_s": 239
       }
     }
   }

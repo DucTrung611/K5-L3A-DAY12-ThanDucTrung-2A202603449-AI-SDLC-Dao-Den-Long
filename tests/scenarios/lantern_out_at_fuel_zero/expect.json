@@ -1,0 +1,75 @@
+{
+  "requirement": "T3/Nhiên liệu",
+  "description": "fuel 0.5 = 30 đơn vị: hao 1/tick -> fuel <= 0 đúng tick 30: lantern_out, đèn tắt, deposited về 0, ever_lit vẫn true, fuel 0; không kết thúc game",
+  "seed": 1,
+  "ticks": 40,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 30,
+        "name": "lantern_out",
+        "data": {
+          "lantern_id": "L1"
+        }
+      }
+    ],
+    "event_counts": {
+      "lantern_out": 1
+    },
+    "absent_events": [
+      "game_over"
+    ],
+    "snapshots": {
+      "29": {
+        "lanterns": [
+          {
+            "id": "L1",
+            "lit": true,
+            "deposited": 10,
+            "fuel": 0
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      },
+      "30": {
+        "lanterns": [
+          {
+            "id": "L1",
+            "lit": false,
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": true,
+            "relit_count": 0
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      },
+      "40": {
+        "state": "playing"
+      }
+    }
+  }
+}

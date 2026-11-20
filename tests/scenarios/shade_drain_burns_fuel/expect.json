@@ -1,0 +1,159 @@
+{
+  "requirement": "T3/Drain",
+  "description": "1 Bóng Mực drain: mỗi tick hao 1 + 5 = 6 đơn vị (từ 1200): tick 60 fuel 14.0, tick 100 fuel 10.0, tick 120 fuel 8.0, tick 180 fuel 2.0; hết dầu (fuel <= 0) ở tick 200: lantern_out, Bóng Mực về wander. fuel_drain chỉ ghi mỗi 60 tick (60, 120, 180). Đèn fuel < 30 mất vùng an toàn nên Bóng Mực đứng cách 1 m không bị đẩy ra",
+  "seed": 1,
+  "ticks": 210,
+  "snapshot_every": 10,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "fuel_drain",
+        "data": {
+          "lantern_id": "L1",
+          "shade_id": "S1",
+          "fuel": 14
+        }
+      },
+      {
+        "tick": 120,
+        "name": "fuel_drain",
+        "data": {
+          "lantern_id": "L1",
+          "shade_id": "S1",
+          "fuel": 8
+        }
+      },
+      {
+        "tick": 180,
+        "name": "fuel_drain",
+        "data": {
+          "lantern_id": "L1",
+          "shade_id": "S1",
+          "fuel": 2
+        }
+      },
+      {
+        "tick": 200,
+        "name": "lantern_out",
+        "data": {
+          "lantern_id": "L1"
+        }
+      }
+    ],
+    "event_counts": {
+      "fuel_drain": 3,
+      "lantern_out": 1
+    },
+    "absent_events": [
+      "player_hit"
+    ],
+    "snapshots": {
+      "10": {
+        "shades": [
+          {
+            "id": "S1",
+            "state": "drain",
+            "pos": [
+              0,
+              1,
+              26
+            ]
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 19
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "100": {
+        "shades": [
+          {
+            "state": "drain",
+            "pos": [
+              0,
+              1,
+              26
+            ]
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 10
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "190": {
+        "lanterns": [
+          {
+            "lit": true,
+            "fuel": 1
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "200": {
+        "lanterns": [
+          {
+            "lit": false,
+            "fuel": 0,
+            "deposited": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ],
+        "shades": [
+          {
+            "state": "wander"
+          }
+        ]
+      }
+    }
+  }
+}

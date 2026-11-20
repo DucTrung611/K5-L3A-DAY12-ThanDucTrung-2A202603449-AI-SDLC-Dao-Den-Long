@@ -1,0 +1,24 @@
+{
+  "requirement": "T3/Thắng",
+  "description": "Đêm 2: 3/6 đèn sáng ở tick cuối dưới ngưỡng ceil(0.6·6) = 4: thua dawn",
+  "seed": 1,
+  "ticks": 100,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "lost",
+          "reason": "dawn"
+        }
+      }
+    ],
+    "end": {
+      "ticks": 60,
+      "state": "lost",
+      "score": 0
+    }
+  },
+  "night": 2
+}

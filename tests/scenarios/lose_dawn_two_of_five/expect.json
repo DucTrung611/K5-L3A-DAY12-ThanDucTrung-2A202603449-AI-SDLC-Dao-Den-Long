@@ -1,0 +1,23 @@
+{
+  "requirement": "T3/Thua",
+  "description": "Chỉ 2/5 đèn sáng ở tick cuối (< 3): thua dawn, không cộng điểm bình minh",
+  "seed": 1,
+  "ticks": 100,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "lost",
+          "reason": "dawn"
+        }
+      }
+    ],
+    "end": {
+      "ticks": 60,
+      "state": "lost",
+      "score": 0
+    }
+  }
+}

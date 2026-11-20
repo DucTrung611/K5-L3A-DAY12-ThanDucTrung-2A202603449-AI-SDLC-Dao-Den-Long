@@ -1,0 +1,30 @@
+{
+  "requirement": "T3/Thua",
+  "description": "L3 hết dầu ở tick 30 (fuel 0.5) -> còn 2/5 đèn sáng ở tick cuối -> thua dawn",
+  "seed": 1,
+  "ticks": 100,
+  "expect": {
+    "events": [
+      {
+        "tick": 30,
+        "name": "lantern_out",
+        "data": {
+          "lantern_id": "L3"
+        }
+      },
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "lost",
+          "reason": "dawn"
+        }
+      }
+    ],
+    "end": {
+      "ticks": 60,
+      "state": "lost",
+      "score": 0
+    }
+  }
+}

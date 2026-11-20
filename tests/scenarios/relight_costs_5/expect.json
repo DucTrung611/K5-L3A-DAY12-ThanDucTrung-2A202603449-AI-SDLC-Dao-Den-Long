@@ -1,0 +1,62 @@
+{
+  "requirement": "T3/Thắp lại",
+  "description": "Đèn đã từng sáng (ever_lit) chỉ cần 5 đom đóm: mang 6 -> nạp 5, thắp lại, còn 1. Điểm = 5·5 + 40 (thắp lại) = 65; lantern_lit relight:true; relit_count 1; fuel 100; sức chứa 10 -> 12",
+  "seed": 1,
+  "ticks": 5,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 5,
+          "deposited": 5
+        }
+      },
+      {
+        "tick": 1,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L1",
+          "relight": true
+        }
+      }
+    ],
+    "snapshots": {
+      "1": {
+        "score": 65,
+        "player": {
+          "carried": 1,
+          "capacity": 12
+        },
+        "lanterns": [
+          {
+            "id": "L1",
+            "lit": true,
+            "fuel": 100,
+            "ever_lit": true,
+            "relit_count": 1,
+            "deposited": 5
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      }
+    },
+    "end": {
+      "score": 65
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "requirement": "R7/C2",
-  "description": "Mang 10, cách L1 1.5 m (≤ 2.0), nhấn interact -> nạp 10 (lantern_cost 10), L1 sáng. Điểm = 10·10 (mỗi đom đóm NẠP) + 100 (đèn) = 200",
+  "description": "Mang 10, cách L1 1.5 m (≤ 2.0), nhấn interact -> nạp 10 (lantern_cost 10), L1 sáng. Ticket-03: điểm = 10·5 (mỗi đom đóm NẠP +5) + 100 (thắp lần đầu) = 150; đèn đầy dầu 100, ever_lit; sức chứa 10 -> 12 (thắp thành công lần 1)",
   "seed": 1,
   "ticks": 10,
   "snapshot_every": 1,
@@ -19,7 +19,8 @@
         "tick": 1,
         "name": "lantern_lit",
         "data": {
-          "lantern_id": "L1"
+          "lantern_id": "L1",
+          "relight": false
         }
       }
     ],
@@ -38,7 +39,10 @@
               25
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L2",
@@ -48,7 +52,10 @@
               7.7
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L3",
@@ -58,7 +65,10 @@
               -20.2
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L4",
@@ -68,7 +78,10 @@
               -20.2
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L5",
@@ -78,23 +91,31 @@
               7.7
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           }
         ]
       },
       "1": {
-        "score": 200,
+        "score": 150,
         "player": {
-          "carried": 0
+          "carried": 0,
+          "capacity": 12
         },
         "lanterns": [
           {
             "id": "L1",
             "lit": true,
-            "deposited": 10
+            "deposited": 10,
+            "fuel": 100,
+            "ever_lit": true,
+            "relit_count": 0
           },
           {
-            "lit": false
+            "lit": false,
+            "fuel": 0
           },
           {
             "lit": false
@@ -111,7 +132,7 @@
     "end": {
       "ticks": 10,
       "state": "playing",
-      "score": 200
+      "score": 150
     }
   }
 }

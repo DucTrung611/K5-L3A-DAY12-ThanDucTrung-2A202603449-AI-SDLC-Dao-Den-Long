@@ -1,0 +1,83 @@
+{
+  "requirement": "T3/Vùng an toàn",
+  "description": "fuel 31 = 1860 đơn vị: đúng 30.0 ở tick 60 (vẫn còn vùng an toàn, Bóng Mực chase bị chặn ở z = 31 từ tick 30); tick 61 fuel 29.98 < 30 -> mất vùng an toàn: Bóng Mực tiến lên z = 31 - 1/15 = 30.933",
+  "seed": 1,
+  "ticks": 62,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "30": {
+        "shades": [
+          {
+            "pos": [
+              0,
+              1,
+              31
+            ],
+            "state": "chase"
+          }
+        ]
+      },
+      "60": {
+        "lanterns": [
+          {
+            "fuel": 30,
+            "lit": true
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ],
+        "shades": [
+          {
+            "pos": [
+              0,
+              1,
+              31
+            ]
+          }
+        ]
+      },
+      "61": {
+        "lanterns": [
+          {
+            "fuel": 30
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ],
+        "shades": [
+          {
+            "pos": [
+              0,
+              1,
+              30.933
+            ]
+          }
+        ]
+      }
+    },
+    "absent_events": [
+      "player_hit"
+    ]
+  }
+}

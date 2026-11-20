@@ -1,6 +1,6 @@
 {
   "requirement": "R7",
-  "description": "Đèn nhớ tiến độ: L1 đã có 3/10, nạp 4 -> 7/10 chưa sáng, +40 điểm (đúng biên 2.0 m). Lần bấm thứ hai không còn gì để nạp",
+  "description": "Đèn nhớ tiến độ: L1 đã có 3/10, nạp 4 -> 7/10 chưa sáng, +4·5 = 20 điểm (Ticket-03; đúng biên 2.0 m). Lần bấm thứ hai không còn gì để nạp",
   "seed": 1,
   "ticks": 10,
   "expect": {
@@ -22,7 +22,7 @@
       "lantern_lit"
     ],
     "end": {
-      "score": 40
+      "score": 20
     }
   }
 }

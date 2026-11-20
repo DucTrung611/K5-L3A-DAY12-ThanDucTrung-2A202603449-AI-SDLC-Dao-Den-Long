@@ -1,0 +1,48 @@
+{
+  "requirement": "T3/Châm dầu",
+  "description": "fuel 20 (còn 1199 đơn vị sau hao), mang 3 < cần 9: used = 3; fuel = (1199 + 1800)/60 = 49.98 -> 50.0; carried 0; điểm 15",
+  "seed": 1,
+  "ticks": 3,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "refuel",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 3,
+          "fuel": 50
+        }
+      }
+    ],
+    "snapshots": {
+      "1": {
+        "player": {
+          "carried": 0
+        },
+        "lanterns": [
+          {
+            "id": "L1",
+            "fuel": 50
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      }
+    },
+    "end": {
+      "score": 15
+    }
+  }
+}

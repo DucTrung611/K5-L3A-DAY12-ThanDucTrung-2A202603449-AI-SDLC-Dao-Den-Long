@@ -1,0 +1,114 @@
+{
+  "requirement": "T3/Drain",
+  "description": "Bóng Mực wander đi thẳng tới đèn sáng fuel < 30 (4 m/s): cách L1 10 m -> z = 35 - t/15; cách đúng 2.0 m ở tick 120 (z=27) thì chuyển drain; hao tick 1..120 = 1 đơn vị (còn 1080); từ tick 121 hao 6: tick 121 fuel = 1074/60 = 17.9",
+  "seed": 1,
+  "ticks": 125,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "60": {
+        "shades": [
+          {
+            "id": "S1",
+            "pos": [
+              0,
+              1,
+              31
+            ],
+            "state": "wander"
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 19
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "119": {
+        "shades": [
+          {
+            "state": "wander",
+            "pos": [
+              0,
+              1,
+              27.067
+            ]
+          }
+        ]
+      },
+      "120": {
+        "shades": [
+          {
+            "state": "drain",
+            "pos": [
+              0,
+              1,
+              27
+            ]
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 18
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "121": {
+        "shades": [
+          {
+            "state": "drain",
+            "pos": [
+              0,
+              1,
+              27
+            ]
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 17.9
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      }
+    },
+    "absent_events": [
+      "player_hit"
+    ]
+  }
+}

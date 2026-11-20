@@ -1,0 +1,7 @@
+{
+  "requirement": "T3/Định dạng",
+  "description": "player.successful_lights âm -> exit 2",
+  "seed": 1,
+  "ticks": 10,
+  "exit_code": 2
+}

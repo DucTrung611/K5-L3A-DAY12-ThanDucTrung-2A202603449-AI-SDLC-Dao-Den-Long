@@ -1,0 +1,33 @@
+{
+  "requirement": "T3/Thắng",
+  "description": "Thay win_all_lit: thắp đèn cuối (tick 1) KHÔNG còn kết thúc Đêm; điểm 10·5 + 100 = 150; game vẫn playing ở tick 100 (còn 98.3 s), không có game_over",
+  "seed": 1,
+  "ticks": 100,
+  "snapshot_every": 50,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L5",
+          "relight": false
+        }
+      }
+    ],
+    "absent_events": [
+      "game_over"
+    ],
+    "snapshots": {
+      "50": {
+        "state": "playing",
+        "score": 150
+      }
+    },
+    "end": {
+      "ticks": 100,
+      "state": "playing",
+      "score": 150
+    }
+  }
+}

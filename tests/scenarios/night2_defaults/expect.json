@@ -1,13 +1,13 @@
 {
   "requirement": "C4",
-  "description": "Đêm 2 mặc định: 330 s, xuất phát (0,0,0), 6 đèn tọa độ chuẩn, 20 đom đóm, bùa C1 sẵn sàng, chưa có Bóng Mực/Gió Lạc",
+  "description": "Đêm 2 mặc định: 270 s (Ticket-03), xuất phát (0,0,0), 6 đèn tọa độ chuẩn, 20 đom đóm, bùa C1 sẵn sàng, chưa có Bóng Mực/Gió Lạc",
   "seed": 7,
   "ticks": 20,
   "expect": {
     "snapshots": {
       "0": {
         "night": 2,
-        "time_left_s": 330,
+        "time_left_s": 270,
         "player": {
           "pos": [
             0,
@@ -25,7 +25,10 @@
               20
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L2",
@@ -35,7 +38,10 @@
               -10
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L3",
@@ -45,7 +51,10 @@
               -10
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L4",
@@ -55,7 +64,10 @@
               20
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L5",
@@ -65,7 +77,10 @@
               -10
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L6",
@@ -75,7 +90,10 @@
               -10
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           }
         ],
         "motes_active": 20,

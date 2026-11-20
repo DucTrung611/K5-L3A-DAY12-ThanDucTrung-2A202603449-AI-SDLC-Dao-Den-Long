@@ -1,0 +1,25 @@
+{
+  "requirement": "T3/Sức chứa",
+  "description": "Sức chứa = min(20, 10 + 2·successful_lights). Tick 1 mang 10/10 không nhặt, thắp L1 (+1 lần thành công) -> 12; tick 2 nhặt đúng 12 (13 đom đóm, còn 1 trên đất)",
+  "seed": 1,
+  "ticks": 4,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "1": {
+        "player": {
+          "carried": 0,
+          "capacity": 12
+        },
+        "motes_active": 13
+      },
+      "2": {
+        "player": {
+          "carried": 12,
+          "capacity": 12
+        },
+        "motes_active": 1
+      }
+    }
+  }
+}

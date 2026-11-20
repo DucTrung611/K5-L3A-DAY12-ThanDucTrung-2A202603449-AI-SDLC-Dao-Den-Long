@@ -1,0 +1,38 @@
+{
+  "requirement": "T3/Thắp lại",
+  "description": "Thắp lại đã có 3/5: mang 3 -> chỉ nạp 2 (5-3), còn 1; thắp lại thành công. Điểm = 2·5 + 40 = 50",
+  "seed": 1,
+  "ticks": 3,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 2,
+          "deposited": 5
+        }
+      },
+      {
+        "tick": 1,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L1",
+          "relight": true
+        }
+      }
+    ],
+    "snapshots": {
+      "1": {
+        "player": {
+          "carried": 1
+        }
+      }
+    },
+    "end": {
+      "score": 50
+    }
+  }
+}

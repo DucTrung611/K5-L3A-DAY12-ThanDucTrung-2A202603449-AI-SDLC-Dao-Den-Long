@@ -1,6 +1,6 @@
 {
   "requirement": "R7",
-  "description": "L1 đã 8/10, mang 5 -> chỉ nạp 2 (min(đang mang, còn thiếu)), còn giữ 3. Điểm = 2·10 + 100 = 120",
+  "description": "L1 đã 8/10, mang 5 -> chỉ nạp 2 (min(đang mang, còn thiếu)), còn giữ 3. Ticket-03: điểm = 2·5 + 100 = 110",
   "seed": 1,
   "ticks": 10,
   "expect": {
@@ -18,7 +18,8 @@
         "tick": 1,
         "name": "lantern_lit",
         "data": {
-          "lantern_id": "L1"
+          "lantern_id": "L1",
+          "relight": false
         }
       }
     ],
@@ -27,7 +28,7 @@
         "player": {
           "carried": 3
         },
-        "score": 120
+        "score": 110
       }
     }
   }

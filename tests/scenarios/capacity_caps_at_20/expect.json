@@ -1,0 +1,23 @@
+{
+  "requirement": "T3/Sức chứa",
+  "description": "successful_lights 7 -> min(20, 24) = 20: nhặt đúng 20 trong 25 đom đóm",
+  "seed": 1,
+  "ticks": 3,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "0": {
+        "player": {
+          "capacity": 20
+        }
+      },
+      "3": {
+        "player": {
+          "carried": 20,
+          "capacity": 20
+        },
+        "motes_active": 5
+      }
+    }
+  }
+}

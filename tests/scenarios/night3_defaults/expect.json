@@ -1,13 +1,13 @@
 {
   "requirement": "C4",
-  "description": "Đêm 3 mặc định: 360 s, xuất phát (0,0,-20), 7 đèn tọa độ chuẩn (y=6, 3, 3, 0...), 20 đom đóm, hai bùa C1 C2, gió chưa thổi",
+  "description": "Đêm 3 mặc định: 300 s (Ticket-03), xuất phát (0,0,-20), 7 đèn tọa độ chuẩn (y=6, 3, 3, 0...), 20 đom đóm, hai bùa C1 C2, gió chưa thổi",
   "seed": 7,
   "ticks": 20,
   "expect": {
     "snapshots": {
       "0": {
         "night": 3,
-        "time_left_s": 360,
+        "time_left_s": 300,
         "player": {
           "pos": [
             0,
@@ -25,7 +25,10 @@
               6
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L2",
@@ -35,7 +38,10 @@
               10
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L3",
@@ -45,7 +51,10 @@
               10
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L4",
@@ -55,7 +64,10 @@
               -10
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L5",
@@ -65,7 +77,10 @@
               -10
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L6",
@@ -75,7 +90,10 @@
               -35
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           },
           {
             "id": "L7",
@@ -85,7 +103,10 @@
               -35
             ],
             "lit": false,
-            "deposited": 0
+            "deposited": 0,
+            "fuel": 0,
+            "ever_lit": false,
+            "relit_count": 0
           }
         ],
         "motes_active": 20,

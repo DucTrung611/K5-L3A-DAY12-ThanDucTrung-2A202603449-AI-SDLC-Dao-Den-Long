@@ -1,0 +1,22 @@
+{
+  "requirement": "T3/Điểm",
+  "description": "Bóng Mực không ở drain trúng Tỏa Sáng: +5 (không phải +15)",
+  "seed": 1,
+  "ticks": 3,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "pulse",
+        "data": {
+          "stunned_ids": [
+            "A"
+          ]
+        }
+      }
+    ],
+    "end": {
+      "score": 5
+    }
+  }
+}

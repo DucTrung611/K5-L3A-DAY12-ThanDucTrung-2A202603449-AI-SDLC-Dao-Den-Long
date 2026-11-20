@@ -1,0 +1,24 @@
+{
+  "requirement": "T3/Thắng",
+  "description": "Đêm 3: 5/7 đèn sáng ở tick cuối đạt ngưỡng ceil(0.6·7) = 5: thắng, điểm 5·149 + 150 = 895",
+  "seed": 1,
+  "ticks": 100,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "won",
+          "reason": "dawn_survived"
+        }
+      }
+    ],
+    "end": {
+      "ticks": 60,
+      "state": "won",
+      "score": 895
+    }
+  },
+  "night": 3
+}

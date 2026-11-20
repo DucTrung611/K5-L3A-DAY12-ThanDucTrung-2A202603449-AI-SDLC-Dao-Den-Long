@@ -1,0 +1,24 @@
+{
+  "requirement": "T3/Drain",
+  "description": "Hai đèn yếu L2 (23.8, 7.7) và L5 (-23.8, 7.7) cách Bóng Mực wander bằng nhau (23.8 m): chọn id nhỏ hơn = L2 -> đi +X: x = t/15 (tick 60: x = 4.0)",
+  "seed": 1,
+  "ticks": 60,
+  "snapshot_every": 60,
+  "expect": {
+    "snapshots": {
+      "60": {
+        "shades": [
+          {
+            "id": "S1",
+            "pos": [
+              4,
+              1,
+              7.7
+            ],
+            "state": "wander"
+          }
+        ]
+      }
+    }
+  }
+}

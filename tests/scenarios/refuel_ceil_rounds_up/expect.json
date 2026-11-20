@@ -1,0 +1,59 @@
+{
+  "requirement": "T3/Châm dầu",
+  "description": "Tick 1 hao trước: fuel = 3299 đơn vị (54.98). used = min(10, ceil((6000-3299)/600 = 4.50)) = 5; fuel = min(100, 54.98 + 50) = 100; carried 10-5 = 5; điểm 5·5 = 25; sự kiện refuel {amount 5, fuel 100}, KHÔNG có deposit/lantern_lit",
+  "seed": 1,
+  "ticks": 3,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "refuel",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 5,
+          "fuel": 100
+        }
+      }
+    ],
+    "event_counts": {
+      "refuel": 1
+    },
+    "absent_events": [
+      "deposit",
+      "lantern_lit"
+    ],
+    "snapshots": {
+      "1": {
+        "score": 25,
+        "player": {
+          "carried": 5,
+          "capacity": 10
+        },
+        "lanterns": [
+          {
+            "id": "L1",
+            "lit": true,
+            "fuel": 100,
+            "relit_count": 0
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      }
+    },
+    "end": {
+      "score": 25
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "requirement": "T3/Drain",
+  "description": "drain -> chase khi Mây trong 6 m (đúng 6.0 tính là trong): Mây ở z=20, Bóng Mực z=26 -> tick 1 chase và đã bước 1/15 m: z = 25.933. Tick 1 vẫn bị hút (hao 6 đơn vị): fuel = 1194/60 = 19.9",
+  "seed": 1,
+  "ticks": 3,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "1": {
+        "shades": [
+          {
+            "id": "S1",
+            "state": "chase",
+            "pos": [
+              0,
+              1,
+              25.933
+            ]
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 19.9
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "2": {
+        "shades": [
+          {
+            "state": "chase"
+          }
+        ],
+        "lanterns": [
+          {
+            "fuel": 19.9
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      }
+    }
+  }
+}

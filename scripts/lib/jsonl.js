@@ -1,12 +1,14 @@
-// Kiểm tra định dạng output JSONL theo Test Contract v1.1 mục E (độc lập với code game).
+// Kiểm tra định dạng output JSONL theo Test Contract v1.2 mục E (độc lập với code game).
 
 const EVENT_NAMES = new Set([
   "mote_picked", "deposit", "lantern_lit", "pulse", "player_hit", "shade_spawned", "game_over",
   "dash", "charm_picked", "drifter_steal", "drifter_drop", "night_start", "paused", "resumed",
+  "refuel", "lantern_out", "fuel_drain",
 ]);
 const STATES = new Set(["playing", "paused", "won", "lost"]);
 const END_STATES = new Set(["playing", "won", "lost"]);
-const SHADE_STATES = new Set(["spawning", "wander", "chase", "recoil", "stunned"]);
+const SHADE_STATES = new Set(["spawning", "wander", "chase", "recoil", "stunned", "drain"]);
+const has1dp = (v) => typeof v === "number" && Number.isFinite(v) && Math.abs(Math.round(v * 10) - v * 10) < 1e-6;
 const DRIFTER_STATES = new Set(["idle", "chase", "flee"]);
 
 const has3dp = (v) => typeof v === "number" && Number.isFinite(v) && Math.abs(Math.round(v * 1000) - v * 1000) < 1e-6;
@@ -49,12 +51,12 @@ export function validateOutput(objs, { snapshotEvery = 10, ticks, fallEnabled = 
       if (!Number.isInteger(o.score)) err(i, "score phải là số nguyên");
       if (!o.wind || typeof o.wind.active !== "boolean" || !Number.isInteger(o.wind.dir_deg)) err(i, "wind sai định dạng");
       const p = o.player;
-      if (!p || !isVec3(p.pos) || !isVec3(p.vel) || typeof p.grounded !== "boolean" || !Number.isInteger(p.flames) || !Number.isInteger(p.carried) || typeof p.invuln !== "boolean" || !has3dp(p.dash_cd_s) || !has3dp(p.pulse_cd_s) || !has3dp(p.charm_s))
-        err(i, "player sai định dạng");
-      if (!Array.isArray(o.lanterns) || o.lanterns.some((l) => typeof l.id !== "string" || !isVec3(l.pos) || typeof l.lit !== "boolean" || !Number.isInteger(l.deposited)))
-        err(i, "lanterns sai định dạng");
+      if (!p || !isVec3(p.pos) || !isVec3(p.vel) || typeof p.grounded !== "boolean" || !Number.isInteger(p.flames) || !Number.isInteger(p.carried) || typeof p.invuln !== "boolean" || !has3dp(p.dash_cd_s) || !has3dp(p.pulse_cd_s) || !has3dp(p.charm_s) || !Number.isInteger(p.capacity) || p.capacity < 10 || p.capacity > 20)
+        err(i, "player sai định dạng (capacity phải là số nguyên 10..20)");
+      if (!Array.isArray(o.lanterns) || o.lanterns.some((l) => typeof l.id !== "string" || !isVec3(l.pos) || typeof l.lit !== "boolean" || !Number.isInteger(l.deposited) || !has1dp(l.fuel) || l.fuel < 0 || l.fuel > 100 || typeof l.ever_lit !== "boolean" || !Number.isInteger(l.relit_count) || (!l.lit && l.fuel !== 0) || (l.lit && !l.ever_lit)))
+        err(i, "lanterns sai định dạng (fuel 1 chữ số, ever_lit boolean, relit_count nguyên; đèn tắt fuel 0)");
       if (!Array.isArray(o.shades) || o.shades.some((s) => typeof s.id !== "string" || !isVec3(s.pos) || !SHADE_STATES.has(s.state)))
-        err(i, "shades sai định dạng (state phải là spawning|wander|chase|recoil|stunned)");
+        err(i, "shades sai định dạng (state phải là spawning|wander|chase|recoil|stunned|drain)");
       if (!Number.isInteger(o.motes_active)) err(i, "motes_active phải là số nguyên");
       if (!Array.isArray(o.motes) || o.motes.length !== o.motes_active || o.motes.some((m) => typeof m.id !== "string" || !isVec3(m.pos) || !["random", "dropped"].includes(m.kind) || (m.kind === "dropped" ? !has3dp(m.ttl_s) : m.ttl_s !== null)))
         err(i, "motes sai định dạng / không khớp motes_active");

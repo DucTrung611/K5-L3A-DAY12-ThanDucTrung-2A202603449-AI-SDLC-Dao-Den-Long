@@ -1,0 +1,24 @@
+{
+  "requirement": "T3/Thắng",
+  "description": "Đêm 2: 4/6 đèn sáng ở tick cuối đạt ngưỡng ceil(0.6·6) = 4: thắng, điểm 4·149 + 150 = 746",
+  "seed": 1,
+  "ticks": 100,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "won",
+          "reason": "dawn_survived"
+        }
+      }
+    ],
+    "end": {
+      "ticks": 60,
+      "state": "won",
+      "score": 746
+    }
+  },
+  "night": 2
+}

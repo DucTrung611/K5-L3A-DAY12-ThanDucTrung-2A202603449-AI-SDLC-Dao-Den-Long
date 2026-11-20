@@ -1,0 +1,98 @@
+{
+  "requirement": "T3/Nhiên liệu",
+  "description": "Đèn lit:true không khai báo fuel mặc định 100; hao 1 fuel/s = 1 đơn vị/tick: tick 6 -> 99.9, tick 60 -> 99.0, tick 600 -> 90.0; ever_lit true, relit_count 0; đèn tắt fuel 0",
+  "seed": 1,
+  "ticks": 600,
+  "snapshot_every": 6,
+  "expect": {
+    "snapshots": {
+      "0": {
+        "lanterns": [
+          {
+            "id": "L1",
+            "lit": true,
+            "fuel": 100,
+            "ever_lit": true,
+            "relit_count": 0
+          },
+          {
+            "lit": false,
+            "fuel": 0,
+            "ever_lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      },
+      "6": {
+        "lanterns": [
+          {
+            "fuel": 99.9
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "60": {
+        "lanterns": [
+          {
+            "fuel": 99
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "600": {
+        "lanterns": [
+          {
+            "fuel": 90,
+            "lit": true
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      }
+    },
+    "absent_events": [
+      "lantern_out",
+      "refuel"
+    ]
+  }
+}

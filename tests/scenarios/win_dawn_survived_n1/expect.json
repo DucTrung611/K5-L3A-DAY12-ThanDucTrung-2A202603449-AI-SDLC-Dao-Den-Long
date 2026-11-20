@@ -1,0 +1,29 @@
+{
+  "requirement": "T3/Thắng",
+  "description": "Đêm 1 cần 3/5 đèn (ceil(0.6·5)=3). Hết giờ ở tick 60 với 3 đèn sáng -> thắng dawn_survived. Dầu tick 60: L1 = (6000-60)/60 = 99, L2 = (3030-60)/60 = 49.5 -> 49, L3 = (600-60)/60 = 9. Điểm = (50+99) + (50+49) + (50+9) + 3 lửa·50 = 457",
+  "seed": 1,
+  "ticks": 100,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "won",
+          "reason": "dawn_survived"
+        }
+      }
+    ],
+    "end": {
+      "ticks": 60,
+      "state": "won",
+      "score": 457
+    },
+    "snapshots": {
+      "60": {
+        "state": "won",
+        "time_left_s": 0
+      }
+    }
+  }
+}

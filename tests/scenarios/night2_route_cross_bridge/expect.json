@@ -1,6 +1,6 @@
 {
   "requirement": "C4/Chơi được",
-  "description": "Đêm 2: đi thẳng +X từ (0,0,0) qua cầu tre sang đảo B (x=70 ở tick 700, không rơi vì |z| = 0), rồi +Z tới (70,0,19) (tick 890) và thắp L4 (70,0,20). Kiểm: không rơi, L4 sáng, điểm 200",
+  "description": "Đêm 2: đi thẳng +X từ (0,0,0) qua cầu tre sang đảo B (x=70 ở tick 700, không rơi vì |z| = 0), rồi +Z tới (70,0,19) (tick 890) và thắp L4 (70,0,20). Kiểm: không rơi, L4 sáng, điểm 150 (Ticket-03)",
   "seed": 1,
   "ticks": 1000,
   "snapshot_every": 10,
@@ -12,7 +12,8 @@
       {
         "name": "lantern_lit",
         "data": {
-          "lantern_id": "L4"
+          "lantern_id": "L4",
+          "relight": false
         }
       }
     ],
@@ -28,7 +29,7 @@
         }
       },
       "1000": {
-        "score": 200,
+        "score": 150,
         "lanterns": [
           {
             "lit": false

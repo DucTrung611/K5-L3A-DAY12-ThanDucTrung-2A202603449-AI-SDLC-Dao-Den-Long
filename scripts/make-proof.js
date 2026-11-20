@@ -77,7 +77,7 @@ log(`- Tổng: **${allOk ? "TẤT CẢ ĐẠT" : "CÓ MỤC CHƯA ĐẠT"}**`);
 log();
 log("| Kiểm chứng | Lệnh | Kết quả |");
 log("|---|---|---|");
-log(`| Contract v1.1 khớp số chuẩn | \`npm run contract\` | ${contract.status === 0 ? "ĐẠT" : "CHƯA ĐẠT"} |`);
+log(`| Contract v1.2 khớp số chuẩn | \`npm run contract\` | ${contract.status === 0 ? "ĐẠT" : "CHƯA ĐẠT"} |`);
 log(`| Unit test | \`npm test\` | ${unit.status === 0 ? "ĐẠT" : "CHƯA ĐẠT"} (${unitPass} pass / ${unitFail} fail) – [unit-tests.tap](unit-tests.tap) |`);
 log(`| Scenario headless (hộp đen qua CLI) | \`npm run scenarios\` | ${passScen}/${scenRes.length} ĐẠT – [scenarios.json](scenarios.json) |`);
 log(`| Tất định (3 đêm × 3 seed × 2 lần, trọn đêm) | \`npm run determinism\` | ${detRes.pass ? "ĐẠT" : "CHƯA ĐẠT"} – [determinism.json](determinism.json) |`);

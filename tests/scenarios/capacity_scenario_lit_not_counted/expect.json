@@ -1,0 +1,18 @@
+{
+  "requirement": "T3/Sức chứa",
+  "description": "Đèn đặt sẵn sáng bằng scenario không tính vào successful_lights: sức chứa vẫn 10, nhặt 10 trong 12",
+  "seed": 1,
+  "ticks": 3,
+  "snapshot_every": 1,
+  "expect": {
+    "snapshots": {
+      "3": {
+        "player": {
+          "carried": 10,
+          "capacity": 10
+        },
+        "motes_active": 2
+      }
+    }
+  }
+}

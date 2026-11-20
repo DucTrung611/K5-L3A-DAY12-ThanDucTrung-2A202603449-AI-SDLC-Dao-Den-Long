@@ -1,0 +1,35 @@
+{
+  "requirement": "T3/Thua",
+  "description": "Tick bình minh (60) Bóng Mực hết spawning và chạm Mây (1 lửa) cùng tick: dù 3/5 đèn sáng, hết Ngọn Lửa luôn thua no_flames, không thắng, điểm 0",
+  "seed": 1,
+  "ticks": 100,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "player_hit",
+        "data": {
+          "by": "shade",
+          "flames": 0,
+          "dropped": 0
+        }
+      },
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "lost",
+          "reason": "no_flames"
+        }
+      }
+    ],
+    "event_counts": {
+      "game_over": 1
+    },
+    "end": {
+      "ticks": 60,
+      "state": "lost",
+      "score": 0
+    }
+  }
+}

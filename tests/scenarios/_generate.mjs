@@ -1,5 +1,5 @@
 // Sinh lại tests/scenarios/*/{scenario,inputs,expect}.json:  node tests/scenarios/_generate.mjs tests/scenarios
-// (xóa thư mục scenario cũ trước khi sinh lại). Đây là nơi ghi CÔNG THỨC TÍNH TAY của mọi expect từ Ticket-02 (jumpY, fallDrop, ...);
+// (xóa thư mục scenario cũ trước khi sinh lại). Đây là nơi ghi CÔNG THỨC TÍNH TAY của mọi expect từ Ticket-02/03 (jumpY, fallDrop, dầu đèn, ...);
 // KHÔNG được chép output của chương trình vào expect.
 // Sinh scenario Phase 2 vào tests/scenarios/<tên>/{scenario,inputs,expect}.json
 // Mọi số trong expect được tính TAY từ Ticket-02 bằng công thức đóng (không đọc output của game).
@@ -19,8 +19,10 @@ const withBase = (o = {}) => ({ ...BASE, ...o });
 const N1_LANTERNS = [["L1", [0, 0, 25]], ["L2", [23.8, 0, 7.7]], ["L3", [14.7, 0, -20.2]], ["L4", [-14.7, 0, -20.2]], ["L5", [-23.8, 0, 7.7]]];
 const N2_LANTERNS = [["L1", [0, 0, 20]], ["L2", [17, 0, -10]], ["L3", [-17, 0, -10]], ["L4", [70, 0, 20]], ["L5", [87, 0, -10]], ["L6", [53, 0, -10]]];
 const N3_LANTERNS = [["L1", [0, 6, 6]], ["L2", [18, 3, 10]], ["L3", [-18, 3, 10]], ["L4", [35, 0, -10]], ["L5", [-35, 0, -10]], ["L6", [20, 0, -35]], ["L7", [-20, 0, -35]]];
-const lanternsExpect = (list, extra = {}) => list.map(([id, pos]) => ({ id, pos, lit: false, deposited: 0, ...extra }));
-const ALL_EVENTS = ["mote_picked", "deposit", "lantern_lit", "pulse", "player_hit", "shade_spawned", "game_over", "dash", "charm_picked", "drifter_steal", "drifter_drop", "paused", "resumed"];
+const lanternsExpect = (list, extra = {}) => list.map(([id, pos]) => ({ id, pos, lit: false, deposited: 0, fuel: 0, ever_lit: false, relit_count: 0, ...extra }));
+// ---- Ticket-03: dầu đèn tính bằng đơn vị 1/60 (fuel 100 = 6000 đơn vị; tự hao 1 đơn vị/tick, mỗi Bóng Mực hút thêm 5 đơn vị/tick) ----
+const fuelAt = (units) => r3(Math.round((units / 60) * 10) / 10); // làm tròn 1 chữ số như output
+const ALL_EVENTS = ["mote_picked", "deposit", "lantern_lit", "pulse", "player_hit", "shade_spawned", "game_over", "dash", "charm_picked", "drifter_steal", "drifter_drop", "paused", "resumed", "refuel", "lantern_out", "fuel_drain"];
 
 const S = {};
 const add = (name, def) => (S[name] = def);
@@ -29,17 +31,17 @@ const add = (name, def) => (S[name] = def);
 add("smoke_default", {
   expect: {
     requirement: "R1/C7",
-    description: "Đêm 1 mặc định seed 42: 20 đom đóm lúc đầu, thêm 1 ở tick 240 và 480; 2 Bóng Mực sinh đúng tick 300 (S1,S2) ở trạng thái spawning 60 tick rồi wander; night_start ở tick 1; không chạm trong 600 tick",
+    description: "Đêm 1 mặc định seed 42 (240 s theo Ticket-03): 20 đom đóm lúc đầu, thêm 1 ở tick 240 và 480; 2 Bóng Mực sinh đúng tick 300 (S1,S2) ở trạng thái spawning 60 tick rồi wander; night_start ở tick 1; không chạm trong 600 tick",
     seed: 42, ticks: 600,
     expect: {
       end: { type: "end", ticks: 600, state: "playing", score: 0 },
       snapshots: {
-        0: { tick: 0, sim_tick: 0, state: "playing", night: 1, time_left_s: 300, score: 0, wind: { active: false, dir_deg: 0 },
-          player: { pos: [0, 0, 0], vel: [0, 0, 0], grounded: true, flames: 3, carried: 0, invuln: false, dash_cd_s: 0, pulse_cd_s: 0, charm_s: 0 },
+        0: { tick: 0, sim_tick: 0, state: "playing", night: 1, time_left_s: 240, score: 0, wind: { active: false, dir_deg: 0 },
+          player: { pos: [0, 0, 0], vel: [0, 0, 0], grounded: true, flames: 3, carried: 0, invuln: false, dash_cd_s: 0, pulse_cd_s: 0, charm_s: 0, capacity: 10 },
           lanterns: lanternsExpect(N1_LANTERNS), shades: [], motes_active: 20, drifters: [], charms: [] },
         240: { motes_active: 21 }, 310: { shades: [{ id: "S1", state: "spawning" }, { id: "S2", state: "spawning" }] },
         350: { shades: [{ state: "spawning" }, { state: "spawning" }] }, 360: { shades: [{ state: "wander" }, { state: "wander" }] },
-        480: { motes_active: 22 }, 600: { time_left_s: 290, sim_tick: 600, shades: [{ id: "S1", state: "wander" }, { id: "S2", state: "wander" }] },
+        480: { motes_active: 22 }, 600: { time_left_s: 230, sim_tick: 600, shades: [{ id: "S1", state: "wander" }, { id: "S2", state: "wander" }] },
       },
       events: [
         { tick: 1, name: "night_start", data: { night: 1 } },
@@ -53,9 +55,9 @@ add("smoke_default", {
 add("move_forward", {
   scenario: withBase(), inputs: { frames: [{ tick: 0, move: [0, 1], cam_yaw_deg: 0 }] },
   expect: {
-    requirement: "R3", description: "Tick model: tick 0 trước input; move [0,1] ở 6 m/s (tăng tốc tức thời ≤ 0.1 s) -> 1 m sau 10 tick, 6 m sau 60 tick; time_left_s = 300 - 60/60",
+    requirement: "R3", description: "Tick model: tick 0 trước input; move [0,1] ở 6 m/s (tăng tốc tức thời ≤ 0.1 s) -> 1 m sau 10 tick, 6 m sau 60 tick; time_left_s = 240 - 60/60 (Ticket-03: Đêm 1 dài 240 s)",
     seed: 1, ticks: 60,
-    expect: { end: { ticks: 60, state: "playing" }, snapshots: { 0: { player: { pos: [0, 0, 0] }, time_left_s: 300 }, 10: { sim_tick: 10, player: { pos: [0, 0, 1], vel: [0, 0, 6], grounded: true } }, 60: { player: { pos: [0, 0, 6] }, time_left_s: 299 } } },
+    expect: { end: { ticks: 60, state: "playing" }, snapshots: { 0: { player: { pos: [0, 0, 0] }, time_left_s: 240 }, 10: { sim_tick: 10, player: { pos: [0, 0, 1], vel: [0, 0, 6], grounded: true } }, 60: { player: { pos: [0, 0, 6] }, time_left_s: 239 } } },
   },
 });
 add("move_cam_yaw90", {
@@ -122,26 +124,26 @@ add("mote_cap_30", {
 add("deposit_and_light", {
   scenario: withBase({ player: { pos: [0, 0, 23.5], carried: 10 } }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
   expect: {
-    requirement: "R7/C2", description: "Mang 10, cách L1 1.5 m (≤ 2.0), nhấn interact -> nạp 10 (lantern_cost 10), L1 sáng. Điểm = 10·10 (mỗi đom đóm NẠP) + 100 (đèn) = 200",
+    requirement: "R7/C2", description: "Mang 10, cách L1 1.5 m (≤ 2.0), nhấn interact -> nạp 10 (lantern_cost 10), L1 sáng. Ticket-03: điểm = 10·5 (mỗi đom đóm NẠP +5) + 100 (thắp lần đầu) = 150; đèn đầy dầu 100, ever_lit; sức chứa 10 -> 12 (thắp thành công lần 1)",
     seed: 1, ticks: 10, snapshot_every: 1,
     expect: {
-      events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 10, deposited: 10 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L1" } }],
+      events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 10, deposited: 10 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L1", relight: false } }],
       event_counts: { deposit: 1, lantern_lit: 1 },
-      snapshots: { 0: { lanterns: lanternsExpect(N1_LANTERNS) }, 1: { score: 200, player: { carried: 0 }, lanterns: [{ id: "L1", lit: true, deposited: 10 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }] } },
-      end: { ticks: 10, state: "playing", score: 200 },
+      snapshots: { 0: { lanterns: lanternsExpect(N1_LANTERNS) }, 1: { score: 150, player: { carried: 0, capacity: 12 }, lanterns: [{ id: "L1", lit: true, deposited: 10, fuel: 100, ever_lit: true, relit_count: 0 }, { lit: false, fuel: 0 }, { lit: false }, { lit: false }, { lit: false }] } },
+      end: { ticks: 10, state: "playing", score: 150 },
     },
   },
 });
 add("deposit_partial_remembered", {
   scenario: withBase({ player: { pos: [0, 0, 23], carried: 4 }, lanterns: [{ id: "L1", deposited: 3 }] }),
   inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }, { tick: 5, interact: true }] },
-  expect: { requirement: "R7", description: "Đèn nhớ tiến độ: L1 đã có 3/10, nạp 4 -> 7/10 chưa sáng, +40 điểm (đúng biên 2.0 m). Lần bấm thứ hai không còn gì để nạp", seed: 1, ticks: 10,
-    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 4, deposited: 7 } }], event_counts: { deposit: 1 }, absent_events: ["lantern_lit"], end: { score: 40 } } },
+  expect: { requirement: "R7", description: "Đèn nhớ tiến độ: L1 đã có 3/10, nạp 4 -> 7/10 chưa sáng, +4·5 = 20 điểm (Ticket-03; đúng biên 2.0 m). Lần bấm thứ hai không còn gì để nạp", seed: 1, ticks: 10,
+    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 4, deposited: 7 } }], event_counts: { deposit: 1 }, absent_events: ["lantern_lit"], end: { score: 20 } } },
 });
 add("deposit_overflow", {
   scenario: withBase({ player: { pos: [0, 0, 23], carried: 5 }, lanterns: [{ id: "L1", deposited: 8 }] }), inputs: { frames: [{ tick: 0, interact: true }] },
-  expect: { requirement: "R7", description: "L1 đã 8/10, mang 5 -> chỉ nạp 2 (min(đang mang, còn thiếu)), còn giữ 3. Điểm = 2·10 + 100 = 120", seed: 1, ticks: 10,
-    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 2, deposited: 10 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L1" } }], snapshots: { 10: { player: { carried: 3 }, score: 120 } } } },
+  expect: { requirement: "R7", description: "L1 đã 8/10, mang 5 -> chỉ nạp 2 (min(đang mang, còn thiếu)), còn giữ 3. Ticket-03: điểm = 2·5 + 100 = 110", seed: 1, ticks: 10,
+    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 2, deposited: 10 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L1", relight: false } }], snapshots: { 10: { player: { carried: 3 }, score: 110 } } } },
 });
 add("deposit_out_of_range", {
   scenario: withBase({ player: { pos: [0, 0, 22.999], carried: 5 } }), inputs: { frames: [{ tick: 0, interact: true }] },
@@ -150,8 +152,8 @@ add("deposit_out_of_range", {
 });
 add("interact_nearest_tiebreak", {
   scenario: withBase({ player: { pos: [0, 0, 23], carried: 10 }, lanterns: [{ id: "L2", pos: [0, 0, 21] }] }), inputs: { frames: [{ tick: 0, interact: true }] },
-  expect: { requirement: "R5", description: "L1 (z=25) và L2 (z=21) cùng cách 2.0 m: chọn đèn id nhỏ hơn (L1); L2 không bị đụng tới", seed: 1, ticks: 10,
-    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 10, deposited: 10 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L1" } }], event_counts: { deposit: 1 }, end: { score: 200 } } },
+  expect: { requirement: "R5", description: "L1 (z=25) và L2 (z=21) cùng cách 2.0 m: chọn đèn id nhỏ hơn (L1); L2 không bị đụng tới (Ticket-03: điểm 10·5 + 100 = 150)", seed: 1, ticks: 10,
+    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 10, deposited: 10 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L1", relight: false } }], event_counts: { deposit: 1 }, end: { score: 150 } } },
 });
 
 // ======================= Tỏa sáng =======================
@@ -245,18 +247,6 @@ add("lantern_lit_expels_shade", {
   scenario: withBase({ player: { pos: [0, 0, 23], carried: 10 }, shades: [{ id: "S1", pos: [0, 0, 28] }] }), inputs: { frames: [{ tick: 0, interact: true }] },
   expect: { requirement: "C1/C5", description: "Đèn vừa sáng ở tick 1: Bóng Mực cách đèn 3 m bị đẩy ra mép 6 m trong 30 tick (0.1 m/tick: z = 28 + 0.1 t), không chạm người chơi", seed: 1, ticks: 40, snapshot_every: 10,
     expect: { events: [{ tick: 1, name: "lantern_lit", data: { lantern_id: "L1" } }], absent_events: ["player_hit"], snapshots: { 10: { shades: [{ pos: [0, 1, 29], state: "recoil" }] }, 30: { shades: [{ pos: [0, 1, 31], state: "chase" }] } } } },
-});
-add("win_all_lit", {
-  scenario: withBase({ time_left_s: 300, player: { pos: [0, 0, -8], carried: 10 }, lanterns: [{ id: "L1", lit: true }, { id: "L2", lit: true }, { id: "L3", lit: true }, { id: "L4", lit: true }, { id: "L5", pos: [0, 0, -10] }] }),
-  inputs: { frames: [{ tick: 0, interact: true }] },
-  expect: { requirement: "R11/C2", description: "Thắp đèn cuối -> thắng all_lit ở tick 1. Điểm = 10·10 (nạp) + 100 (đèn) + floor(299.983)·2 = 598 + 3 lửa·50 = 150 -> 948", seed: 1, ticks: 100,
-    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L5", amount: 10, deposited: 10 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L5" } }, { tick: 1, name: "game_over", data: { result: "won", reason: "all_lit" } }], end: { ticks: 1, state: "won", score: 948 } } },
-});
-add("win_at_last_tick", {
-  scenario: withBase({ time_left_s: 1, player: { pos: [0, 0, -8], carried: 10 }, lanterns: [{ id: "L1", lit: true }, { id: "L2", lit: true }, { id: "L3", lit: true }, { id: "L4", lit: true }, { id: "L5", pos: [0, 0, -10] }] }),
-  inputs: { frames: [{ tick: 59, interact: true }] },
-  expect: { requirement: "C2", description: "Thắp đèn cuối đúng tick hết giờ (tick 60, time_left = 0) vẫn THẮNG; điểm = 100 + 100 + floor(0)·2 + 150 = 350", seed: 1, ticks: 100,
-    expect: { events: [{ tick: 60, name: "game_over", data: { result: "won", reason: "all_lit" } }], end: { ticks: 60, state: "won", score: 350 } } },
 });
 add("lose_dawn", {
   scenario: withBase({ time_left_s: 1 }),
@@ -416,12 +406,12 @@ add("shade_spawn_schedule_n3", {
 
 // ======================= Bản đồ, bục nhảy, địa hình =======================
 add("night2_defaults", {
-  night: 2, expect: { requirement: "C4", description: "Đêm 2 mặc định: 330 s, xuất phát (0,0,0), 6 đèn tọa độ chuẩn, 20 đom đóm, bùa C1 sẵn sàng, chưa có Bóng Mực/Gió Lạc", seed: 7, ticks: 20,
-    expect: { snapshots: { 0: { night: 2, time_left_s: 330, player: { pos: [0, 0, 0], flames: 3 }, lanterns: lanternsExpect(N2_LANTERNS), motes_active: 20, shades: [], drifters: [], charms: [{ id: "C1", available: true, respawn_s: 0 }] } } } },
+  night: 2, expect: { requirement: "C4", description: "Đêm 2 mặc định: 270 s (Ticket-03), xuất phát (0,0,0), 6 đèn tọa độ chuẩn, 20 đom đóm, bùa C1 sẵn sàng, chưa có Bóng Mực/Gió Lạc", seed: 7, ticks: 20,
+    expect: { snapshots: { 0: { night: 2, time_left_s: 270, player: { pos: [0, 0, 0], flames: 3 }, lanterns: lanternsExpect(N2_LANTERNS), motes_active: 20, shades: [], drifters: [], charms: [{ id: "C1", available: true, respawn_s: 0 }] } } } },
 });
 add("night3_defaults", {
-  night: 3, expect: { requirement: "C4", description: "Đêm 3 mặc định: 360 s, xuất phát (0,0,-20), 7 đèn tọa độ chuẩn (y=6, 3, 3, 0...), 20 đom đóm, hai bùa C1 C2, gió chưa thổi", seed: 7, ticks: 20,
-    expect: { snapshots: { 0: { night: 3, time_left_s: 360, player: { pos: [0, 0, -20], grounded: true }, lanterns: lanternsExpect(N3_LANTERNS), motes_active: 20, charms: [{ id: "C1", available: true }, { id: "C2", available: true }], wind: { active: false, dir_deg: 0 } } } } },
+  night: 3, expect: { requirement: "C4", description: "Đêm 3 mặc định: 300 s (Ticket-03), xuất phát (0,0,-20), 7 đèn tọa độ chuẩn (y=6, 3, 3, 0...), 20 đom đóm, hai bùa C1 C2, gió chưa thổi", seed: 7, ticks: 20,
+    expect: { snapshots: { 0: { night: 3, time_left_s: 300, player: { pos: [0, 0, -20], grounded: true }, lanterns: lanternsExpect(N3_LANTERNS), motes_active: 20, charms: [{ id: "C1", available: true }, { id: "C2", available: true }], wind: { active: false, dir_deg: 0 } } } } },
 });
 {
   const L = Math.hypot(50, -18);
@@ -500,17 +490,17 @@ add("wind_gust", {
 add("pause_resume", {
   scenario: withBase(), inputs: { frames: [{ tick: 0, move: [0, 1] }, { tick: 10, pause: true }, { tick: 11, pause: false }, { tick: 30, pause: true }, { tick: 31, pause: false }] },
   expect: {
-    requirement: "C6/Tạm dừng", description: "Tạm dừng: bấm ở tick 11 -> event paused, state paused, tick vẫn tăng nhưng sim_tick/thời gian/vị trí đứng yên (sim 10, z=1.0, 299.833 s); bấm lại ở tick 31 -> resumed và bước đó chạy luôn (sim 11, z=1.1); tick 40: sim 20, z=2.0",
+    requirement: "C6/Tạm dừng", description: "Tạm dừng: bấm ở tick 11 -> event paused, state paused, tick vẫn tăng nhưng sim_tick/thời gian/vị trí đứng yên (sim 10, z=1.0, 239.833 s); bấm lại ở tick 31 -> resumed và bước đó chạy luôn (sim 11, z=1.1); tick 40: sim 20, z=2.0",
     seed: 1, ticks: 60, snapshot_every: 1,
     expect: {
       events: [{ tick: 1, name: "night_start", data: { night: 1 } }, { tick: 11, name: "paused", data: {} }, { tick: 31, name: "resumed", data: {} }], event_counts: { paused: 1, resumed: 1 },
       snapshots: {
         10: { state: "playing", sim_tick: 10, player: { pos: [0, 0, 1] } },
         11: { state: "paused", tick: 11, sim_tick: 10, player: { pos: [0, 0, 1] } },
-        20: { state: "paused", tick: 20, sim_tick: 10, time_left_s: r3(300 - 10 / 60), player: { pos: [0, 0, 1] } },
+        20: { state: "paused", tick: 20, sim_tick: 10, time_left_s: r3(240 - 10 / 60), player: { pos: [0, 0, 1] } },
         30: { state: "paused", sim_tick: 10 },
         31: { state: "playing", sim_tick: 11, player: { pos: [0, 0, 1.1] } },
-        40: { state: "playing", sim_tick: 20, time_left_s: r3(300 - 20 / 60), player: { pos: [0, 0, 2] } },
+        40: { state: "playing", sim_tick: 20, time_left_s: r3(240 - 20 / 60), player: { pos: [0, 0, 2] } },
         60: { sim_tick: 40, player: { pos: [0, 0, 4] } },
       },
       end: { ticks: 60, state: "playing" },
@@ -540,10 +530,10 @@ add("pause_resume", {
   add("night3_route_to_L1", {
     night: 3, scenario: withBase({ player: { carried: 10 } }), inputs: { frames },
     expect: {
-      requirement: "C4/Chơi được", description: "Đêm 3: đèn L1 ở tầng 2 chỉ tới được bằng: đi vòng ngoài tầng 0 -> leo dốc 30° (r 30 -> 24) -> đi trên tầng 1 -> bục nhảy (0,3,13) -> hạ cánh tầng 2 -> nạp 10 đom đóm. Kiểm kết quả: L1 sáng, điểm 10·10 + 100 = 200, Mây đứng trên tầng 2 (y=6), không bị rơi/chạm",
+      requirement: "C4/Chơi được", description: "Đêm 3: đèn L1 ở tầng 2 chỉ tới được bằng: đi vòng ngoài tầng 0 -> leo dốc 30° (r 30 -> 24) -> đi trên tầng 1 -> bục nhảy (0,3,13) -> hạ cánh tầng 2 -> nạp 10 đom đóm. Kiểm kết quả: L1 sáng, điểm 10·5 + 100 = 150 (Ticket-03), Mây đứng trên tầng 2 (y=6), không bị rơi/chạm",
       seed: 1, ticks: 1150, snapshot_every: 10,
-      expect: { absent_events: ["player_hit"], events: [{ name: "deposit", data: { lantern_id: "L1", amount: 10, deposited: 10 } }, { name: "lantern_lit", data: { lantern_id: "L1" } }], event_counts: { lantern_lit: 1 },
-        snapshots: { 1150: { score: 200, player: { carried: 0, grounded: true, flames: 3, } } }, invariants: ["player_on_tier2_at_end"] },
+      expect: { absent_events: ["player_hit"], events: [{ name: "deposit", data: { lantern_id: "L1", amount: 10, deposited: 10 } }, { name: "lantern_lit", data: { lantern_id: "L1", relight: false } }], event_counts: { lantern_lit: 1 },
+        snapshots: { 1150: { score: 150, player: { carried: 0, grounded: true, flames: 3, } } }, invariants: ["player_on_tier2_at_end"] },
     },
   });
 }
@@ -553,12 +543,265 @@ add("pause_resume", {
     night: 2, scenario: withBase({ player: { carried: 10 } }),
     inputs: { frames: [{ tick: 0, move: [1, 0] }, { tick: 700, move: [0, 1] }, { tick: 890, move: [0, 0] }, ...[900, 910, 920, 930].flatMap((t) => [{ tick: t, interact: true }, { tick: t + 5, interact: false }])] },
     expect: {
-      requirement: "C4/Chơi được", description: "Đêm 2: đi thẳng +X từ (0,0,0) qua cầu tre sang đảo B (x=70 ở tick 700, không rơi vì |z| = 0), rồi +Z tới (70,0,19) (tick 890) và thắp L4 (70,0,20). Kiểm: không rơi, L4 sáng, điểm 200",
+      requirement: "C4/Chơi được", description: "Đêm 2: đi thẳng +X từ (0,0,0) qua cầu tre sang đảo B (x=70 ở tick 700, không rơi vì |z| = 0), rồi +Z tới (70,0,19) (tick 890) và thắp L4 (70,0,20). Kiểm: không rơi, L4 sáng, điểm 150 (Ticket-03)",
       seed: 1, ticks: 1000, snapshot_every: 10,
-      expect: { absent_events: ["player_hit"], events: [{ name: "lantern_lit", data: { lantern_id: "L4" } }], snapshots: { 700: { player: { pos: [70, 0, 0], grounded: true } }, 1000: { score: 200, lanterns: [{ lit: false }, { lit: false }, { lit: false }, { id: "L4", lit: true }, { lit: false }, { lit: false }] } } },
+      expect: { absent_events: ["player_hit"], events: [{ name: "lantern_lit", data: { lantern_id: "L4", relight: false } }], snapshots: { 700: { player: { pos: [70, 0, 0], grounded: true } }, 1000: { score: 150, lanterns: [{ lit: false }, { lit: false }, { lit: false }, { id: "L4", lit: true }, { lit: false }, { lit: false }] } } },
     },
   });
 }
+
+// ======================= Phase 3 – Ticket-03 "Đèn cạn dầu" (Contract v1.2) =======================
+// Quy ước tính tay: fuel = đơn vị/60. Tick k: tự hao 1 đơn vị; mỗi Bóng Mực drain hút thêm 5 đơn vị (bước 2, trước mọi thứ khác).
+const litAll = (ids, extra = {}) => ids.map((id) => ({ id, lit: true, ...extra }));
+const FAR = [0, 0, -30]; // chỗ đứng xa mọi đèn/Bóng Mực để Mây không can thiệp
+
+add("fuel_decay_one_per_second", {
+  scenario: withBase({ lanterns: [{ id: "L1", lit: true }] }),
+  expect: {
+    requirement: "T3/Nhiên liệu", description: "Đèn lit:true không khai báo fuel mặc định 100; hao 1 fuel/s = 1 đơn vị/tick: tick 6 -> 99.9, tick 60 -> 99.0, tick 600 -> 90.0; ever_lit true, relit_count 0; đèn tắt fuel 0",
+    seed: 1, ticks: 600, snapshot_every: 6,
+    expect: { snapshots: { 0: { lanterns: [{ id: "L1", lit: true, fuel: 100, ever_lit: true, relit_count: 0 }, { lit: false, fuel: 0, ever_lit: false }, { lit: false }, { lit: false }, { lit: false }] }, 6: { lanterns: [{ fuel: 99.9 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 60: { lanterns: [{ fuel: 99 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 600: { lanterns: [{ fuel: 90, lit: true }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] } }, absent_events: ["lantern_out", "refuel"] },
+  },
+});
+add("lantern_out_at_fuel_zero", {
+  scenario: withBase({ lanterns: [{ id: "L1", lit: true, fuel: 0.5, deposited: 10 }] }),
+  expect: {
+    requirement: "T3/Nhiên liệu", description: "fuel 0.5 = 30 đơn vị: hao 1/tick -> fuel <= 0 đúng tick 30: lantern_out, đèn tắt, deposited về 0, ever_lit vẫn true, fuel 0; không kết thúc game",
+    seed: 1, ticks: 40, snapshot_every: 1,
+    expect: { events: [{ tick: 30, name: "lantern_out", data: { lantern_id: "L1" } }], event_counts: { lantern_out: 1 }, absent_events: ["game_over"],
+      snapshots: { 29: { lanterns: [{ id: "L1", lit: true, deposited: 10, fuel: 0 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }] }, 30: { lanterns: [{ id: "L1", lit: false, deposited: 0, fuel: 0, ever_lit: true, relit_count: 0 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }] }, 40: { state: "playing" } } },
+  },
+});
+add("relight_costs_5", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 6 }, lanterns: [{ id: "L1", lit: false, ever_lit: true }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Thắp lại", description: "Đèn đã từng sáng (ever_lit) chỉ cần 5 đom đóm: mang 6 -> nạp 5, thắp lại, còn 1. Điểm = 5·5 + 40 (thắp lại) = 65; lantern_lit relight:true; relit_count 1; fuel 100; sức chứa 10 -> 12",
+    seed: 1, ticks: 5, snapshot_every: 1,
+    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 5, deposited: 5 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L1", relight: true } }],
+      snapshots: { 1: { score: 65, player: { carried: 1, capacity: 12 }, lanterns: [{ id: "L1", lit: true, fuel: 100, ever_lit: true, relit_count: 1, deposited: 5 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }] } }, end: { score: 65 } },
+  },
+});
+add("relight_partial_then_complete", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 3 }, lanterns: [{ id: "L1", lit: false, ever_lit: true, deposited: 3 }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Thắp lại", description: "Thắp lại đã có 3/5: mang 3 -> chỉ nạp 2 (5-3), còn 1; thắp lại thành công. Điểm = 2·5 + 40 = 50",
+    seed: 1, ticks: 3, snapshot_every: 1,
+    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L1", amount: 2, deposited: 5 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L1", relight: true } }], snapshots: { 1: { player: { carried: 1 } } }, end: { score: 50 } },
+  },
+});
+add("refuel_ceil_rounds_up", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 10 }, lanterns: [{ id: "L1", lit: true, fuel: 55 }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Châm dầu", description: "Tick 1 hao trước: fuel = 3299 đơn vị (54.98). used = min(10, ceil((6000-3299)/600 = 4.50)) = 5; fuel = min(100, 54.98 + 50) = 100; carried 10-5 = 5; điểm 5·5 = 25; sự kiện refuel {amount 5, fuel 100}, KHÔNG có deposit/lantern_lit",
+    seed: 1, ticks: 3, snapshot_every: 1,
+    expect: { events: [{ tick: 1, name: "refuel", data: { lantern_id: "L1", amount: 5, fuel: 100 } }], event_counts: { refuel: 1 }, absent_events: ["deposit", "lantern_lit"],
+      snapshots: { 1: { score: 25, player: { carried: 5, capacity: 10 }, lanterns: [{ id: "L1", lit: true, fuel: 100, relit_count: 0 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }] } }, end: { score: 25 } },
+  },
+});
+add("refuel_exact_multiple", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 10 }, lanterns: [{ id: "L1", lit: true, fuel: 4801 / 60 }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Châm dầu", description: "fuel đầu 4801 đơn vị -> sau hao tick 1 còn 4800 (80.0): thiếu đúng 1200 = 2 đom đóm: used = ceil(2.0) = 2 (không phải 3); fuel 100; carried 8; điểm 10",
+    seed: 1, ticks: 3, snapshot_every: 1,
+    expect: { events: [{ tick: 1, name: "refuel", data: { lantern_id: "L1", amount: 2, fuel: 100 } }], end: { score: 10 }, snapshots: { 3: { player: { carried: 8 } } } },
+  },
+});
+add("refuel_limited_by_carried", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 3 }, lanterns: [{ id: "L1", lit: true, fuel: 20 }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Châm dầu", description: "fuel 20 (còn 1199 đơn vị sau hao), mang 3 < cần 9: used = 3; fuel = (1199 + 1800)/60 = 49.98 -> 50.0; carried 0; điểm 15",
+    seed: 1, ticks: 3, snapshot_every: 1,
+    expect: { events: [{ tick: 1, name: "refuel", data: { lantern_id: "L1", amount: 3, fuel: 50 } }], snapshots: { 1: { player: { carried: 0 }, lanterns: [{ id: "L1", fuel: 50 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }] } }, end: { score: 15 } },
+  },
+});
+add("interact_prefers_nearest_receivable", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 10 }, lanterns: [{ id: "L1", lit: true, fuel: 50 }, { id: "L2", pos: [0, 0, 22] }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Chọn đèn", description: "L1 đang sáng (cần châm, cách 2.0 m) và L2 chưa sáng (cách 1.0 m): chọn đèn nhận được GẦN NHẤT = L2 -> nạp 10 thắp L2, L1 không được châm. Điểm 10·5 + 100 = 150",
+    seed: 1, ticks: 3,
+    expect: { events: [{ tick: 1, name: "deposit", data: { lantern_id: "L2", amount: 10, deposited: 10 } }, { tick: 1, name: "lantern_lit", data: { lantern_id: "L2", relight: false } }], absent_events: ["refuel"], end: { score: 150 } },
+  },
+});
+add("interact_tie_refuel_smaller_id", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 10 }, lanterns: [{ id: "L1", lit: true, fuel: 50 }, { id: "L2", pos: [0, 0, 21] }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Chọn đèn", description: "L1 (sáng, cần dầu) và L2 (tắt) cùng cách 2.0 m: bằng nhau chọn id nhỏ hơn = L1 -> châm dầu: fuel 49.98 -> cần ceil(5.0017) = 6 đom đóm: used 6, fuel 100, còn 4; L2 không bị đụng. Điểm 6·5 = 30",
+    seed: 1, ticks: 3, snapshot_every: 1,
+    expect: { events: [{ tick: 1, name: "refuel", data: { lantern_id: "L1", amount: 6, fuel: 100 } }], absent_events: ["deposit"], snapshots: { 3: { player: { carried: 4 } } }, end: { score: 30 } },
+  },
+});
+
+// ---- Bóng Mực hút dầu ----
+add("shade_drain_burns_fuel", {
+  scenario: withBase({ player: { pos: FAR }, lanterns: [{ id: "L1", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 26], state: "drain", target_lantern_id: "L1" }] }),
+  expect: {
+    requirement: "T3/Drain", description: "1 Bóng Mực drain: mỗi tick hao 1 + 5 = 6 đơn vị (từ 1200): tick 60 fuel 14.0, tick 100 fuel 10.0, tick 120 fuel 8.0, tick 180 fuel 2.0; hết dầu (fuel <= 0) ở tick 200: lantern_out, Bóng Mực về wander. fuel_drain chỉ ghi mỗi 60 tick (60, 120, 180). Đèn fuel < 30 mất vùng an toàn nên Bóng Mực đứng cách 1 m không bị đẩy ra",
+    seed: 1, ticks: 210, snapshot_every: 10,
+    expect: { events: [{ tick: 60, name: "fuel_drain", data: { lantern_id: "L1", shade_id: "S1", fuel: 14 } }, { tick: 120, name: "fuel_drain", data: { lantern_id: "L1", shade_id: "S1", fuel: 8 } }, { tick: 180, name: "fuel_drain", data: { lantern_id: "L1", shade_id: "S1", fuel: 2 } }, { tick: 200, name: "lantern_out", data: { lantern_id: "L1" } }],
+      event_counts: { fuel_drain: 3, lantern_out: 1 }, absent_events: ["player_hit"],
+      snapshots: { 10: { shades: [{ id: "S1", state: "drain", pos: [0, 1, 26] }], lanterns: [{ fuel: fuelAt(1200 - 60) }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 100: { shades: [{ state: "drain", pos: [0, 1, 26] }], lanterns: [{ fuel: 10 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 190: { lanterns: [{ lit: true, fuel: fuelAt(1200 - 6 * 190) }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 200: { lanterns: [{ lit: false, fuel: 0, deposited: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }], shades: [{ state: "wander" }] } } },
+  },
+});
+add("shade_drain_stacking", {
+  scenario: withBase({ player: { pos: FAR }, lanterns: [{ id: "L1", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 26], state: "drain", target_lantern_id: "L1" }, { id: "S2", pos: [0, 0, 24], state: "drain", target_lantern_id: "L1" }] }),
+  expect: {
+    requirement: "T3/Drain", description: "2 Bóng Mực cùng hút: cộng dồn 1 + 5 + 5 = 11 đơn vị/tick: tick 60 fuel = (1200 - 660)/60 = 9.0 (mỗi con ghi fuel_drain ở tick 60); fuel <= 0 ở tick 110 (1200 - 11·109 = 1 > 0; tick 110 còn -10)",
+    seed: 1, ticks: 115, snapshot_every: 10,
+    expect: { events: [{ tick: 60, name: "fuel_drain", data: { lantern_id: "L1", shade_id: "S1", fuel: 9 } }, { tick: 60, name: "fuel_drain", data: { lantern_id: "L1", shade_id: "S2", fuel: 9 } }, { tick: 110, name: "lantern_out", data: { lantern_id: "L1" } }],
+      snapshots: { 60: { lanterns: [{ fuel: 9 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 100: { lanterns: [{ lit: true, fuel: fuelAt(1200 - 1100) }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 110: { lanterns: [{ lit: false, fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }], shades: [{ state: "wander" }, { state: "wander" }] } } },
+  },
+});
+add("shade_wanders_to_weakest_lantern", {
+  scenario: withBase({ player: { pos: FAR }, lanterns: [{ id: "L1", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 35] }] }),
+  expect: {
+    requirement: "T3/Drain", description: "Bóng Mực wander đi thẳng tới đèn sáng fuel < 30 (4 m/s): cách L1 10 m -> z = 35 - t/15; cách đúng 2.0 m ở tick 120 (z=27) thì chuyển drain; hao tick 1..120 = 1 đơn vị (còn 1080); từ tick 121 hao 6: tick 121 fuel = 1074/60 = 17.9",
+    seed: 1, ticks: 125, snapshot_every: 1,
+    expect: { snapshots: { 60: { shades: [{ id: "S1", pos: [0, 1, 31], state: "wander" }], lanterns: [{ fuel: fuelAt(1200 - 60) }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 119: { shades: [{ state: "wander", pos: [0, 1, r3(35 - 119 / 15)] }] }, 120: { shades: [{ state: "drain", pos: [0, 1, 27] }], lanterns: [{ fuel: 18 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 121: { shades: [{ state: "drain", pos: [0, 1, 27] }], lanterns: [{ fuel: 17.9 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] } }, absent_events: ["player_hit"] },
+  },
+});
+add("shade_wander_tiebreak_smaller_id", {
+  scenario: withBase({ player: { pos: FAR }, lanterns: [{ id: "L2", lit: true, fuel: 20 }, { id: "L5", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 7.7] }] }),
+  expect: {
+    requirement: "T3/Drain", description: "Hai đèn yếu L2 (23.8, 7.7) và L5 (-23.8, 7.7) cách Bóng Mực wander bằng nhau (23.8 m): chọn id nhỏ hơn = L2 -> đi +X: x = t/15 (tick 60: x = 4.0)",
+    seed: 1, ticks: 60, snapshot_every: 60,
+    expect: { snapshots: { 60: { shades: [{ id: "S1", pos: [4, 1, 7.7], state: "wander" }] } } },
+  },
+});
+add("shade_wander_ignores_healthy_lantern", {
+  scenario: withBase({ player: { pos: FAR }, lanterns: [{ id: "L2", lit: true, fuel: 100 }, { id: "L5", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 7.7] }] }),
+  expect: {
+    requirement: "T3/Drain", description: "Đèn khỏe L2 (fuel 100) và đèn yếu L5 (fuel 20) cách Bóng Mực wander bằng nhau (23.8 m): chỉ đèn fuel < 30 được chọn -> đi tới L5 (-X): x = -t/15 (tick 60: x = -4.0). Bắt mutation 'chọn cả đèn khỏe' (sẽ chọn L2, id nhỏ hơn, x = +4)",
+    seed: 1, ticks: 60, snapshot_every: 60,
+    expect: { snapshots: { 60: { shades: [{ id: "S1", pos: [-4, 1, 7.7], state: "wander" }] } } },
+  },
+});
+add("shade_chase_keeps_chasing_weak_lantern", {
+  scenario: withBase({ lanterns: [{ id: "L1", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 10], state: "chase" }] }),
+  expect: {
+    requirement: "T3/Drain", description: "Chỉ Bóng Mực wander mới chọn đèn yếu: con đang chase (Mây ở gốc, L1 yếu ở z=25) vẫn đuổi Mây: z = 10 - t/15 (tick 30: z = 8.0), không sang drain",
+    seed: 1, ticks: 30, snapshot_every: 30,
+    expect: { snapshots: { 30: { shades: [{ id: "S1", pos: [0, 1, 8], state: "chase" }] } } },
+  },
+});
+add("drain_to_chase_within_6", {
+  scenario: withBase({ player: { pos: [0, 0, 20] }, lanterns: [{ id: "L1", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 26], state: "drain", target_lantern_id: "L1" }] }),
+  expect: {
+    requirement: "T3/Drain", description: "drain -> chase khi Mây trong 6 m (đúng 6.0 tính là trong): Mây ở z=20, Bóng Mực z=26 -> tick 1 chase và đã bước 1/15 m: z = 25.933. Tick 1 vẫn bị hút (hao 6 đơn vị): fuel = 1194/60 = 19.9",
+    seed: 1, ticks: 3, snapshot_every: 1,
+    expect: { snapshots: { 1: { shades: [{ id: "S1", state: "chase", pos: [0, 1, r3(26 - 1 / 15)] }], lanterns: [{ fuel: 19.9 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 2: { shades: [{ state: "chase" }], lanterns: [{ fuel: fuelAt(1194 - 1) }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] } } },
+  },
+});
+add("drain_holds_beyond_6", {
+  scenario: withBase({ player: { pos: [0, 0, 19.999] }, lanterns: [{ id: "L1", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 26], state: "drain", target_lantern_id: "L1" }] }),
+  expect: {
+    requirement: "T3/Drain", description: "Mây cách 6.001 m (> 6): Bóng Mực vẫn drain, đứng yên z=26; mỗi tick hao 6 đơn vị: tick 5 fuel = (1200-30)/60 = 19.5",
+    seed: 1, ticks: 5, snapshot_every: 1,
+    expect: { snapshots: { 1: { shades: [{ id: "S1", state: "drain", pos: [0, 1, 26] }] }, 5: { shades: [{ state: "drain", pos: [0, 1, 26] }], lanterns: [{ fuel: 19.5 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] } } },
+  },
+});
+add("drain_pulse_stun_15", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 3 }, lanterns: [{ id: "L1", lit: true, fuel: 20 }], shades: [{ id: "S1", pos: [0, 0, 26], state: "drain", target_lantern_id: "L1" }, { id: "S2", pos: [3, 0, 23], state: "wander" }] }), inputs: { frames: [{ tick: 0, pulse: true }, { tick: 1, pulse: false }] },
+  expect: {
+    requirement: "T3/Điểm", description: "Tỏa Sáng trúng S1 (đang drain, cách 3.0 m) và S2 (wander): S1 tổng +15, S2 +5 -> 20 điểm; cả hai choáng. Tick 1 S1 vẫn bị tính hút (hao 6): fuel 19.9; sau khi choáng thôi hút (tick 5: hao thêm 4 đơn vị: 1194-4 = 1190 -> 19.8)",
+    seed: 1, ticks: 5, snapshot_every: 1,
+    expect: { events: [{ tick: 1, name: "pulse", data: { stunned_ids: ["S1", "S2"] } }], snapshots: { 1: { score: 20, shades: [{ id: "S1", state: "stunned" }, { id: "S2", state: "stunned" }], lanterns: [{ fuel: 19.9 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }] }, 5: { lanterns: [{ fuel: fuelAt(1194 - 4) }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }, { fuel: 0 }], shades: [{ state: "stunned" }, { state: "stunned" }] } }, end: { score: 20 } },
+  },
+});
+add("pulse_non_drain_stun_5", {
+  scenario: withBase({ player: { carried: 3 }, shades: [{ id: "A", pos: [4, 0, 0] }] }), inputs: { frames: [{ tick: 0, pulse: true }, { tick: 1, pulse: false }] },
+  expect: { requirement: "T3/Điểm", description: "Bóng Mực không ở drain trúng Tỏa Sáng: +5 (không phải +15)", seed: 1, ticks: 3, expect: { events: [{ tick: 1, name: "pulse", data: { stunned_ids: ["A"] } }], end: { score: 5 } } },
+});
+add("refuel_restores_zone_expels_drain_shade", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 10 }, lanterns: [{ id: "L1", lit: true, fuel: 25 }], shades: [{ id: "S1", pos: [0, 0, 26], state: "drain", target_lantern_id: "L1" }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Đẩy lùi", description: "Châm dầu lên >= 30 lúc có Bóng Mực drain trong 6 m: tick 1 hao 6 -> 1494; used = ceil(4506/600 = 7.51) = 8 (còn 2), fuel 100, +40 điểm. Vùng an toàn trở lại: Bóng Mực bị đẩy từ z=26 ra mép z=31 trong 30 tick (5/30 mỗi tick), recoil, không gây sát thương; sau đó chase",
+    seed: 1, ticks: 40, snapshot_every: 1,
+    expect: { events: [{ tick: 1, name: "refuel", data: { lantern_id: "L1", amount: 8, fuel: 100 } }], absent_events: ["player_hit"],
+      snapshots: { 1: { score: 40, player: { carried: 2 }, shades: [{ id: "S1", state: "recoil", pos: [0, 1, r3(26 + 5 / 30)] }] }, 15: { shades: [{ state: "recoil", pos: [0, 1, r3(26 + (15 * 5) / 30)] }] }, 30: { shades: [{ state: "chase", pos: [0, 1, 31] }] } } },
+  },
+});
+add("safe_zone_lost_below_30_boundary", {
+  scenario: withBase({ player: { pos: [0, 0, 25] }, lanterns: [{ id: "L1", lit: true, fuel: 31 }], shades: [{ id: "S1", pos: [0, 0, 33], state: "chase" }] }),
+  expect: {
+    requirement: "T3/Vùng an toàn", description: "fuel 31 = 1860 đơn vị: đúng 30.0 ở tick 60 (vẫn còn vùng an toàn, Bóng Mực chase bị chặn ở z = 31 từ tick 30); tick 61 fuel 29.98 < 30 -> mất vùng an toàn: Bóng Mực tiến lên z = 31 - 1/15 = 30.933",
+    seed: 1, ticks: 62, snapshot_every: 1,
+    expect: { snapshots: { 30: { shades: [{ pos: [0, 1, 31], state: "chase" }] }, 60: { lanterns: [{ fuel: 30, lit: true }, { lit: false }, { lit: false }, { lit: false }, { lit: false }], shades: [{ pos: [0, 1, 31] }] }, 61: { lanterns: [{ fuel: 30 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }], shades: [{ pos: [0, 1, r3(31 - 1 / 15)] }] } }, absent_events: ["player_hit"] },
+  },
+});
+
+// ---- Luật thắng mới ----
+add("all_lit_no_early_win", {
+  scenario: withBase({ time_left_s: 100, player: { pos: [0, 0, -8], carried: 10 }, lanterns: [{ id: "L1", lit: true }, { id: "L2", lit: true }, { id: "L3", lit: true }, { id: "L4", lit: true }, { id: "L5", pos: [0, 0, -10] }] }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: {
+    requirement: "T3/Thắng", description: "Thay win_all_lit: thắp đèn cuối (tick 1) KHÔNG còn kết thúc Đêm; điểm 10·5 + 100 = 150; game vẫn playing ở tick 100 (còn 98.3 s), không có game_over",
+    seed: 1, ticks: 100, snapshot_every: 50,
+    expect: { events: [{ tick: 1, name: "lantern_lit", data: { lantern_id: "L5", relight: false } }], absent_events: ["game_over"], snapshots: { 50: { state: "playing", score: 150 } }, end: { ticks: 100, state: "playing", score: 150 } },
+  },
+});
+add("win_dawn_survived_n1", {
+  scenario: withBase({ time_left_s: 1, lanterns: [{ id: "L1", lit: true }, { id: "L2", lit: true, fuel: 50.5 }, { id: "L3", lit: true, fuel: 10 }] }),
+  expect: {
+    requirement: "T3/Thắng", description: "Đêm 1 cần 3/5 đèn (ceil(0.6·5)=3). Hết giờ ở tick 60 với 3 đèn sáng -> thắng dawn_survived. Dầu tick 60: L1 = (6000-60)/60 = 99, L2 = (3030-60)/60 = 49.5 -> 49, L3 = (600-60)/60 = 9. Điểm = (50+99) + (50+49) + (50+9) + 3 lửa·50 = 457",
+    seed: 1, ticks: 100,
+    expect: { events: [{ tick: 60, name: "game_over", data: { result: "won", reason: "dawn_survived" } }], end: { ticks: 60, state: "won", score: 457 }, snapshots: { 60: { state: "won", time_left_s: 0 } } },
+  },
+});
+add("lose_dawn_two_of_five", {
+  scenario: withBase({ time_left_s: 1, lanterns: [{ id: "L1", lit: true }, { id: "L2", lit: true }] }),
+  expect: { requirement: "T3/Thua", description: "Chỉ 2/5 đèn sáng ở tick cuối (< 3): thua dawn, không cộng điểm bình minh", seed: 1, ticks: 100, expect: { events: [{ tick: 60, name: "game_over", data: { result: "lost", reason: "dawn" } }], end: { ticks: 60, state: "lost", score: 0 } } },
+});
+add("lose_no_flames_beats_dawn_win", {
+  scenario: withBase({ time_left_s: 1, player: { flames: 1 }, lanterns: litAll(["L1", "L2", "L3"]), shades: [{ id: "S1", pos: [0.5, 0, 0], state: "spawning", state_ticks_left: 60 }] }),
+  expect: { requirement: "T3/Thua", description: "Tick bình minh (60) Bóng Mực hết spawning và chạm Mây (1 lửa) cùng tick: dù 3/5 đèn sáng, hết Ngọn Lửa luôn thua no_flames, không thắng, điểm 0", seed: 1, ticks: 100,
+    expect: { events: [{ tick: 60, name: "player_hit", data: { by: "shade", flames: 0, dropped: 0 } }, { tick: 60, name: "game_over", data: { result: "lost", reason: "no_flames" } }], event_counts: { game_over: 1 }, end: { ticks: 60, state: "lost", score: 0 } } },
+});
+add("lantern_out_before_dawn_loses", {
+  scenario: withBase({ time_left_s: 1, lanterns: [{ id: "L1", lit: true }, { id: "L2", lit: true }, { id: "L3", lit: true, fuel: 0.5 }] }),
+  expect: { requirement: "T3/Thua", description: "L3 hết dầu ở tick 30 (fuel 0.5) -> còn 2/5 đèn sáng ở tick cuối -> thua dawn", seed: 1, ticks: 100,
+    expect: { events: [{ tick: 30, name: "lantern_out", data: { lantern_id: "L3" } }, { tick: 60, name: "game_over", data: { result: "lost", reason: "dawn" } }], end: { ticks: 60, state: "lost", score: 0 } } },
+});
+{
+  // Đêm 2: ceil(0.6·6) = 4 (3.6); Đêm 3: ceil(0.6·7) = 5 (4.2). Điểm = n·(50+99) + 150
+  const mk = (night, ids, win) =>
+    add(`${win ? "win" : "lose"}_dawn_threshold_n${night}`, {
+      night, scenario: withBase({ time_left_s: 1, lanterns: litAll(ids) }),
+      expect: { requirement: "T3/Thắng", description: `Đêm ${night}: ${ids.length}/${night === 2 ? 6 : 7} đèn sáng ở tick cuối ${win ? "đạt" : "dưới"} ngưỡng ceil(0.6·${night === 2 ? 6 : 7}) = ${night === 2 ? 4 : 5}: ${win ? `thắng, điểm ${ids.length}·149 + 150 = ${ids.length * 149 + 150}` : "thua dawn"}`, seed: 1, ticks: 100,
+        expect: { events: [{ tick: 60, name: "game_over", data: win ? { result: "won", reason: "dawn_survived" } : { result: "lost", reason: "dawn" } }], end: { ticks: 60, state: win ? "won" : "lost", score: win ? ids.length * 149 + 150 : 0 } } },
+    });
+  mk(2, ["L1", "L2", "L3", "L4"], true);
+  mk(2, ["L1", "L2", "L3"], false);
+  mk(3, ["L1", "L2", "L3", "L4", "L5"], true);
+  mk(3, ["L1", "L2", "L3", "L4"], false);
+}
+
+// ---- Sức chứa ----
+add("capacity_grows_after_light", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 10 }, motes: Array.from({ length: 13 }, () => [0, 0, 23.2]) }), inputs: { frames: [{ tick: 0, interact: true }, { tick: 1, interact: false }] },
+  expect: { requirement: "T3/Sức chứa", description: "Sức chứa = min(20, 10 + 2·successful_lights). Tick 1 mang 10/10 không nhặt, thắp L1 (+1 lần thành công) -> 12; tick 2 nhặt đúng 12 (13 đom đóm, còn 1 trên đất)", seed: 1, ticks: 4, snapshot_every: 1,
+    expect: { snapshots: { 1: { player: { carried: 0, capacity: 12 }, motes_active: 13 }, 2: { player: { carried: 12, capacity: 12 }, motes_active: 1 } } } },
+});
+add("capacity_caps_at_20", {
+  scenario: withBase({ player: { successful_lights: 7 }, motes: Array.from({ length: 25 }, () => [0, 0, 0.5]) }),
+  expect: { requirement: "T3/Sức chứa", description: "successful_lights 7 -> min(20, 24) = 20: nhặt đúng 20 trong 25 đom đóm", seed: 1, ticks: 3, snapshot_every: 1,
+    expect: { snapshots: { 0: { player: { capacity: 20 } }, 3: { player: { carried: 20, capacity: 20 }, motes_active: 5 } } } },
+});
+add("capacity_scenario_lit_not_counted", {
+  scenario: withBase({ lanterns: litAll(["L1", "L2", "L3"]), motes: Array.from({ length: 12 }, () => [0, 0, 0.5]) }),
+  expect: { requirement: "T3/Sức chứa", description: "Đèn đặt sẵn sáng bằng scenario không tính vào successful_lights: sức chứa vẫn 10, nhặt 10 trong 12", seed: 1, ticks: 3, snapshot_every: 1,
+    expect: { snapshots: { 3: { player: { carried: 10, capacity: 10 }, motes_active: 2 } } } },
+});
+add("relight_after_out_sequence", {
+  scenario: withBase({ player: { pos: [0, 0, 23], carried: 5 }, lanterns: [{ id: "L1", lit: true, fuel: 0.5, deposited: 10 }] }), inputs: { frames: [{ tick: 40, interact: true }, { tick: 41, interact: false }] },
+  expect: { requirement: "T3/Thắp lại", description: "L1 hết dầu ở tick 30 (lantern_out), tick 41 người chơi nạp 5 -> thắp lại (relight true, +40), relit_count 1; điểm 5·5 + 40 = 65; capacity 12", seed: 1, ticks: 45, snapshot_every: 1,
+    expect: { events: [{ tick: 30, name: "lantern_out", data: { lantern_id: "L1" } }, { tick: 41, name: "deposit", data: { lantern_id: "L1", amount: 5, deposited: 5 } }, { tick: 41, name: "lantern_lit", data: { lantern_id: "L1", relight: true } }],
+      snapshots: { 40: { lanterns: [{ lit: false, ever_lit: true, relit_count: 0 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }] }, 41: { score: 65, player: { carried: 0, capacity: 12 }, lanterns: [{ lit: true, fuel: 100, ever_lit: true, relit_count: 1 }, { lit: false }, { lit: false }, { lit: false }, { lit: false }] } }, end: { score: 65 } } },
+});
+
+// ---- Định dạng Phase 3 sai ----
+add("bad_scenario_fuel_range", { scenario: { lanterns: [{ id: "L1", lit: true, fuel: 150 }] }, expect: { requirement: "T3/Định dạng", description: "lanterns[].fuel ngoài [0,100] -> exit 2", seed: 1, ticks: 10, exit_code: 2 } });
+add("bad_scenario_ever_lit_type", { scenario: { lanterns: [{ id: "L1", ever_lit: "yes" }] }, expect: { requirement: "T3/Định dạng", description: "ever_lit không phải boolean -> exit 2", seed: 1, ticks: 10, exit_code: 2 } });
+add("bad_scenario_target_lantern", { scenario: { shades: [{ pos: [1, 0, 0], target_lantern_id: "L9" }] }, expect: { requirement: "T3/Định dạng", description: "shades[].target_lantern_id không phải đèn của Đêm -> exit 2", seed: 1, ticks: 10, exit_code: 2 } });
+add("bad_scenario_successful_lights", { scenario: { player: { successful_lights: -1 } }, expect: { requirement: "T3/Định dạng", description: "player.successful_lights âm -> exit 2", seed: 1, ticks: 10, exit_code: 2 } });
 
 // ======================= Định dạng sai =======================
 add("bad_inputs_tick_order", { scenario: withBase(), inputs: { frames: [{ tick: 5, move: [0, 1] }, { tick: 5, move: [0, 0] }] }, expect: { requirement: "R2", description: "inputs có tick không tăng nghiêm ngặt -> exit 2 + stderr", seed: 1, ticks: 10, exit_code: 2 } });

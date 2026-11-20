@@ -1,0 +1,105 @@
+{
+  "requirement": "T3/Drain",
+  "description": "2 Bóng Mực cùng hút: cộng dồn 1 + 5 + 5 = 11 đơn vị/tick: tick 60 fuel = (1200 - 660)/60 = 9.0 (mỗi con ghi fuel_drain ở tick 60); fuel <= 0 ở tick 110 (1200 - 11·109 = 1 > 0; tick 110 còn -10)",
+  "seed": 1,
+  "ticks": 115,
+  "snapshot_every": 10,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "fuel_drain",
+        "data": {
+          "lantern_id": "L1",
+          "shade_id": "S1",
+          "fuel": 9
+        }
+      },
+      {
+        "tick": 60,
+        "name": "fuel_drain",
+        "data": {
+          "lantern_id": "L1",
+          "shade_id": "S2",
+          "fuel": 9
+        }
+      },
+      {
+        "tick": 110,
+        "name": "lantern_out",
+        "data": {
+          "lantern_id": "L1"
+        }
+      }
+    ],
+    "snapshots": {
+      "60": {
+        "lanterns": [
+          {
+            "fuel": 9
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "100": {
+        "lanterns": [
+          {
+            "lit": true,
+            "fuel": 1.7
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ]
+      },
+      "110": {
+        "lanterns": [
+          {
+            "lit": false,
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          },
+          {
+            "fuel": 0
+          }
+        ],
+        "shades": [
+          {
+            "state": "wander"
+          },
+          {
+            "state": "wander"
+          }
+        ]
+      }
+    }
+  }
+}

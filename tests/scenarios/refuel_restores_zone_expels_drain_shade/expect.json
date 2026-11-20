@@ -1,0 +1,66 @@
+{
+  "requirement": "T3/Đẩy lùi",
+  "description": "Châm dầu lên >= 30 lúc có Bóng Mực drain trong 6 m: tick 1 hao 6 -> 1494; used = ceil(4506/600 = 7.51) = 8 (còn 2), fuel 100, +40 điểm. Vùng an toàn trở lại: Bóng Mực bị đẩy từ z=26 ra mép z=31 trong 30 tick (5/30 mỗi tick), recoil, không gây sát thương; sau đó chase",
+  "seed": 1,
+  "ticks": 40,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "refuel",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 8,
+          "fuel": 100
+        }
+      }
+    ],
+    "absent_events": [
+      "player_hit"
+    ],
+    "snapshots": {
+      "1": {
+        "score": 40,
+        "player": {
+          "carried": 2
+        },
+        "shades": [
+          {
+            "id": "S1",
+            "state": "recoil",
+            "pos": [
+              0,
+              1,
+              26.167
+            ]
+          }
+        ]
+      },
+      "15": {
+        "shades": [
+          {
+            "state": "recoil",
+            "pos": [
+              0,
+              1,
+              28.5
+            ]
+          }
+        ]
+      },
+      "30": {
+        "shades": [
+          {
+            "state": "chase",
+            "pos": [
+              0,
+              1,
+              31
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

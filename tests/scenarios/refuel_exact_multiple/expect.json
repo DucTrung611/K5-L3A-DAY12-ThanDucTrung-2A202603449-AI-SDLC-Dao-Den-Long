@@ -1,0 +1,30 @@
+{
+  "requirement": "T3/Châm dầu",
+  "description": "fuel đầu 4801 đơn vị -> sau hao tick 1 còn 4800 (80.0): thiếu đúng 1200 = 2 đom đóm: used = ceil(2.0) = 2 (không phải 3); fuel 100; carried 8; điểm 10",
+  "seed": 1,
+  "ticks": 3,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "refuel",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 2,
+          "fuel": 100
+        }
+      }
+    ],
+    "end": {
+      "score": 10
+    },
+    "snapshots": {
+      "3": {
+        "player": {
+          "carried": 8
+        }
+      }
+    }
+  }
+}

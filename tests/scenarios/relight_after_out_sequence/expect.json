@@ -1,0 +1,88 @@
+{
+  "requirement": "T3/Thắp lại",
+  "description": "L1 hết dầu ở tick 30 (lantern_out), tick 41 người chơi nạp 5 -> thắp lại (relight true, +40), relit_count 1; điểm 5·5 + 40 = 65; capacity 12",
+  "seed": 1,
+  "ticks": 45,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 30,
+        "name": "lantern_out",
+        "data": {
+          "lantern_id": "L1"
+        }
+      },
+      {
+        "tick": 41,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 5,
+          "deposited": 5
+        }
+      },
+      {
+        "tick": 41,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L1",
+          "relight": true
+        }
+      }
+    ],
+    "snapshots": {
+      "40": {
+        "lanterns": [
+          {
+            "lit": false,
+            "ever_lit": true,
+            "relit_count": 0
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      },
+      "41": {
+        "score": 65,
+        "player": {
+          "carried": 0,
+          "capacity": 12
+        },
+        "lanterns": [
+          {
+            "lit": true,
+            "fuel": 100,
+            "ever_lit": true,
+            "relit_count": 1
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      }
+    },
+    "end": {
+      "score": 65
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "requirement": "T3/Chọn đèn",
+  "description": "L1 (sáng, cần dầu) và L2 (tắt) cùng cách 2.0 m: bằng nhau chọn id nhỏ hơn = L1 -> châm dầu: fuel 49.98 -> cần ceil(5.0017) = 6 đom đóm: used 6, fuel 100, còn 4; L2 không bị đụng. Điểm 6·5 = 30",
+  "seed": 1,
+  "ticks": 3,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "refuel",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 6,
+          "fuel": 100
+        }
+      }
+    ],
+    "absent_events": [
+      "deposit"
+    ],
+    "snapshots": {
+      "3": {
+        "player": {
+          "carried": 4
+        }
+      }
+    },
+    "end": {
+      "score": 30
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "requirement": "R5",
-  "description": "L1 (z=25) và L2 (z=21) cùng cách 2.0 m: chọn đèn id nhỏ hơn (L1); L2 không bị đụng tới",
+  "description": "L1 (z=25) và L2 (z=21) cùng cách 2.0 m: chọn đèn id nhỏ hơn (L1); L2 không bị đụng tới (Ticket-03: điểm 10·5 + 100 = 150)",
   "seed": 1,
   "ticks": 10,
   "expect": {
@@ -18,7 +18,8 @@
         "tick": 1,
         "name": "lantern_lit",
         "data": {
-          "lantern_id": "L1"
+          "lantern_id": "L1",
+          "relight": false
         }
       }
     ],
@@ -26,7 +27,7 @@
       "deposit": 1
     },
     "end": {
-      "score": 200
+      "score": 150
     }
   }
 }

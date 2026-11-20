@@ -1,0 +1,33 @@
+{
+  "requirement": "T3/Chọn đèn",
+  "description": "L1 đang sáng (cần châm, cách 2.0 m) và L2 chưa sáng (cách 1.0 m): chọn đèn nhận được GẦN NHẤT = L2 -> nạp 10 thắp L2, L1 không được châm. Điểm 10·5 + 100 = 150",
+  "seed": 1,
+  "ticks": 3,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L2",
+          "amount": 10,
+          "deposited": 10
+        }
+      },
+      {
+        "tick": 1,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L2",
+          "relight": false
+        }
+      }
+    ],
+    "absent_events": [
+      "refuel"
+    ],
+    "end": {
+      "score": 150
+    }
+  }
+}
