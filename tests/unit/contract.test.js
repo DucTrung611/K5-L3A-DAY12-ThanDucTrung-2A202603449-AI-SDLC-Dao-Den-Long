@@ -12,10 +12,10 @@ test("game.contract.json: tuning khớp đúng số game đang dùng", () => {
   assert.deepEqual(contract.tuning, JSON.parse(JSON.stringify(TUNING)));
 });
 
-// Phase 2: contract v1.1; Phase 3 (Ticket-03): v1.2 (test kiểm "1.1" được sửa theo ticket, không bỏ).
-test("game.contract.json: các khóa bắt buộc của v1.2", () => {
-  assert.equal(contract.contract_version, "1.2");
-  for (const k of ["team", "build_cmd", "run_cmd", "headless_cmd"]) assert.equal(typeof contract[k], "string");
+// Phase 2: contract v1.1; Phase 3 (Ticket-03): v1.2; Phase 4 (Ticket-04): v1.3 thêm bench_cmd/soak_cmd (test kiểm "1.2" được sửa theo ticket, không bỏ).
+test("game.contract.json: các khóa bắt buộc của v1.3", () => {
+  assert.equal(contract.contract_version, "1.3");
+  for (const k of ["team", "build_cmd", "run_cmd", "headless_cmd", "bench_cmd", "soak_cmd"]) assert.equal(typeof contract[k], "string");
   assert.equal(contract.tuning.lantern_count_night1, 5);
   assert.equal(contract.tuning.fall_enabled, true);
   for (const k of ["dash_speed", "dash_duration_s", "dash_cooldown_s", "night2_duration_s", "night3_duration_s"]) assert.equal(typeof contract.tuning[k], "number", k);

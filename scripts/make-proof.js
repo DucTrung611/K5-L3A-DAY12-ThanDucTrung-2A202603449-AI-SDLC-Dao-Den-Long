@@ -22,6 +22,7 @@ const sh = (c) => {
   }
 };
 
+const require_version = JSON.parse(fs.readFileSync(path.join(ROOT, "game.contract.json"), "utf8")).contract_version;
 const out = [];
 const log = (s = "") => out.push(s);
 
@@ -62,10 +63,21 @@ for (const night of [1, 2, 3]) {
 }
 const perfOk = perf.every((p) => p.ok && p.best <= 30000);
 
+// 7. Phase 4 (Ticket-04): soak, benchmark (trình duyệt thật), kiểm tra giao diện
+let p4 = null;
+if (Number(phase) >= 4) {
+  const soak = node(["scripts/soak.js", "--seed", "7", "--nights", "10", "--out", rel(path.join(dir, "soak.json"))]);
+  const bench = node(["scripts/bench.js", "--seed", "42", "--duration", "30", "--out", rel(path.join(dir, "bench.json"))]);
+  const ui = node(["scripts/ui-check.js", "--shots", rel(dir), "--out", rel(path.join(dir, "ui-check.json"))]);
+  const rd = (f) => (fs.existsSync(path.join(dir, f)) ? JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) : null);
+  p4 = { soak: rd("soak.json"), soakOk: soak.status === 0, bench: rd("bench.json"), benchRan: bench.status === 0, ui: rd("ui-check.json"), uiOk: ui.status === 0 };
+  p4.benchOk = p4.benchRan && p4.bench && p4.bench.avg_fps >= 60 && p4.bench.p1_low_fps >= 30 && p4.bench.load_ms <= 10000;
+}
+
 const commit = sh("git rev-parse --short HEAD") || "(chưa có commit)";
-const dirty = sh("git status --porcelain") ? " + thay đổi chưa commit" : "";
+const dirty = sh('git status --porcelain -- . ":(exclude)docs/proof" ":(exclude)out" ":(exclude)bench.json" ":(exclude)soak.json"') ? " + thay đổi chưa commit" : "";
 const passScen = scenRes.filter((r) => r.pass).length;
-const allOk = contract.status === 0 && unit.status === 0 && scen.status === 0 && det.status === 0 && bot.status === 0 && perfOk;
+const allOk = contract.status === 0 && unit.status === 0 && scen.status === 0 && det.status === 0 && bot.status === 0 && perfOk && (!p4 || (p4.soakOk && p4.benchOk && p4.uiOk));
 const extra = (f) => fs.existsSync(path.join(dir, f));
 
 log(`# Kết quả kiểm chứng Phase ${phase} (tự sinh bởi \`npm run proof -- --phase ${phase}\`)`);
@@ -77,7 +89,7 @@ log(`- Tổng: **${allOk ? "TẤT CẢ ĐẠT" : "CÓ MỤC CHƯA ĐẠT"}**`);
 log();
 log("| Kiểm chứng | Lệnh | Kết quả |");
 log("|---|---|---|");
-log(`| Contract v1.2 khớp số chuẩn | \`npm run contract\` | ${contract.status === 0 ? "ĐẠT" : "CHƯA ĐẠT"} |`);
+log(`| Contract v${require_version} khớp số chuẩn | \`npm run contract\` | ${contract.status === 0 ? "ĐẠT" : "CHƯA ĐẠT"} |`);
 log(`| Unit test | \`npm test\` | ${unit.status === 0 ? "ĐẠT" : "CHƯA ĐẠT"} (${unitPass} pass / ${unitFail} fail) – [unit-tests.tap](unit-tests.tap) |`);
 log(`| Scenario headless (hộp đen qua CLI) | \`npm run scenarios\` | ${passScen}/${scenRes.length} ĐẠT – [scenarios.json](scenarios.json) |`);
 log(`| Tất định (3 đêm × 3 seed × 2 lần, trọn đêm) | \`npm run determinism\` | ${detRes.pass ? "ĐẠT" : "CHƯA ĐẠT"} – [determinism.json](determinism.json) |`);
@@ -90,6 +102,13 @@ if (extra("mutation.json")) {
 if (extra("fps.json")) {
   const f = JSON.parse(fs.readFileSync(path.join(dir, "fps.json"), "utf8"));
   log(`| Client ≥ 30 FPS ở 1280×720 (bản build thường) | Playwright (xem [fps.json](fps.json)) | ${f.pass ? "ĐẠT" : "CHƯA ĐẠT"}: ${Object.entries(f.nights).map(([n, v]) => `Đêm ${n} ${v.avg_fps} FPS`).join(", ")} – ${f.webgl_renderer} |`);
+}
+if (p4) {
+  const b = p4.bench;
+  const sk = p4.soak;
+  log(`| Soak 10 đêm trong một tiến trình (crashes = 0, RSS ≤ 1.2×) | \`node scripts/soak.js --seed 7 --nights 10 --out soak.json\` | ${p4.soakOk ? "ĐẠT" : "CHƯA ĐẠT"}: crashes ${sk?.crashes}, RSS ${sk?.mem_start_mb} → ${sk?.mem_end_mb} MB – [soak.json](soak.json) |`);
+  log(`| Benchmark 1280×720, 200 Bóng Mực + 100 đom đóm (avg ≥ 60, p1-low ≥ 30, load ≤ 10 s) | \`node scripts/bench.js --seed 42 --duration 30 --out bench.json\` | ${p4.benchOk ? "ĐẠT" : "CHƯA ĐẠT"}: avg ${b?.avg_fps} FPS, p1-low ${b?.p1_low_fps}, p95 ${b?.frame_ms_p95} ms, load ${b?.load_ms} ms – [bench.json](bench.json) |`);
+  log(`| Giao diện: đổi phím, phụ đề, chữ ≥ 18 px, chữ lớn, giảm chuyển động, bảng xếp hạng + xuất CLI | \`node scripts/ui-check.js\` | ${p4.uiOk ? "ĐẠT" : "CHƯA ĐẠT"}: ${p4.ui?.results.filter((r) => r.ok).length}/${p4.ui?.results.length} – [ui-check.json](ui-check.json) |`);
 }
 log();
 log("## Scenario");
