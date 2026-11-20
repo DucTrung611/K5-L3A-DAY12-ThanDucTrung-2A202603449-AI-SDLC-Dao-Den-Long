@@ -344,6 +344,10 @@ export function createView(container) {
   let pulseT = -1;
 
   const cam = { yaw: 0, pos: new THREE.Vector3(0, 6, -10) };
+  let shakeMag = 0;
+  let shakeLeft = 0;
+  let shakeDur = 1;
+  let bench = false;
   addEventListener("resize", () => {
     renderer.setSize(innerWidth, innerHeight);
     camera.aspect = innerWidth / innerHeight;
@@ -393,6 +397,21 @@ export function createView(container) {
     pulse() {
       pulseT = 0;
     },
+    /** Rung camera (bị tắt bởi Giảm chuyển động ở main.js). */
+    shake(mag = 0.35, dur = 0.35) {
+      shakeMag = mag;
+      shakeLeft = shakeDur = dur;
+    },
+    /** Chế độ benchmark: ép pixel ratio 1, tắt hiệu ứng sáng tạo (vệt sáng của Mây). */
+    setBench(on) {
+      bench = !!on;
+      renderer.setPixelRatio(on ? 1 : Math.min(devicePixelRatio || 1, 1.25));
+      const w = on ? 1280 : innerWidth; // benchmark: đúng 1280x720 dù cửa sổ lệch vài px do khung trình duyệt
+      const h = on ? 720 : innerHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    },
     /** Bảng màu dễ phân biệt (Ticket-03): viền/mắt Bóng Mực #00B3FF, màu cảnh báo #FFFFFF. */
     setAccessible(on) {
       accessible = !!on;
@@ -403,7 +422,8 @@ export function createView(container) {
       const behind = tmp.z > 1;
       return { x: ((tmp.x + 1) / 2) * innerWidth, y: ((1 - tmp.y) / 2) * innerHeight, nx: tmp.x, ny: tmp.y, behind, visible: !behind && Math.abs(tmp.x) <= 1 && Math.abs(tmp.y) <= 1 };
     },
-    render(g, camYawDeg, dt, time) {
+    /** camOverride = { pos:[x,y,z], look:[x,y,z] } thay camera góc nhìn thứ ba (benchmark). */
+    render(g, camYawDeg, dt, time, camOverride) {
       const P = g.player;
       const T = g.tuning;
       const lit = g.lanterns.filter((L) => L.lit).length;
@@ -421,7 +441,7 @@ export function createView(container) {
       if (trailPos.length > trail.length * 2) trailPos.pop();
       trail.forEach((s, i) => {
         const p = trailPos[Math.min(trailPos.length - 1, i * 2)];
-        if (!p || P.fallWait > 0) return void (s.material.opacity = 0);
+        if (!p || P.fallWait > 0 || bench) return void (s.material.opacity = 0);
         s.position.set(p[0], p[1], p[2]);
         s.material.opacity = (P.charm > 0 ? 0.55 : 0.2) * (1 - i / trail.length);
         s.scale.setScalar(0.25 + 0.5 * (1 - i / trail.length));
@@ -563,8 +583,19 @@ export function createView(container) {
       const fy = P.fallWait > 0 ? Math.max(P.pos[1], -2) : P.pos[1];
       const target = new THREE.Vector3(P.pos[0] - Math.sin(cam.yaw) * 9, fy + 5.2, P.pos[2] - Math.cos(cam.yaw) * 9);
       cam.pos.lerp(target, Math.min(1, dt * 6));
-      camera.position.copy(cam.pos);
-      camera.lookAt(P.pos[0], fy + 1.4, P.pos[2]);
+      if (camOverride) {
+        camera.position.set(camOverride.pos[0], camOverride.pos[1], camOverride.pos[2]);
+        camera.lookAt(camOverride.look[0], camOverride.look[1], camOverride.look[2]);
+      } else {
+        camera.position.copy(cam.pos);
+        if (shakeLeft > 0) {
+          shakeLeft = Math.max(0, shakeLeft - dt);
+          const k = (shakeLeft / shakeDur) * shakeMag;
+          camera.position.x += (Math.random() - 0.5) * 2 * k;
+          camera.position.y += (Math.random() - 0.5) * 2 * k;
+        }
+        camera.lookAt(P.pos[0], fy + 1.4, P.pos[2]);
+      }
       renderer.render(scene, camera);
     },
   };

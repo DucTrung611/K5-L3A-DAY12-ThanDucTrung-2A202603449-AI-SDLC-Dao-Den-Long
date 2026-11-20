@@ -14,6 +14,10 @@ export function createHud(tuning) {
   const slots = $("slots");
   const arrow = $("arrow");
   let toastTimer = 0;
+  let calm = false; // Giảm chuyển động: không chớp màn hình
+  let subsOn = true;
+  let keyLabel = () => "";
+  const cues = []; // phụ đề: { el, key, until }
   slots.innerHTML = "<i></i>".repeat(tuning.capacity_max);
   const dashTicks = secToTicks(tuning.dash_cooldown_s);
   const pulseTicks = secToTicks(tuning.pulse_cooldown_s);
@@ -22,6 +26,7 @@ export function createHud(tuning) {
   return {
     show(on) {
       $("hud").classList.toggle("on", on);
+      if (!on) this.clearCues();
     },
     toast(text, ms = 1800) {
       const t = $("toast");
@@ -30,7 +35,52 @@ export function createHud(tuning) {
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => (t.style.opacity = 0), ms);
     },
+    setReduceMotion(on) {
+      calm = !!on;
+    },
+    setSubtitles(on) {
+      subsOn = !!on;
+      if (!on) $("subtitle").textContent = "";
+      cues.length = 0;
+    },
+    /** Hàm đổi hành động -> nhãn phím hiện tại (để HUD hiện đúng phím đã đổi). */
+    setKeyLabel(fn) {
+      keyLabel = fn;
+    },
+    /** Phụ đề / chỉ báo hình ảnh cho sự kiện quan trọng. `key` chống lặp; tối đa 3 dòng. */
+    cue(text, { ms = 3000, key = text, danger = false } = {}) {
+      if (!subsOn) return;
+      const now = performance.now();
+      const old = cues.find((c) => c.key === key);
+      if (old) return void (old.until = now + ms);
+      const el = document.createElement("div");
+      el.textContent = text;
+      if (danger) el.className = "danger";
+      $("subtitle").append(el);
+      cues.push({ el, key, until: now + ms });
+      while (cues.length > 3) cues.shift().el.remove();
+    },
+    tickCues() {
+      const now = performance.now();
+      for (let i = cues.length - 1; i >= 0; i--) {
+        if (cues[i].until <= now) {
+          cues[i].el.remove();
+          cues.splice(i, 1);
+        }
+      }
+    },
+    clearCues() {
+      for (const c of cues) c.el.remove();
+      cues.length = 0;
+      $("cueBar").hidden = true;
+    },
+    /** Dải chỉ báo cố định (ví dụ 10 s cuối của Đêm). */
+    bar(text) {
+      $("cueBar").hidden = !(subsOn && text);
+      if (text) $("cueBar").textContent = text;
+    },
     flash() {
+      if (calm) return;
       const f = $("flash");
       f.style.opacity = 1;
       setTimeout(() => (f.style.opacity = 0), 220);
@@ -49,8 +99,12 @@ export function createHud(tuning) {
       const clock = $("clock");
       clock.textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
       clock.classList.toggle("urgent", g.timeLeft <= 30);
-      clock.classList.toggle("blink", g.timeLeft <= 30 && Math.floor(time * 2) % 2 === 0);
+      clock.classList.toggle("blink", !calm && g.timeLeft <= 30 && Math.floor(time * 2) % 2 === 0);
       const cap = capacityOf(g);
+      const dk = $("cdDash").querySelector("small");
+      const pk = $("cdPulse").querySelector("small");
+      if (dk.textContent !== keyLabel("dash")) dk.textContent = keyLabel("dash");
+      if (pk.textContent !== keyLabel("pulse")) pk.textContent = keyLabel("pulse");
       [...slots.children].forEach((el, i) => {
         el.hidden = i >= cap;
         el.classList.toggle("on", i < P.carried);
@@ -74,11 +128,11 @@ export function createHud(tuning) {
         if (!L.lit) {
           const cost = L.everLit ? tuning.relight_cost : tuning.lantern_cost;
           const verb = L.everLit ? "Thắp lại" : "Nạp ánh sáng";
-          hint = P.carried > 0 ? `E — ${verb} (${L.deposited}/${cost})` : `${L.id} cần ${cost - L.deposited} đom đóm nữa (${L.deposited}/${cost})`;
+          hint = P.carried > 0 ? `${keyLabel("interact")} — ${verb} (${L.deposited}/${cost})` : `${L.id} cần ${cost - L.deposited} đom đóm nữa (${L.deposited}/${cost})`;
         } else {
           const fuel = L.fuelU / 60;
           const used = Math.min(P.carried, Math.ceil((g.fu.max - L.fuelU) / g.fu.perMote));
-          hint = P.carried > 0 ? `E — Châm dầu (${Math.floor(fuel)}/${tuning.fuel_max}, +${used * tuning.fuel_per_mote})` : `${L.id} còn ${Math.floor(fuel)}/${tuning.fuel_max} dầu – mang đom đóm tới châm`;
+          hint = P.carried > 0 ? `${keyLabel("interact")} — Châm dầu (${Math.floor(fuel)}/${tuning.fuel_max}, +${used * tuning.fuel_per_mote})` : `${L.id} còn ${Math.floor(fuel)}/${tuning.fuel_max} dầu – mang đom đóm tới châm`;
         }
       } else if (P.carried >= cap) hint = "Đã mang đầy đom đóm – mang về đèn gần nhất";
 
@@ -88,7 +142,7 @@ export function createHud(tuning) {
       lowEl.hidden = lows.length === 0;
       if (lows.length) {
         $("lowFuelText").textContent = `Đèn sắp tắt: ${lows.map((L) => `${L.id} (${Math.ceil(L.fuelU / 60)})`).join(" · ")}`;
-        lowEl.style.opacity = Math.floor(time * 2) % 2 === 0 ? 1 : 0.35;
+        lowEl.style.opacity = calm || Math.floor(time * 2) % 2 === 0 ? 1 : 0.35;
       }
       $("hint").textContent = hint;
 
