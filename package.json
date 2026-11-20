@@ -1,0 +1,30 @@
+{
+  "name": "dao-den-long",
+  "version": "0.1.0",
+  "description": "Đảo Đèn Lồng – game 3D (Day 12 AI SDLC lab) với chế độ headless theo Test Contract v1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite --open",
+    "build": "vite build",
+    "preview": "vite preview",
+    "headless": "node src/headless/cli.js",
+    "test": "node --test \"tests/unit/*.test.js\"",
+    "scenarios": "node scripts/run-scenarios.js",
+    "determinism": "node scripts/check-determinism.js",
+    "contract": "node scripts/check-contract.js",
+    "bot": "node scripts/bot-playthrough.js",
+    "verify": "npm run --silent contract && npm test --silent && npm run --silent scenarios && npm run --silent determinism && npm run --silent bot",
+    "proof": "node scripts/make-proof.js"
+  },
+  "dependencies": {
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "vite": "5.4.11"
+  }
+}
