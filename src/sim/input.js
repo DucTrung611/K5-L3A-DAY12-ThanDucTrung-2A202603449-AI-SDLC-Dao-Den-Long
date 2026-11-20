@@ -1,20 +1,17 @@
-// Mô hình input theo Test Contract v1.0 mục C.
+// Mô hình input theo Test Contract (v1.0 mục C, v1.1 thêm dash và pause).
 // - Mặc định: move [0,0], cam_yaw_deg 0, mọi nút false.
 // - Frame chỉ đổi trường có mặt; trường vắng giữ giá trị cũ.
 // - Nút kích hoạt khi chuyển false -> true (cạnh lên).
 
-export const BUTTONS = ["jump", "interact", "pulse", "dash"];
+export const BUTTONS = ["jump", "interact", "pulse", "dash", "pause"];
 
 export function createInputState() {
-  return {
-    move: [0, 0],
-    cam_yaw_deg: 0,
-    jump: false,
-    interact: false,
-    pulse: false,
-    dash: false,
-    prev: { jump: false, interact: false, pulse: false, dash: false },
-  };
+  const s = { move: [0, 0], cam_yaw_deg: 0, prev: {} };
+  for (const b of BUTTONS) {
+    s[b] = false;
+    s.prev[b] = false;
+  }
+  return s;
 }
 
 /** Áp một frame (đã được validate) lên trạng thái input hiện tại. */

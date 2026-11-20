@@ -41,7 +41,7 @@ function parseArgs(argv) {
     inputs: a.inputs,
     out: a.out,
   };
-  if (opts.night !== 1) throw new ArgError(`chỉ hỗ trợ --night 1 ở Phase 1 (nhận ${opts.night})`);
+  if (![1, 2, 3].includes(opts.night)) throw new ArgError(`--night phải là 1, 2 hoặc 3 (nhận ${opts.night})`);
   if (!opts.out) throw new ArgError("thiếu --out");
   return opts;
 }
@@ -70,10 +70,11 @@ function main() {
     return 1;
   }
   try {
-    const scenario = opts.scenario ? validateScenario(readJson(opts.scenario, "scenario")) : undefined;
+    const scenario = opts.scenario ? validateScenario(readJson(opts.scenario, "scenario"), opts.night) : undefined;
     const inputs = opts.inputs ? validateInputs(readJson(opts.inputs, "inputs")) : undefined;
     const { lines } = runHeadless({
       seed: opts.seed,
+      night: opts.night,
       scenario,
       inputs,
       ticks: opts.ticks,
