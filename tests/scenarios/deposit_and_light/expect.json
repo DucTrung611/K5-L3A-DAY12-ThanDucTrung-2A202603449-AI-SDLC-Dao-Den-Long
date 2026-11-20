@@ -1,0 +1,89 @@
+{
+  "requirement": "R7",
+  "description": "Mang 5, cách L1 2 m (≤ interact_radius 3), nhấn interact -> deposit 5, L1 thắp, +100 điểm",
+  "seed": 1,
+  "ticks": 10,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 5,
+          "deposited": 5
+        }
+      },
+      {
+        "tick": 1,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L1"
+        }
+      }
+    ],
+    "event_counts": {
+      "deposit": 1,
+      "lantern_lit": 1
+    },
+    "snapshots": {
+      "0": {
+        "lanterns": [
+          {
+            "id": "L1",
+            "pos": [
+              0,
+              0,
+              25
+            ],
+            "lit": false,
+            "deposited": 0
+          },
+          {
+            "id": "L2"
+          },
+          {
+            "id": "L3"
+          },
+          {
+            "id": "L4"
+          },
+          {
+            "id": "L5"
+          }
+        ]
+      },
+      "1": {
+        "score": 100,
+        "player": {
+          "carried": 0
+        },
+        "lanterns": [
+          {
+            "id": "L1",
+            "lit": true,
+            "deposited": 5
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          },
+          {
+            "lit": false
+          }
+        ]
+      }
+    },
+    "end": {
+      "ticks": 10,
+      "state": "playing",
+      "score": 100
+    }
+  }
+}

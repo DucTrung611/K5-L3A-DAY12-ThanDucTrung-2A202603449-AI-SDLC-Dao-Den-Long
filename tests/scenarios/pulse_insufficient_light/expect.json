@@ -1,0 +1,25 @@
+{
+  "requirement": "R8",
+  "description": "Mang 1 < pulse_cost 2 -> không tỏa sáng được: không có event pulse, Bóng Mực không bị choáng",
+  "seed": 1,
+  "ticks": 1,
+  "snapshot_every": 1,
+  "expect": {
+    "absent_events": [
+      "pulse"
+    ],
+    "snapshots": {
+      "1": {
+        "player": {
+          "carried": 1
+        },
+        "shades": [
+          {
+            "id": "A",
+            "state": "chase"
+          }
+        ]
+      }
+    }
+  }
+}

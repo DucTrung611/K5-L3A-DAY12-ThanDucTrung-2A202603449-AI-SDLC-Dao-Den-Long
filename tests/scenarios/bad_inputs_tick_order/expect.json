@@ -1,0 +1,7 @@
+{
+  "requirement": "R2",
+  "description": "inputs có tick không tăng nghiêm ngặt -> exit 2 + stderr",
+  "seed": 1,
+  "ticks": 10,
+  "exit_code": 2
+}

@@ -1,0 +1,43 @@
+{
+  "requirement": "R3",
+  "description": "Tick model: snapshot tick 0 trước input; move [0,1] ở 6 m/s -> 1 m sau 10 tick, 6 m sau 60 tick; time_left_s = 300 - 60/60",
+  "seed": 1,
+  "ticks": 60,
+  "expect": {
+    "end": {
+      "ticks": 60,
+      "state": "playing"
+    },
+    "snapshots": {
+      "0": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            0
+          ]
+        },
+        "time_left_s": 300
+      },
+      "10": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "60": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            6
+          ]
+        },
+        "time_left_s": 299
+      }
+    }
+  }
+}

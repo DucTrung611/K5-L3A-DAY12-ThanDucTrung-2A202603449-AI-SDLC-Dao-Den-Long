@@ -1,0 +1,54 @@
+{
+  "requirement": "R9",
+  "description": "Bóng Mực áp sát: hit ở tick 1 (rơi floor(4·0.5)=2), bất tử 1.5 s = 90 tick -> hit tiếp ở tick 92 (rơi 1), tick 183 (hết lửa) -> thua no_flames",
+  "seed": 1,
+  "ticks": 300,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "player_hit",
+        "data": {
+          "by": "shade",
+          "flames": 2,
+          "dropped": 2
+        }
+      },
+      {
+        "tick": 92,
+        "name": "player_hit",
+        "data": {
+          "by": "shade",
+          "flames": 1,
+          "dropped": 1
+        }
+      },
+      {
+        "tick": 183,
+        "name": "player_hit",
+        "data": {
+          "by": "shade",
+          "flames": 0,
+          "dropped": 0
+        }
+      },
+      {
+        "tick": 183,
+        "name": "game_over",
+        "data": {
+          "result": "lost",
+          "reason": "no_flames"
+        }
+      }
+    ],
+    "event_counts": {
+      "player_hit": 3,
+      "game_over": 1
+    },
+    "end": {
+      "ticks": 183,
+      "state": "lost",
+      "score": 0
+    }
+  }
+}

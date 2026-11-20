@@ -1,0 +1,28 @@
+{
+  "requirement": "R17",
+  "description": "Nhảy: v0 6 m/s, g 20 m/s² (Euler bán ẩn) -> y = (6n - n(n+1)/6)/60, tick 10: 0.694 m; đã tiếp đất ở tick 60; giữ nút không nhảy lại",
+  "seed": 1,
+  "ticks": 60,
+  "expect": {
+    "snapshots": {
+      "10": {
+        "player": {
+          "pos": [
+            0,
+            0.694,
+            0
+          ]
+        }
+      },
+      "60": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  }
+}

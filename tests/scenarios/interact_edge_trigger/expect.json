@@ -1,0 +1,49 @@
+{
+  "requirement": "R5",
+  "description": "Giữ interact nhiều tick chỉ kích hoạt 1 lần (cạnh lên). L1, L2 cùng cách 2 m -> chọn L1 (id nhỏ hơn); nhả rồi nhấn lại ở tick 20 -> nạp L2",
+  "seed": 1,
+  "ticks": 40,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 5,
+          "deposited": 5
+        }
+      },
+      {
+        "tick": 1,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L1"
+        }
+      },
+      {
+        "tick": 21,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L2",
+          "amount": 5,
+          "deposited": 5
+        }
+      },
+      {
+        "tick": 21,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L2"
+        }
+      }
+    ],
+    "event_counts": {
+      "deposit": 2,
+      "lantern_lit": 2
+    },
+    "end": {
+      "score": 200
+    }
+  }
+}

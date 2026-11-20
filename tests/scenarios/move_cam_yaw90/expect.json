@@ -1,0 +1,19 @@
+{
+  "requirement": "R4",
+  "description": "cam_yaw_deg=90, move [0,1]: x' = x·cosθ + z·sinθ = 1, z' = 0 -> đi +X, 6 m sau 60 tick",
+  "seed": 1,
+  "ticks": 60,
+  "expect": {
+    "snapshots": {
+      "60": {
+        "player": {
+          "pos": [
+            6,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  }
+}

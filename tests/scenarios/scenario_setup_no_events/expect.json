@@ -1,0 +1,50 @@
+{
+  "requirement": "R13",
+  "description": "Dựng scenario (4 đèn lit:true, player carried/flames) không phát sự kiện, không cộng điểm",
+  "seed": 1,
+  "ticks": 10,
+  "expect": {
+    "absent_events": [
+      "mote_picked",
+      "deposit",
+      "lantern_lit",
+      "pulse",
+      "player_hit",
+      "shade_spawned",
+      "game_over"
+    ],
+    "snapshots": {
+      "0": {
+        "score": 0,
+        "player": {
+          "carried": 3,
+          "flames": 2
+        },
+        "lanterns": [
+          {
+            "lit": true
+          },
+          {
+            "lit": true
+          },
+          {
+            "lit": true
+          },
+          {
+            "lit": true
+          },
+          {
+            "id": "L5",
+            "lit": false,
+            "deposited": 2
+          }
+        ]
+      }
+    },
+    "end": {
+      "ticks": 10,
+      "state": "playing",
+      "score": 0
+    }
+  }
+}

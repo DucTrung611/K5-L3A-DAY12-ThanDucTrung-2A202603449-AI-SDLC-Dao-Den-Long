@@ -1,0 +1,23 @@
+{
+  "requirement": "R6",
+  "description": "Đang mang đủ carry_capacity (10) thì không nhặt thêm; đom đóm vẫn nằm đó",
+  "seed": 1,
+  "ticks": 5,
+  "snapshot_every": 5,
+  "expect": {
+    "absent_events": [
+      "mote_picked"
+    ],
+    "snapshots": {
+      "5": {
+        "motes_active": 1,
+        "player": {
+          "carried": 10
+        }
+      }
+    },
+    "end": {
+      "score": 0
+    }
+  }
+}

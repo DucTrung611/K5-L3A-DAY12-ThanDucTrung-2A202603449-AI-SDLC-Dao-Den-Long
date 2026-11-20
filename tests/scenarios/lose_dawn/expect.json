@@ -1,0 +1,29 @@
+{
+  "requirement": "R12",
+  "description": "time_left_s 1 -> hết giờ sau 60 bước: game_over lost/dawn ở tick 60, dừng sớm dù --ticks 200",
+  "seed": 1,
+  "ticks": 200,
+  "expect": {
+    "events": [
+      {
+        "tick": 60,
+        "name": "game_over",
+        "data": {
+          "result": "lost",
+          "reason": "dawn"
+        }
+      }
+    ],
+    "snapshots": {
+      "60": {
+        "state": "lost",
+        "time_left_s": 0
+      }
+    },
+    "end": {
+      "ticks": 60,
+      "state": "lost",
+      "score": 0
+    }
+  }
+}

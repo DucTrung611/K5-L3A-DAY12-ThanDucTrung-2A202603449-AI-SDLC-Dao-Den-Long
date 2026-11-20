@@ -1,0 +1,81 @@
+{
+  "requirement": "R8",
+  "description": "Pulse (tốn 2): A cách 5 m (≤ 6) bị choáng + đẩy 4 m ra x=9; B cách 10 m vẫn đuổi (10 - 3.5/60 = 9.942). Choáng 2.5 s = 150 tick: tick 150 còn stunned, tick 151 chase. +20 điểm",
+  "seed": 1,
+  "ticks": 152,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "pulse",
+        "data": {
+          "stunned_ids": [
+            "A"
+          ]
+        }
+      }
+    ],
+    "event_counts": {
+      "pulse": 1
+    },
+    "absent_events": [
+      "player_hit"
+    ],
+    "snapshots": {
+      "1": {
+        "score": 20,
+        "player": {
+          "carried": 1
+        },
+        "shades": [
+          {
+            "id": "A",
+            "pos": [
+              9,
+              0,
+              0
+            ],
+            "state": "stunned"
+          },
+          {
+            "id": "B",
+            "pos": [
+              9.942,
+              0,
+              0
+            ],
+            "state": "chase"
+          }
+        ]
+      },
+      "150": {
+        "shades": [
+          {
+            "id": "A",
+            "pos": [
+              9,
+              0,
+              0
+            ],
+            "state": "stunned"
+          },
+          {
+            "id": "B"
+          }
+        ]
+      },
+      "151": {
+        "shades": [
+          {
+            "id": "A",
+            "state": "chase"
+          },
+          {
+            "id": "B"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "requirement": "R7",
+  "description": "L1 đã có 3/5, mang 4 -> chỉ nạp 2 cho đủ lantern_cost, còn giữ 2",
+  "seed": 1,
+  "ticks": 10,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "deposit",
+        "data": {
+          "lantern_id": "L1",
+          "amount": 2,
+          "deposited": 5
+        }
+      },
+      {
+        "tick": 1,
+        "name": "lantern_lit",
+        "data": {
+          "lantern_id": "L1"
+        }
+      }
+    ],
+    "snapshots": {
+      "10": {
+        "player": {
+          "carried": 2
+        },
+        "score": 100
+      }
+    }
+  }
+}

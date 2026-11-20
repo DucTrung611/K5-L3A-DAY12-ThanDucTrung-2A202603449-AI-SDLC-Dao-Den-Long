@@ -1,0 +1,22 @@
+{
+  "requirement": "R10",
+  "description": "Đèn CHƯA thắp không bảo vệ: Bóng Mực cách 5 m, tốc độ 3.5 m/s -> khoảng cách ≤ 1 sau 69 bước -> player_hit tick 69",
+  "seed": 1,
+  "ticks": 70,
+  "expect": {
+    "events": [
+      {
+        "tick": 69,
+        "name": "player_hit",
+        "data": {
+          "by": "shade",
+          "flames": 2,
+          "dropped": 0
+        }
+      }
+    ],
+    "event_counts": {
+      "player_hit": 1
+    }
+  }
+}

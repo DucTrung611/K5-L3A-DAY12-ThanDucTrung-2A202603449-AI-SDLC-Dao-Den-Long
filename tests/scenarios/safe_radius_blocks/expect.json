@@ -1,0 +1,29 @@
+{
+  "requirement": "R10",
+  "description": "Đứng tại L1 đã thắp: Bóng Mực không vào được bán kính 8 m quanh đèn -> dừng ở z=33, không bao giờ chạm người chơi",
+  "seed": 1,
+  "ticks": 600,
+  "expect": {
+    "absent_events": [
+      "player_hit"
+    ],
+    "snapshots": {
+      "600": {
+        "shades": [
+          {
+            "id": "A",
+            "pos": [
+              0,
+              0,
+              33
+            ],
+            "state": "chase"
+          }
+        ]
+      }
+    },
+    "invariants": [
+      "shades_outside_lit_safe_radius"
+    ]
+  }
+}

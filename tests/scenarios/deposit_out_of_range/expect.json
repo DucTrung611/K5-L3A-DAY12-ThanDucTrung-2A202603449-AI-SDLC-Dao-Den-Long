@@ -1,0 +1,22 @@
+{
+  "requirement": "R7",
+  "description": "Cách L1 3.001 m (> interact_radius 3) thì nhấn interact không có tác dụng",
+  "seed": 1,
+  "ticks": 5,
+  "expect": {
+    "absent_events": [
+      "deposit",
+      "lantern_lit"
+    ],
+    "snapshots": {
+      "0": {
+        "player": {
+          "carried": 5
+        }
+      }
+    },
+    "end": {
+      "score": 0
+    }
+  }
+}

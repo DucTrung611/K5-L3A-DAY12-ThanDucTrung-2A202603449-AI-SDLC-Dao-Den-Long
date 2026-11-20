@@ -1,0 +1,7 @@
+{
+  "requirement": "R2",
+  "description": "move ngoài [-1,1] -> exit 2",
+  "seed": 1,
+  "ticks": 10,
+  "exit_code": 2
+}

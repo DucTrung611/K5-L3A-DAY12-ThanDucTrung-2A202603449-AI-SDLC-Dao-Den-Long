@@ -1,0 +1,40 @@
+{
+  "requirement": "R6",
+  "description": "Đom đóm cách đúng 1.5 m (= pickup_radius, ≤ r) được nhặt; cách 1.501 m thì không. +10 điểm",
+  "seed": 1,
+  "ticks": 5,
+  "snapshot_every": 1,
+  "expect": {
+    "events": [
+      {
+        "tick": 1,
+        "name": "mote_picked",
+        "data": {
+          "carried": 1
+        }
+      }
+    ],
+    "event_counts": {
+      "mote_picked": 1
+    },
+    "snapshots": {
+      "0": {
+        "motes_active": 2,
+        "score": 0
+      },
+      "1": {
+        "motes_active": 1,
+        "score": 10,
+        "player": {
+          "carried": 1
+        }
+      },
+      "5": {
+        "motes_active": 1
+      }
+    },
+    "end": {
+      "score": 10
+    }
+  }
+}

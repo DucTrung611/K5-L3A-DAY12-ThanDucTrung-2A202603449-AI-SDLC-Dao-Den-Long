@@ -1,0 +1,37 @@
+{
+  "requirement": "R3",
+  "description": "Trường vắng giữ giá trị cũ: tick 30 chỉ đổi yaw 180° nên move [0,1] vẫn giữ -> đi ngược về gốc; tick 60 dừng",
+  "seed": 1,
+  "ticks": 90,
+  "expect": {
+    "snapshots": {
+      "30": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            3
+          ]
+        }
+      },
+      "60": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "90": {
+        "player": {
+          "pos": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "requirement": "R1",
+  "description": "Thế giới mặc định seed 42: exit 0, snapshot tick 0 đúng, Bóng Mực đầu tiên sinh đúng giây 10 (tick 600)",
+  "seed": 42,
+  "ticks": 600,
+  "expect": {
+    "end": {
+      "type": "end",
+      "ticks": 600,
+      "state": "playing",
+      "score": 0
+    },
+    "snapshots": {
+      "0": {
+        "tick": 0,
+        "sim_tick": 0,
+        "state": "playing",
+        "time_left_s": 300,
+        "score": 0,
+        "player": {
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "flames": 3,
+          "carried": 0
+        },
+        "motes_active": 30,
+        "shades": []
+      },
+      "600": {
+        "time_left_s": 290
+      }
+    },
+    "events": [
+      {
+        "tick": 600,
+        "name": "shade_spawned",
+        "data": {
+          "id": "S1"
+        }
+      }
+    ],
+    "event_counts": {
+      "shade_spawned": 1,
+      "mote_picked": 0
+    }
+  }
+}
