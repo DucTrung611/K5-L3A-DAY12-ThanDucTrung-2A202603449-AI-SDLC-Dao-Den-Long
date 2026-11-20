@@ -1,6 +1,6 @@
 {
   "name": "dao-den-long",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Đảo Đèn Lồng – game 3D (Day 12 AI SDLC lab) với chế độ headless theo Test Contract v1.0",
   "private": true,
   "type": "module",
@@ -19,13 +19,17 @@
     "contract": "node scripts/check-contract.js",
     "bot": "node scripts/bot-playthrough.js",
     "mutation": "node scripts/mutation-check.js",
-    "verify": "npm run --silent contract && npm test --silent && npm run --silent scenarios && npm run --silent determinism && npm run --silent bot",
-    "proof": "node scripts/make-proof.js"
+    "verify": "npm run --silent contract && npm test --silent && npm run --silent scenarios && npm run --silent determinism && npm run --silent bot && node scripts/soak.js --seed 7 --nights 10 --out out/soak.json",
+    "proof": "node scripts/make-proof.js",
+    "bench": "node scripts/bench.js --seed 42 --duration 30 --out bench.json",
+    "soak": "node scripts/soak.js --seed 7 --nights 10 --out soak.json",
+    "ui-check": "node scripts/ui-check.js"
   },
   "dependencies": {
     "three": "0.170.0"
   },
   "devDependencies": {
+    "playwright-core": "^1.49.1",
     "vite": "5.4.11"
   }
 }

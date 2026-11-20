@@ -7,6 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { runHeadless } from "../sim/run.js";
+import { readLeaderboard } from "../../scripts/lib/leaderboard-store.js";
 import { validateScenario, validateInputs, FormatError } from "../sim/validate.js";
 
 class ArgError extends Error {}
@@ -61,7 +62,22 @@ function readJson(file, label) {
   }
 }
 
+function exportLeaderboard(argv) {
+  const i = argv.indexOf("--export-leaderboard");
+  if (i < 0) return null;
+  const out = argv[i + 1];
+  if (!out || out.startsWith("--")) {
+    process.stderr.write("Lỗi: thiếu đường dẫn sau --export-leaderboard\n");
+    return 1;
+  }
+  fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
+  fs.writeFileSync(out, JSON.stringify({ entries: readLeaderboard() }, null, 2) + "\n");
+  return 0;
+}
+
 function main() {
+  const exported = exportLeaderboard(process.argv.slice(2)); // Ticket-04: cùng một lệnh xuất bảng xếp hạng như run_cmd
+  if (exported !== null) return exported;
   let opts;
   try {
     opts = parseArgs(process.argv.slice(2));
